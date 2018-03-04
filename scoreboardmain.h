@@ -122,11 +122,13 @@ private slots:
 
     void on_TimerPreset_Checkbox_clicked(bool checked15);
 
-    void on_FiveP_Radio_clicked();
+    void on_Forty_Radio_clicked();
 
-    void on_TenP_Radio_clicked();
+    void on_Sixty_Radio_clicked();
 
-    void on_FifteenP_Radio_clicked();
+    void on_Sixtyfive_Radio_clicked();
+
+    void on_Seventy_Radio_clicked();
 
     void on_actionXxRocketshotxX_triggered();
 

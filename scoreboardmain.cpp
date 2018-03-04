@@ -21,7 +21,7 @@ int saved_speed = 0, last_speed = 0; //Stored speed integer
 int speed = 1000; //Speed integer | Default = 1000 (1seconds) | Milliseconds = 1000(0.1seconds)
 int Clock_button = 0; //Start/Stop button
 int Normal_Speed = 1000, Millisecond_Speed = 93;
-int PresetRadio = 2;
+int PresetRadio = 3;
 
 bool bol = false; //Open/Close for the server
 bool many = false; //For milliseconds register
@@ -31,17 +31,18 @@ bool testplayer = false; //Test player button
 bool to_switch; //On/Off for To_input
 bool Milliseconds = false, Minute_Zero = false, Hotkey = false, Stopwatch_input = false; //On/Off for Milliseconds, Add zero to minute, Hotkey, Stopwatch
 bool presetbool = true; //Preset timer
-bool SecretIanButton = false; //Secret Ian Button
 
 string minutes_zero = "", seconds_zero = ""; //For 9 <-> 0 | Example: 09 05
 string Player1_Name = "", Player2_Name = ""; //Name for Player1, Player2
 string Player1_Id = "", Player2_Id = ""; //Id for Player1, Player2
+string Round = "", Round_info = "", Info_text="";
 string clock_symbol = ":"; //Clock Symbol | Default = : | Milliseconds = .
-string Window_Name = "Scoreboard for Netrunner 0.9"; //Please Change this after a update!
+string Window_Name = "Scoreboard for Netrunner 0.91"; //Please Change this after a update!
 QString Clock_text = "65:00"; //Clock Text
 QList<QString> IdList;
 
 ofstream Player1_Name_Output, Player2_Name_Output, Player1_Id_Output, Player2_Id_Output, Player1_Score_Output, Player2_Score_Output, Period_Output, Clock_Output; //Ofstream for outputting to .txt
+ofstream Round_Output, Round_info_Output, Info_text_Output;
 
 ScoreboardMain::ScoreboardMain(QWidget *parent) :
     QMainWindow(parent),
@@ -70,14 +71,26 @@ void ScoreboardMain::Opened() //Resets all
     Player1_Score_Output.open(".\\Output\\Player1_Score.txt");
     Player2_Score_Output.open(".\\Output\\Player2_Score.txt");
     Clock_Output.open(".\\Output\\Clock.txt");
+    Round_Output.open(".\\Output\\Round.txt");
+    Info_text_Output.open(".\\Output\\Round.txt");
 
     Player1_Name_Output << "";
     Player2_Name_Output << "";
     Player1_Id_Output << "";
     Player2_Id_Output << "";
-    Player1_Score_Output << Player1_Score;
-    Player2_Score_Output << Player2_Score;
+    if (ui->NoScoreIdOutput->isChecked())
+    {
+        Player1_Score_Output << "";
+        Player2_Score_Output << "";
+    }
+    else
+    {
+        Player1_Score_Output << Player1_Score;
+        Player2_Score_Output << Player2_Score;
+    }
     Clock_Output << "00:00";
+    Round_Output << "";
+    Info_text_Output << "";
 
     Player1_Name_Output.close();
     Player2_Name_Output.close();
@@ -86,6 +99,8 @@ void ScoreboardMain::Opened() //Resets all
     Player1_Score_Output.close();
     Player2_Score_Output.close();
     Clock_Output.close();
+    Round_Output.close();
+    Info_text_Output.close();
 
     IdList.append("Anarch: Quetzal"); IdList.append("Anarch: Edward Kim"); IdList.append("Anarch: MaxX"); IdList.append("Anarch: Valencia Estevez"); IdList.append("Anarch: Null");
     IdList.append("Anarch: Omar Keung"); IdList.append("Anarch: Alice Merchant"); IdList.append("Anarch: Reina Roja"); IdList.append("Anarch: Freedom Khumalo");
@@ -215,9 +230,16 @@ void ScoreboardMain::Changed() //Changed Score,etc
         Player1_Score_Output.open(".\\Output\\Player1_Score.txt");
         Player2_Score_Output.open(".\\Output\\Player2_Score.txt");
 
-        Player1_Score_Output << Player1_Score;
-        Player2_Score_Output << Player2_Score;
-
+        if (ui->NoScoreIdOutput->isChecked())
+        {
+            Player1_Score_Output << "";
+            Player2_Score_Output << "";
+        }
+        else
+        {
+            Player1_Score_Output << Player1_Score;
+            Player2_Score_Output << Player2_Score;
+        }
         Player1_Score_Output.close();
         Player2_Score_Output.close();
     }
@@ -280,45 +302,96 @@ void ScoreboardMain::on_Update_Team_Button_clicked() //Update Team Name Button
 {
     QString Player1N = ui->Player1Name_Input->text(), Player2N = ui->Player2Name_Input->text();
     QString Player1I = ui->Player1Id_Input->currentText(), Player2I = ui->Player2Id_Input->currentText();
+    QString RoundI = ui->Round_Input->text(), TextI= ui->Info_text_Input->text();
     Player1_Name = Player1N.toUtf8().constData(), Player2_Name = Player2N.toUtf8().constData();
     Player1_Id = Player1I.toUtf8().constData(), Player2_Id = Player2I.toUtf8().constData();
+    Round= RoundI.toUtf8().constData(), Info_text=TextI.toUtf8().constData();
     if(ui->checkBox->isChecked())
     {
         writexml();
-    }else{
-    Player1_Name_Output.open(".\\Output\\Player1_Name.txt");
-    Player2_Name_Output.open(".\\Output\\Player2_Name.txt");
-    Player1_Id_Output.open(".\\Output\\Player1_Id.txt");
-    Player2_Id_Output.open(".\\Output\\Player2_Id.txt");
-    Player1_Name_Output << Player1_Name;
-    Player2_Name_Output << Player2_Name;
-    Player1_Id_Output << Player1_Id;
-    Player2_Id_Output << Player2_Id;
-    Player1_Name_Output.close();
-    Player2_Name_Output.close();
-    Player1_Id_Output.close();
-    Player2_Id_Output.close();
     }
-
-    if (QFile::exists(".\\Output\\Player1_Id.png"))
+    else
     {
-        QFile::remove(".\\Output\\Player1_Id.png");
-    }
-    QString p1_id=QString::fromStdString(Player1_Id.substr(0,2));
-    QString p1_idfile=".\\ID_Pictures\\" ;
-    p1_idfile.append(p1_id);
-    p1_idfile.append(".png");
-    QFile::copy(p1_idfile,".\\Output\\Player1_Id.png");
+        Player1_Name_Output.open(".\\Output\\Player1_Name.txt");
+        Player2_Name_Output.open(".\\Output\\Player2_Name.txt");
+        Round_Output.open(".\\Output\\Round.txt");
+        Round_info_Output.open(".\\Output\\Round_info.txt");
+        Info_text_Output.open(".\\Output\\Info_text.txt");
+        Player1_Name_Output << Player1_Name;
+        Player2_Name_Output << Player2_Name;
+        Player1_Id_Output.open(".\\Output\\Player1_Id.txt");
+        Player2_Id_Output.open(".\\Output\\Player2_Id.txt");
+        Round_Output << Round ;
+        Info_text_Output << Info_text ;
 
-    if (QFile::exists(".\\Output\\Player2_Id.png"))
-    {
-        QFile::remove(".\\Output\\Player2_Id.png");
+        if(ui->Swiss_Radio->isChecked())
+        {
+            Round_info_Output << "Swiss Round " << Round;
+        }
+        if(ui->Top_cut_Radio->isChecked())
+        {
+            Round_info_Output << "Top cut Round " << Round;
+        }
+        if(ui->Grand_final_Radio->isChecked())
+        {
+            Round_info_Output << "Grand Final";
+        }
+
+        if (ui->NoScoreIdOutput->isChecked())
+        {
+            Player1_Score_Output.open(".\\Output\\Player1_Score.txt");
+            Player2_Score_Output.open(".\\Output\\Player2_Score.txt");
+            Player1_Score_Output << "";
+            Player2_Score_Output << "";
+            Player1_Score_Output.close();
+            Player2_Score_Output.close();
+
+            Player1_Id_Output << "";
+            Player2_Id_Output << "";
+
+            if (QFile::exists(".\\Output\\Player1_Id.png"))
+            {
+                QFile::remove(".\\Output\\Player1_Id.png");
+            }
+
+            if (QFile::exists(".\\Output\\Player2_Id.png"))
+            {
+                QFile::remove(".\\Output\\Player2_Id.png");
+            }
+        }
+        else
+        {
+            Player1_Id_Output << Player1_Id;
+            Player2_Id_Output << Player2_Id;
+
+            if (QFile::exists(".\\Output\\Player1_Id.png"))
+            {
+                QFile::remove(".\\Output\\Player1_Id.png");
+            }
+            QString p1_id=QString::fromStdString(Player1_Id.substr(0,2));
+            QString p1_idfile=".\\ID_Pictures\\" ;
+            p1_idfile.append(p1_id);
+            p1_idfile.append(".png");
+            QFile::copy(p1_idfile,".\\Output\\Player1_Id.png");
+
+            if (QFile::exists(".\\Output\\Player2_Id.png"))
+            {
+                QFile::remove(".\\Output\\Player2_Id.png");
+            }
+            QString p2_id=QString::fromStdString(Player2_Id.substr(0,2));
+            QString p2_idfile=".\\ID_pictures\\" ;
+            p2_idfile.append(p2_id);
+            p2_idfile.append(".png");
+            QFile::copy(p2_idfile,".\\Output\\Player2_Id.png");
+        }
+        Player1_Name_Output.close();
+        Player2_Name_Output.close();
+        Player1_Id_Output.close();
+        Player2_Id_Output.close();
+        Round_Output.close();
+        Round_info_Output.close();
+        Info_text_Output.close();
     }
-    QString p2_id=QString::fromStdString(Player2_Id.substr(0,2));
-    QString p2_idfile=".\\ID_pictures\\" ;
-    p2_idfile.append(p2_id);
-    p2_idfile.append(".png");
-    QFile::copy(p2_idfile,".\\Output\\Player2_Id.png");
 
     di->Player1_Name(QString::fromStdString(Player1_Name));
     di->Player2_Name(QString::fromStdString(Player2_Name));
@@ -724,7 +797,7 @@ void ScoreboardMain::on_Reset_Button_clicked() //Reset Clock button
         ui->Seconds_Input->setValue(0);
         ui->Minutes_Input->setValue(40);
         clock_symbol = ":";
-        minu = 5;
+        minu = 40;
         seco = 0;
         Clock_Output.open(".\\Output\\Clock.txt");
         Clock_Output << "40:00";
@@ -741,11 +814,32 @@ void ScoreboardMain::on_Reset_Button_clicked() //Reset Clock button
         }
     }else if(presetbool == true && PresetRadio == 2 && Stopwatch_input == false)
     {
+        ui->Clock_Label->setText("  60:00");
+        ui->Seconds_Input->setValue(0);
+        ui->Minutes_Input->setValue(60);
+        clock_symbol = ":";
+        minu = 60;
+        seco = 0;
+        Clock_Output.open(".\\Output\\Clock.txt");
+        Clock_Output << "60:00";
+        Clock_Output.close();
+        if(ui->checkBox->isChecked())
+        {
+            Clock_text = "60:00";
+            writexml();
+        }
+        ui->Clock_Label->setText("  60:00");
+        if(ui->pushButton->text() == "Disable")
+        {
+        client->write(QString("Clock:  60:00").toUtf8());
+        }
+    }else if(presetbool == true && PresetRadio == 3 && Stopwatch_input == false)
+    {
         ui->Clock_Label->setText("  65:00");
         ui->Seconds_Input->setValue(0);
         ui->Minutes_Input->setValue(65);
         clock_symbol = ":";
-        minu = 10;
+        minu = 65;
         seco = 0;
         Clock_Output.open(".\\Output\\Clock.txt");
         Clock_Output << "65:00";
@@ -760,14 +854,14 @@ void ScoreboardMain::on_Reset_Button_clicked() //Reset Clock button
         {
         client->write(QString("Clock:  65:00").toUtf8());
         }
-    }else if(presetbool == true && PresetRadio == 3 && Stopwatch_input == false)
+    }else if(presetbool == true && PresetRadio == 4 && Stopwatch_input == false)
     {
         ui->Clock_Label->setText("  70:00");
         ui->Seconds_Input->setValue(0);
         ui->Minutes_Input->setValue(70);
-        clock_symbol = ":";
-        minu = 15;
+        minu = 70;
         seco = 0;
+        clock_symbol = ":";
         Clock_Output.open(".\\Output\\Clock.txt");
         Clock_Output << "70:00";
         Clock_Output.close();
@@ -780,27 +874,6 @@ void ScoreboardMain::on_Reset_Button_clicked() //Reset Clock button
         if(ui->pushButton->text() == "Disable")
         {
         client->write(QString("Clock:  70:00").toUtf8());
-        }
-    }else if(presetbool == true && PresetRadio == 4 && Stopwatch_input == false)
-    {
-        ui->Clock_Label->setText("  20:00");
-        ui->Seconds_Input->setValue(0);
-        ui->Minutes_Input->setValue(20);
-        minu = 20;
-        seco = 0;
-        clock_symbol = ":";
-        Clock_Output.open(".\\Output\\Clock.txt");
-        Clock_Output << "20:00";
-        Clock_Output.close();
-        if(ui->checkBox->isChecked())
-        {
-            Clock_text = "20:00";
-            writexml();
-        }
-        ui->Clock_Label->setText("  20:00");
-        if(ui->pushButton->text() == "Disable")
-        {
-        client->write(QString("Clock:  20:00").toUtf8());
         }
     }else{
         if(ui->checkBox->isChecked())
@@ -1289,17 +1362,21 @@ void ScoreboardMain::on_TimerPreset_Checkbox_clicked(bool checked15)
     if(checked15 == true)
     {
         presetbool = true;
-        if(ui->FiveP_Radio->isChecked())
+        if(ui->Forty_Radio->isChecked())
         {
             PresetRadio = 1;
         }
-        if(ui->TenP_Radio->isChecked())
+        if(ui->Sixty_Radio->isChecked())
         {
             PresetRadio = 2;
         }
-        if(ui->FifteenP_Radio->isChecked())
+        if(ui->Sixtyfive_Radio->isChecked())
         {
             PresetRadio = 3;
+        }
+        if(ui->Seventy_Radio->isChecked())
+        {
+            PresetRadio = 4;
         }
     }else{
         PresetRadio = 0;
@@ -1307,7 +1384,7 @@ void ScoreboardMain::on_TimerPreset_Checkbox_clicked(bool checked15)
     }
 }
 
-void ScoreboardMain::on_FiveP_Radio_clicked()
+void ScoreboardMain::on_Forty_Radio_clicked()
 {
     if(presetbool == true)
     {
@@ -1315,7 +1392,7 @@ void ScoreboardMain::on_FiveP_Radio_clicked()
     }
 }
 
-void ScoreboardMain::on_TenP_Radio_clicked()
+void ScoreboardMain::on_Sixty_Radio_clicked()
 {
     if(presetbool == true)
     {
@@ -1323,11 +1400,19 @@ void ScoreboardMain::on_TenP_Radio_clicked()
     }
 }
 
-void ScoreboardMain::on_FifteenP_Radio_clicked()
+void ScoreboardMain::on_Sixtyfive_Radio_clicked()
 {
     if(presetbool == true)
     {
     PresetRadio = 3;
+    }
+}
+
+void ScoreboardMain::on_Seventy_Radio_clicked()
+{
+    if(presetbool == true)
+    {
+    PresetRadio = 4;
     }
 }
 
