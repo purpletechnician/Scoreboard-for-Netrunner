@@ -543,6 +543,9 @@ Score and Timer</string>
       <property name="text">
        <string>Swiss round</string>
       </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
      </widget>
      <widget class="QRadioButton" name="Top_cut_Radio">
       <property name="geometry">

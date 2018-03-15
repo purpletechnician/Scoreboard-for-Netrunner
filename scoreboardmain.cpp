@@ -37,7 +37,8 @@ string Player1_Name = "", Player2_Name = ""; //Name for Player1, Player2
 string Player1_Id = "", Player2_Id = ""; //Id for Player1, Player2
 string Round = "", Round_info = "", Info_text="";
 string clock_symbol = ":"; //Clock Symbol | Default = : | Milliseconds = .
-string Window_Name = "Scoreboard for Netrunner 0.91"; //Please Change this after a update!
+string Window_Name = "Scoreboard for Netrunner 0.92"; //Please Change this after a update!
+string version_info = "0.92";
 QString Clock_text = "65:00"; //Clock Text
 QList<QString> IdList;
 
@@ -153,10 +154,16 @@ void ScoreboardMain::Opened() //Resets all
 
     //Makes new QNetworkAccessMangager and parents to this
     manager = new QNetworkAccessManager(this);
+    //Get From the URL
+    if (QUrl("https://github.com/purpletechnician/Scoreboard-for-Netrunner/blob/master/").isValid())
+    {
+        ui->Testing->setText("Valid URL");
+    }
     //Connect to replyFinished QnetworkReply
     connect(manager,SIGNAL(finished(QNetworkReply*)),this,SLOT(replyFinished(QNetworkReply*)));
-    //Get From the URL
-    manager->get(QNetworkRequest(QUrl("https://obsproject.com/forum/resources/scoreboard-windows-mac.150/")));
+    manager->get(QNetworkRequest(QUrl("https://github.com/purpletechnician/Scoreboard-for-Netrunner/blob/master/")));
+    //QNetworkReply* reply = manager->get(QNetworkRequest(QUrl("https://github.com/purpletechnician/Scoreboard-for-Netrunner/blob/master/")));
+    //connect(reply,SIGNAL(finished()),this,SLOT(replyFinished(QNetworkReply*)));
 }
 
 void ScoreboardMain::replyFinished(QNetworkReply *reply)
@@ -172,6 +179,8 @@ void ScoreboardMain::replyFinished(QNetworkReply *reply)
     }
     else
     {
+        ui->Testing->setText("Reading URL");
+
         ofstream textout;
         textout.open(".\\Update\\out.txt");
         //Read all from the url and writes to a file
@@ -184,7 +193,7 @@ void ScoreboardMain::replyFinished(QNetworkReply *reply)
             while(getline(textin, getstring))
             {
                 ui->Testing->setStyleSheet("QLabel{color: rgb(0, 0, 0);}");
-                str = getstring.find("Version_Info:0.9");
+                str = getstring.find(version_info);
                 if(str!=string::npos)
                 {
                     ui->Testing->setText("Status: No Update");
@@ -358,6 +367,11 @@ void ScoreboardMain::on_Update_Team_Button_clicked() //Update Team Name Button
             {
                 QFile::remove(".\\Output\\Player2_Id.png");
             }
+
+            if (QFile::exists(".\\Output\\AgendaPoint.png"))
+            {
+                QFile::remove(".\\Output\\AgendaPoint.png");
+            }
         }
         else
         {
@@ -383,6 +397,8 @@ void ScoreboardMain::on_Update_Team_Button_clicked() //Update Team Name Button
             p2_idfile.append(p2_id);
             p2_idfile.append(".png");
             QFile::copy(p2_idfile,".\\Output\\Player2_Id.png");
+
+            QFile::copy(".\\ID_pictures\\AgendaPoint.png",".\\Output\\AgendaPoint.png");
         }
         Player1_Name_Output.close();
         Player2_Name_Output.close();
