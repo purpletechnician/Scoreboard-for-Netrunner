@@ -104,7 +104,7 @@
        </font>
       </property>
       <property name="text">
-       <string>Player 2</string>
+       <string>Player 2 </string>
       </property>
       <property name="maxLength">
        <number>30</number>
