@@ -18,7 +18,7 @@ int Player1_Score = 0, Player2_Score = 0; //Team Score integer
 int minu = 65, seco = 0; //Minutes and Seconds integer
 int mins = 0, secs = 0; //Used for To_input
 int saved_speed = 0, last_speed = 0; //Stored speed integer
-int speed = 1000; //Speed integer | Default = 1000 (1seconds) | Milliseconds = 1000(0.1seconds)
+int speed = 1000; //Speed integer | Default = 1000 (1seconds) | Milliseconds = 1000(0.001seconds)
 int Clock_button = 0; //Start/Stop button
 int Normal_Speed = 1000, Millisecond_Speed = 93;
 int PresetRadio = 3;
@@ -37,8 +37,8 @@ string Player1_Name = "", Player2_Name = ""; //Name for Player1, Player2
 string Player1_Id = "", Player2_Id = ""; //Id for Player1, Player2
 string Round = "", Round_info = "", NR_text="", NRS_text="";
 string clock_symbol = ":"; //Clock Symbol | Default = : | Milliseconds = .
-string Window_Name = "Scoreboard for Netrunner 0.93"; //Please Change this after a update!
-string version_info = "0.93";
+string Window_Name = "Scoreboard for Netrunner 0.94"; //Please Change this after a update!
+string version_info = "0.94";
 QString Clock_text = "65:00"; //Clock Text
 QList<QString> IdList;
 
@@ -335,8 +335,6 @@ void ScoreboardMain::on_Update_Team_Button_clicked() //Update Team Name Button
         Player1_Id_Output.open(".\\Output\\Player1_Id.txt");
         Player2_Id_Output.open(".\\Output\\Player2_Id.txt");
         Round_Output << Round ;
-        NR_Output<<NR_text;
-        NRS_Output<<NRS_text;
         if(ui->Swiss_Radio->isChecked())
         {
             Round_info_Output << "Swiss Round " << Round;
@@ -404,6 +402,23 @@ void ScoreboardMain::on_Update_Team_Button_clicked() //Update Team Name Button
 
             QFile::copy(".\\ID_pictures\\AgendaPoint.png",".\\Output\\AgendaPoint.png");
         }
+
+        if (ui->UpNextScreen->isChecked())
+        {
+             QFile::copy(".\\ID_Pictures\\UpNext.png",".\\Output\\UpNext.png");
+             NR_Output<<NR_text;
+             NRS_Output<<NRS_text;
+        }
+        else
+        {
+            if (QFile::exists(".\\Output\\UpNext.png"))
+            {
+                QFile::remove(".\\Output\\UpNext.png");
+            }
+            NR_Output<<"";
+            NRS_Output<<"";
+        }
+
         Player1_Name_Output.close();
         Player2_Name_Output.close();
         Player1_Id_Output.close();
