@@ -37,8 +37,8 @@ string Player1_Name = "", Player2_Name = ""; //Name for Player1, Player2
 string Player1_Id = "", Player2_Id = ""; //Id for Player1, Player2
 string Round = "", Round_info = "", NR_text="", NRS_text="";
 string clock_symbol = ":"; //Clock Symbol | Default = : | Milliseconds = .
-string Window_Name = "Scoreboard for Netrunner 0.92"; //Please Change this after a update!
-string version_info = "0.92";
+string Window_Name = "Scoreboard for Netrunner 0.93"; //Please Change this after a update!
+string version_info = "0.93";
 QString Clock_text = "65:00"; //Clock Text
 QList<QString> IdList;
 
