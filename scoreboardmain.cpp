@@ -35,7 +35,7 @@ bool presetbool = true; //Preset timer
 string minutes_zero = "", seconds_zero = ""; //For 9 <-> 0 | Example: 09 05
 string Player1_Name = "", Player2_Name = ""; //Name for Player1, Player2
 string Player1_Id = "", Player2_Id = ""; //Id for Player1, Player2
-string Round = "", Round_info = "", Info_text="";
+string Round = "", Round_info = "", NR_text="", NRS_text="";
 string clock_symbol = ":"; //Clock Symbol | Default = : | Milliseconds = .
 string Window_Name = "Scoreboard for Netrunner 0.92"; //Please Change this after a update!
 string version_info = "0.92";
@@ -43,7 +43,7 @@ QString Clock_text = "65:00"; //Clock Text
 QList<QString> IdList;
 
 ofstream Player1_Name_Output, Player2_Name_Output, Player1_Id_Output, Player2_Id_Output, Player1_Score_Output, Player2_Score_Output, Period_Output, Clock_Output; //Ofstream for outputting to .txt
-ofstream Round_Output, Round_info_Output, Info_text_Output;
+ofstream Round_Output, Round_info_Output, NR_Output, NRS_Output;
 
 ScoreboardMain::ScoreboardMain(QWidget *parent) :
     QMainWindow(parent),
@@ -73,7 +73,8 @@ void ScoreboardMain::Opened() //Resets all
     Player2_Score_Output.open(".\\Output\\Player2_Score.txt");
     Clock_Output.open(".\\Output\\Clock.txt");
     Round_Output.open(".\\Output\\Round.txt");
-    Info_text_Output.open(".\\Output\\Round.txt");
+    NR_Output.open(".\\Output\\Next_round.txt");
+    NRS_Output.open(".\\Output\\Next_round_start.txt");
 
     Player1_Name_Output << "";
     Player2_Name_Output << "";
@@ -91,7 +92,8 @@ void ScoreboardMain::Opened() //Resets all
     }
     Clock_Output << "00:00";
     Round_Output << "";
-    Info_text_Output << "";
+    NR_Output << "";
+    NRS_Output << "";
 
     Player1_Name_Output.close();
     Player2_Name_Output.close();
@@ -101,7 +103,8 @@ void ScoreboardMain::Opened() //Resets all
     Player2_Score_Output.close();
     Clock_Output.close();
     Round_Output.close();
-    Info_text_Output.close();
+    NR_Output.close();
+    NRS_Output.close();
 
     IdList.append("Anarch: Quetzal"); IdList.append("Anarch: Edward Kim"); IdList.append("Anarch: MaxX"); IdList.append("Anarch: Valencia Estevez"); IdList.append("Anarch: Null");
     IdList.append("Anarch: Omar Keung"); IdList.append("Anarch: Alice Merchant"); IdList.append("Anarch: Reina Roja"); IdList.append("Anarch: Freedom Khumalo");
@@ -311,10 +314,10 @@ void ScoreboardMain::on_Update_Team_Button_clicked() //Update Team Name Button
 {
     QString Player1N = ui->Player1Name_Input->text(), Player2N = ui->Player2Name_Input->text();
     QString Player1I = ui->Player1Id_Input->currentText(), Player2I = ui->Player2Id_Input->currentText();
-    QString RoundI = ui->Round_Input->text(), TextI= ui->Info_text_Input->text();
+    QString RoundI = ui->Round_Input->text(), TextNRSI= ui->Next_round_start_Input->text(), TextNRI=ui->Next_round_Input->text();
     Player1_Name = Player1N.toUtf8().constData(), Player2_Name = Player2N.toUtf8().constData();
     Player1_Id = Player1I.toUtf8().constData(), Player2_Id = Player2I.toUtf8().constData();
-    Round= RoundI.toUtf8().constData(), Info_text=TextI.toUtf8().constData();
+    Round= RoundI.toUtf8().constData(), NR_text=TextNRI.toUtf8().constData(); NRS_text=TextNRSI.toUtf8().constData();
     if(ui->checkBox->isChecked())
     {
         writexml();
@@ -325,14 +328,15 @@ void ScoreboardMain::on_Update_Team_Button_clicked() //Update Team Name Button
         Player2_Name_Output.open(".\\Output\\Player2_Name.txt");
         Round_Output.open(".\\Output\\Round.txt");
         Round_info_Output.open(".\\Output\\Round_info.txt");
-        Info_text_Output.open(".\\Output\\Info_text.txt");
+        NR_Output.open(".\\Output\\Next_round.txt");
+        NRS_Output.open(".\\Output\\Next_round_start.txt");
         Player1_Name_Output << Player1_Name;
         Player2_Name_Output << Player2_Name;
         Player1_Id_Output.open(".\\Output\\Player1_Id.txt");
         Player2_Id_Output.open(".\\Output\\Player2_Id.txt");
         Round_Output << Round ;
-        Info_text_Output << Info_text ;
-
+        NR_Output<<NR_text;
+        NRS_Output<<NRS_text;
         if(ui->Swiss_Radio->isChecked())
         {
             Round_info_Output << "Swiss Round " << Round;
@@ -406,7 +410,8 @@ void ScoreboardMain::on_Update_Team_Button_clicked() //Update Team Name Button
         Player2_Id_Output.close();
         Round_Output.close();
         Round_info_Output.close();
-        Info_text_Output.close();
+        NR_Output.close();
+        NRS_Output.close();
     }
 
     di->Player1_Name(QString::fromStdString(Player1_Name));
