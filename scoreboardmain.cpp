@@ -14,6 +14,13 @@
 
 using namespace std;
 
+string version_info = "0.92";
+string Window_Name = "Scoreboard for Netrunner "+version_info; //Please Change this after a update!
+//string Update_URL = "http://sverigesradio.se";
+string Update_URL = "https://github.com/purpletechnician/Scoreboard-for-Netrunner";
+//string Update_URL = "https://github.com/purpletechnician/Scoreboard-for-Netrunner/blob/master";
+QString QUpdate_URL = QString::fromStdString(Update_URL);
+
 int Player1_Score = 0, Player2_Score = 0; //Team Score integer
 int minu = 65, seco = 0; //Minutes and Seconds integer
 int mins = 0, secs = 0; //Used for To_input
@@ -37,8 +44,6 @@ string Player1_Name = "", Player2_Name = ""; //Name for Player1, Player2
 string Player1_Id = "", Player2_Id = ""; //Id for Player1, Player2
 string Round = "", Round_info = "", NR_text="", NRS_text="";
 string clock_symbol = ":"; //Clock Symbol | Default = : | Milliseconds = .
-string Window_Name = "Scoreboard for Netrunner 0.94"; //Please Change this after a update!
-string version_info = "0.94";
 QString Clock_text = "65:00"; //Clock Text
 QList<QString> IdList;
 
@@ -158,15 +163,13 @@ void ScoreboardMain::Opened() //Resets all
     //Makes new QNetworkAccessMangager and parents to this
     manager = new QNetworkAccessManager(this);
     //Get From the URL
-    if (QUrl("https://github.com/purpletechnician/Scoreboard-for-Netrunner/blob/master/").isValid())
+    if (QUrl(QUpdate_URL).isValid())
     {
         ui->Testing->setText("Valid URL");
     }
     //Connect to replyFinished QnetworkReply
     connect(manager,SIGNAL(finished(QNetworkReply*)),this,SLOT(replyFinished(QNetworkReply*)));
-    manager->get(QNetworkRequest(QUrl("https://github.com/purpletechnician/Scoreboard-for-Netrunner/blob/master/")));
-    //QNetworkReply* reply = manager->get(QNetworkRequest(QUrl("https://github.com/purpletechnician/Scoreboard-for-Netrunner/blob/master/")));
-    //connect(reply,SIGNAL(finished()),this,SLOT(replyFinished(QNetworkReply*)));
+    manager->get(QNetworkRequest(QUrl(QUpdate_URL)));
 }
 
 void ScoreboardMain::replyFinished(QNetworkReply *reply)
@@ -197,6 +200,9 @@ void ScoreboardMain::replyFinished(QNetworkReply *reply)
             {
                 ui->Testing->setStyleSheet("QLabel{color: rgb(0, 0, 0);}");
                 str = getstring.find(version_info);
+                //qDebug()<<qPrintable(str)<<"="<<qPrintable(string::npos);
+                qDebug()<<QString::fromStdString(getstring);
+                qDebug()<<" size:"<<str<<" at pos:"<<string::npos;
                 if(str!=string::npos)
                 {
                     ui->Testing->setText("Status: No Update");
@@ -223,7 +229,12 @@ void ScoreboardMain::WarningBox()
 {
     if(stopreply == 0)
     {
-       QMessageBox::warning(this,"New Update Found", "<a href=https://obsproject.com/forum/resources/scoreboard-windows-mac.150>Update Download</a>");
+       QString HTMLcode_Update = "<a href=";
+       HTMLcode_Update.append(QUpdate_URL);
+       HTMLcode_Update.append(">Update Download</a>") ;
+       HTMLcode_Update.toHtmlEscaped();
+       qDebug()<<qPrintable(HTMLcode_Update);
+       QMessageBox::warning(this,"New Update Found", HTMLcode_Update);
        stopreply = 1;
     }
     else
