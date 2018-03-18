@@ -14,11 +14,10 @@
 
 using namespace std;
 
-string version_info = "0.92";
-string Window_Name = "Scoreboard for Netrunner "+version_info; //Please Change this after a update!
-//string Update_URL = "http://sverigesradio.se";
+string version_info = "0.94";
 string Update_URL = "https://github.com/purpletechnician/Scoreboard-for-Netrunner";
-//string Update_URL = "https://github.com/purpletechnician/Scoreboard-for-Netrunner/blob/master";
+
+string Window_Name = "Scoreboard for Netrunner "+version_info; //Please Change this after a update!
 QString QUpdate_URL = QString::fromStdString(Update_URL);
 
 int Player1_Score = 0, Player2_Score = 0; //Team Score integer
@@ -200,9 +199,8 @@ void ScoreboardMain::replyFinished(QNetworkReply *reply)
             {
                 ui->Testing->setStyleSheet("QLabel{color: rgb(0, 0, 0);}");
                 str = getstring.find(version_info);
-                //qDebug()<<qPrintable(str)<<"="<<qPrintable(string::npos);
-                qDebug()<<QString::fromStdString(getstring);
-                qDebug()<<" size:"<<str<<" at pos:"<<string::npos;
+                //qDebug()<<QString::fromStdString(getstring);
+                //qDebug()<<" size:"<<str<<" at pos:"<<string::npos;
                 if(str!=string::npos)
                 {
                     ui->Testing->setText("Status: No Update");
@@ -229,11 +227,12 @@ void ScoreboardMain::WarningBox()
 {
     if(stopreply == 0)
     {
-       QString HTMLcode_Update = "<a href=";
+       QString HTMLcode_Update = "&nbsp;&nbsp;&nbsp;<a href=";
        HTMLcode_Update.append(QUpdate_URL);
-       HTMLcode_Update.append(">Update Download</a>") ;
+       HTMLcode_Update.append("/releases");
+       HTMLcode_Update.append(">Update Download</a>&nbsp;&nbsp;&nbsp;") ;
        HTMLcode_Update.toHtmlEscaped();
-       qDebug()<<qPrintable(HTMLcode_Update);
+       //qDebug()<<qPrintable(HTMLcode_Update);
        QMessageBox::warning(this,"New Update Found", HTMLcode_Update);
        stopreply = 1;
     }
@@ -349,14 +348,26 @@ void ScoreboardMain::on_Update_Team_Button_clicked() //Update Team Name Button
         if(ui->Swiss_Radio->isChecked())
         {
             Round_info_Output << "Swiss Round " << Round;
+            PresetRadio=3;
+            on_Reset_Button_clicked();
         }
         if(ui->Top_cut_Radio->isChecked())
         {
             Round_info_Output << "Top cut Round " << Round;
+            PresetRadio=1;
+            on_Reset_Button_clicked();
         }
         if(ui->Grand_final_Radio->isChecked())
         {
             Round_info_Output << "Grand Final";
+            PresetRadio=2;
+            on_Reset_Button_clicked();
+        }
+        if(ui->Casual_Radio->isChecked())
+        {
+            Round_info_Output << "Casual";
+            PresetRadio=4;
+            on_Reset_Button_clicked();
         }
 
         if (ui->NoScoreIdOutput->isChecked())

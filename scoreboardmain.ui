@@ -589,6 +589,19 @@ start</string>
        <enum>Qt::Vertical</enum>
       </property>
      </widget>
+     <widget class="QRadioButton" name="Casual_Radio">
+      <property name="geometry">
+       <rect>
+        <x>440</x>
+        <y>476</y>
+        <width>91</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Casual</string>
+      </property>
+     </widget>
      <zorder>Minutes_To_In</zorder>
      <zorder>Player2Score_Label</zorder>
      <zorder>Player2Name_Input</zorder>
@@ -623,6 +636,7 @@ start</string>
      <zorder>line_11</zorder>
      <zorder>Update_Team_Button</zorder>
      <zorder>line_12</zorder>
+     <zorder>Casual_Radio</zorder>
     </widget>
     <widget class="QWidget" name="S">
      <attribute name="title">
