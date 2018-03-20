@@ -10,9 +10,9 @@ The software has the following features:<br/>
 * Countdown timer output based on swiss/top cut or finals round in a tournament<br/>
 * Show actual agendapoint for runner/corp. Manual and output to file can be disabled when software is unmanned.<br/>
 * Show identity (text and picture) of players runner or corp. Output to file can be disabled when software is unmanned.<br/>
-<br/>
 * UpNext-screen can be shown between round with information which round is next and when it starts.<br/>
 * Mp3-music can be a added/played.<br/>
+<br/>
 Below files are created by the software (Output-folder):<br/>
 * "Player1_Name.txt"/"Player2_Name.txt": Input: textfield. Shows each player name.<br/>
 * "Player1_Score.txt"/"Player2_Score.txt": Shows each player score. Input: Up/down-buttons for each player. Output can be disabled in software.<br/>
