@@ -1,9 +1,9 @@
 # Scoreboard-for-Netrunner 0.94
-0,94 Fixing bugs in GUI, Up/next-screen-presetation and update-functionality.<br/>
+0,94 Fixing bugs in GUI, Up/next-screen-presentation and update-functionality.<br/>
 0,93 Added the possibility to show "up-next"-screen between rounds<br/>
 0,92 Fixing bugs<br/>
 <br/>
-Requires SSL-libraries installed (necessary dll:s are shipped in binary zip-file but whole package can be donloaded at https://sourceforge.net/projects/openssl/ or https://sourceforge.net/projects/gnuwin32/files/openssl/0.9.8h-1/openssl-0.9.8h-1-setup.exe)<br/>
+Requires SSL-libraries installed (necessary dll:s are shipped in binary zip-file but whole package can be downloaded at https://sourceforge.net/projects/openssl/ or https://sourceforge.net/projects/gnuwin32/files/openssl/0.9.8h-1/openssl-0.9.8h-1-setup.exe)<br/>
 <br/>
 The software has the following features:<br/>
 * Show name of players<br/>
