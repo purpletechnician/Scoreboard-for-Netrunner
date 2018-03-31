@@ -14,7 +14,7 @@ The software has the following features:<br/>
 * Mp3-music can be a added/played.<br/>
 <br/>
 Below files are created by the software (Output-folder):<br/>
-* "Player1_Name.txt"/"Player2_Name.txt": Input: textfield. Shows each player name.<br/>
+* "Player1_Name.txt"/"Player2_Name.txt": Shows each player name. Input: Textfield.<br/>
 * "Player1_Score.txt"/"Player2_Score.txt": Shows each player score. Input: Up/down-buttons for each player. Output can be disabled in software.<br/>
 * "Player1_Id.txt"/"Player2_Id.txt": Shows each player identity.Input: Choosable field. Output can be disabled in software.<br/>
 * "Player1_Ïd.png"/"Player2_Id.png": Hold each player identity icon. Based on above input. Output can be disabled in software.<br/>
