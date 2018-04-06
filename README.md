@@ -18,8 +18,8 @@ Below files are created by the software (Output-folder):<br/>
 • "Player1_Name.txt"/"Player2_Name.txt": Shows each player name. Input: Textfield.<br/>
 • "Player1_Score.txt"/"Player2_Score.txt": Shows each player score. Input: Up/down-buttons for each player. Output can be disabled in software.<br/>
 • "Player1_Id.txt"/"Player2_Id.txt": Shows each player identity.Input: Choosable field. Output can be disabled in software.<br/>
-• "Player1_Ïd.png"/"Player2_Id.png": Hold each player identity icon. Based on above input. Output can be disabled in software.<br/>
-* "Clock.txt": Show actual timer value. Input: start/stop timer and radio-button swiss/top cut/grand final.<br/>
+• "Player1_Id.png"/"Player2_Id.png": Hold each player identity icon. Based on above input. Output can be disabled in software.<br/>
+• "Clock.txt": Show actual timer value. Input: start/stop timer and radio-button swiss/top cut/grand final.<br/>
 • "Round.txt": Shows which round in tourament. Input: textfield.<br/>
 • "Round_info.txt": Show "Swiss"/"Top cut"/"Grand final" and round number.<br/>
 • "UpNext.png": Shows a "UpNext"-screen used between round. The below "Next_round.txt" and "Next_round_starts.txt" are enabled at the same time. Output can be disabled in software.<br/>
