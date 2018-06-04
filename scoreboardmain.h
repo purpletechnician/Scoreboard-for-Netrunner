@@ -32,6 +32,8 @@ private slots:
 
     void WarningBox();
 
+    void ScoreboardGetCards();
+
     void on_Player1UP_Button_clicked();
 
     void on_Player1DOWN_Button_clicked();
@@ -98,7 +100,7 @@ private slots:
 
     void startRead();
 
-    void on_actionSickmind33_triggered();
+    //void on_actionSickmind33_triggered();
 
     void on_PlaySound_Checkbox_clicked(bool checked10);
 
@@ -130,7 +132,7 @@ private slots:
 
     void on_Seventy_Radio_clicked();
 
-    void on_actionXxRocketshotxX_triggered();
+    //void on_actionXxRocketshotxX_triggered();
 
     void xml();
 
@@ -142,7 +144,7 @@ private slots:
 
     void on_actionDonate_triggered();
 
-    void on_Player1Name_Input_returnPressed();
+    //void on_Player1Name_Input_returnPressed();
 
     void on_SoundSpeed_Slider_sliderMoved(int slidepos);
 

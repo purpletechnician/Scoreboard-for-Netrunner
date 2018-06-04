@@ -299,7 +299,7 @@ Score and Timer</string>
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>400</y>
+        <y>390</y>
         <width>141</width>
         <height>81</height>
        </rect>
@@ -553,7 +553,7 @@ start</string>
      <widget class="QPushButton" name="StopMusic_Button">
       <property name="geometry">
        <rect>
-        <x>220</x>
+        <x>280</x>
         <y>420</y>
         <width>91</width>
         <height>51</height>

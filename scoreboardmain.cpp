@@ -171,7 +171,15 @@ void ScoreboardMain::Opened() //Resets all
     //Connect to replyFinished QnetworkReply
     connect(manager,SIGNAL(finished(QNetworkReply*)),this,SLOT(replyFinished(QNetworkReply*)));
     manager->get(QNetworkRequest(QUrl(QUpdate_URL)));
+
+    ScoreboardMain::ScoreboardGetCards();
 }
+
+void ScoreboardMain::ScoreboardGetCards()
+{
+
+}
+
 
 void ScoreboardMain::replyFinished(QNetworkReply *reply)
 {
