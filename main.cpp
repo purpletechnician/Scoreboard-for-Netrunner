@@ -1,6 +1,11 @@
 #include "scoreboardmain.h"
 #include <QApplication>
-#include <direct.h>
+#ifdef Q_OS_WIN
+    #include <direct.h>
+#elif
+    # include <unistd.h>
+#endif
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);

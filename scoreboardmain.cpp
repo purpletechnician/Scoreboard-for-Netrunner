@@ -1,6 +1,5 @@
 #include "scoreboardmain.h"
 #include "ui_scoreboardmain.h"
-#include <windows.h> //For Hotkey/Shortcut key
 #include <fstream> //For Outputing to .txt
 #include <ctime>
 #include <QTimer>
@@ -11,6 +10,9 @@
 #include <sstream>
 #include <QMediaMetaData>
 #include <QComboBox>
+#ifdef Q_OS_WIN
+    #include <windows.h> //For Hotkey/Shortcut key
+#endif
 
 using namespace std;
 
@@ -236,9 +238,6 @@ void ScoreboardMain::WarningBox()
        QMessageBox::warning(this,"New Update Found", HTMLcode_Update);
        stopreply = 1;
     }
-    else
-    {
-    }
 }
 
 void ScoreboardMain::Changed() //Changed Score,etc
@@ -279,7 +278,9 @@ void ScoreboardMain::on_Player1UP_Button_clicked() //Player1_Up Button
     if(ui->pushButton->text() == "Disable")
     {
         client->write(QString("Player1_Score:" + QString::number(Player1_Score) + "\n").toUtf8());
-    }else{
+    }
+    else
+    {
         return;
     }
 }
@@ -291,7 +292,9 @@ void ScoreboardMain::on_Player1DOWN_Button_clicked() //Player1_Down Button
     if(ui->pushButton->text() == "Disable")
     {
         client->write(QString("Player1_Score:" + QString::number(Player1_Score) + "\n").toUtf8());
-    }else{
+    }
+    else
+    {
         return;
     }
 }
@@ -303,7 +306,9 @@ void ScoreboardMain::on_Player2UP_Button_clicked() //Player2_Up Button
     if(ui->pushButton->text() == "Disable")
     {
         client->write(QString("Player2_Score:" + QString::number(Player2_Score) + "\n").toUtf8());
-    }else{
+    }
+    else
+    {
         return;
     }
 }
@@ -315,7 +320,9 @@ void ScoreboardMain::on_Player2DOWN_Button_clicked() //Player2_Down Button
     if(ui->pushButton->text() == "Disable")
     {
         client->write(QString("Player2_Score:" + QString::number(Player2_Score) + "\n").toUtf8());
-    }else{
+    }
+    else
+    {
         return;
     }
 }
@@ -328,6 +335,7 @@ void ScoreboardMain::on_Update_Team_Button_clicked() //Update Team Name Button
     Player1_Name = Player1N.toUtf8().constData(), Player2_Name = Player2N.toUtf8().constData();
     Player1_Id = Player1I.toUtf8().constData(), Player2_Id = Player2I.toUtf8().constData();
     Round= RoundI.toUtf8().constData(), NR_text=TextNRI.toUtf8().constData(); NRS_text=TextNRSI.toUtf8().constData();
+
     if(ui->checkBox->isChecked())
     {
         writexml();
@@ -485,8 +493,8 @@ void ScoreboardMain::on_Start_Button_clicked() //Start button
 {
     Clock_button++;
     if(minu > 0 && many == false && Stopwatch_input == false){
-    speed = Normal_Speed;
-    clock_symbol = ":";
+        speed = Normal_Speed;
+        clock_symbol = ":";
     }
     /*if(countu == true && milli == false)
     {
@@ -506,31 +514,32 @@ void ScoreboardMain::on_Start_Button_clicked() //Start button
         seco = 10;
         seconds_zero = "";
         clock_symbol = ".";
-    }else if(minu == 0 && Stopwatch_input == false){
-    speed = Normal_Speed;
-    clock_symbol = ":";
-    many = false;
+    }
+    else if(minu == 0 && Stopwatch_input == false){
+        speed = Normal_Speed;
+        clock_symbol = ":";
+        many = false;
     }
     if(many == false && Stopwatch_input == true && Milliseconds == true)
     {
-    many = false;
-    speed = Millisecond_Speed;
-    minu = seco;
-    clock_symbol = ".";
+        many = false;
+        speed = Millisecond_Speed;
+        minu = seco;
+        clock_symbol = ".";
     }
     if(minu == 0 && many == false && Stopwatch_input == true && Milliseconds == false)
     {
-    many = true;
-    speed = Normal_Speed;
-    clock_symbol = ":";
-    if(seco < 9 && many == true)
-    {
-        seconds_zero = "0";
-    }
-    if(seco > 9)
-    {
-    seconds_zero = "";
-    }
+        many = true;
+        speed = Normal_Speed;
+        clock_symbol = ":";
+        if(seco < 9 && many == true)
+        {
+            seconds_zero = "0";
+        }
+        if(seco > 9)
+        {
+        seconds_zero = "";
+        }
     }
     if(Clock_button == 2 && Stopwatch_input == false)
     {
@@ -558,26 +567,27 @@ void ScoreboardMain::on_Start_Button_clicked() //Start button
     }
     if(Clock_button == 3 && Stopwatch_input == true)
     {
-     Clock_button = 1;
-     if(saved_speed == Normal_Speed)
-     {
-         speed = Normal_Speed;
-     }else if(saved_speed == Millisecond_Speed)
-     {
-         speed = Millisecond_Speed;
-     }
+        Clock_button = 1;
+        if(saved_speed == Normal_Speed)
+        {
+            speed = Normal_Speed;
+        }
+        else if(saved_speed == Millisecond_Speed)
+        {
+            speed = Millisecond_Speed;
+        }
     }
     if(Clock_button == 1 && Stopwatch_input == false)
     {
-    input_stop = true;
-    ui->Start_Button->setText("Stop");
-    ScoreboardMain::Timer_Control();
+        input_stop = true;
+        ui->Start_Button->setText("Stop");
+        ScoreboardMain::Timer_Control();
     }
     if(Clock_button == 1 && Stopwatch_input == true)
     {
-    input_stop = true;
-    ui->Start_Button->setText("Stop");
-    ScoreboardMain::Stopwatch_Control();
+        input_stop = true;
+        ui->Start_Button->setText("Stop");
+        ScoreboardMain::Stopwatch_Control();
     }
 }
 
@@ -591,7 +601,7 @@ void ScoreboardMain::Stopwatch_Control() //Stopwatch Control
     }
     if(seco > 9)
     {
-    seconds_zero = "";
+        seconds_zero = "";
     }
        // seco++;
     if(minu > 1 && Milliseconds == true)
@@ -605,7 +615,7 @@ void ScoreboardMain::Stopwatch_Control() //Stopwatch Control
         }
         if(seco > 9)
         {
-        seconds_zero = "";
+            seconds_zero = "";
         }
     }
     clock->start(speed);
@@ -621,7 +631,7 @@ void ScoreboardMain::Timer_Control() //Timer Control
     }
     if(seco > 9)
     {
-    seconds_zero = "";
+        seconds_zero = "";
     }
     if(minu < 9 && many == false && Minute_Zero == true)
     {
@@ -629,7 +639,7 @@ void ScoreboardMain::Timer_Control() //Timer Control
     }
     if(minu > 9 && Minute_Zero == true)
     {
-    minutes_zero = "";
+        minutes_zero = "";
     }
     if(minu == -1)
     {
@@ -658,10 +668,10 @@ void ScoreboardMain::Stopwatch() //Stopwatch
         {
             seconds_zero = "0";
 
-        many = true;
-        clock_symbol = ":";
-        speed = Normal_Speed;
-    }
+            many = true;
+            clock_symbol = ":";
+            speed = Normal_Speed;
+        }
     }
     if(minu < 10 && Minute_Zero == true)
     {
@@ -691,7 +701,8 @@ void ScoreboardMain::Stopwatch() //Stopwatch
     if(seco < 9 && Milliseconds == false)
     {
         seconds_zero = "0";
-    }else if(seco > 8 && Milliseconds == false){
+    }
+    else if(seco > 8 && Milliseconds == false){
         seconds_zero = "";
     }
     if(minu == mins && seco == secs && to_switch == true)
@@ -725,83 +736,84 @@ void ScoreboardMain::Timer() //Timer
     //seco--;
     if(seco > 11)
     {
-    seconds_zero = "";
+        seconds_zero = "";
     }
- ui->Clock_Label->setText("  " + QString::fromStdString(minutes_zero) + QString::number(minu) + QString::fromStdString(clock_symbol) + QString::fromStdString(seconds_zero) + QString::number(seco));
- di->Clock(QString::fromStdString(minutes_zero) + QString::number(minu) + QString::fromStdString(clock_symbol) + QString::fromStdString(seconds_zero) + QString::number(seco));
- if(ui->checkBox->isChecked())
- {
-     Clock_text = QString::fromStdString(minutes_zero) + QString::number(minu) + QString::fromStdString(clock_symbol) + QString::fromStdString(seconds_zero) + QString::number(seco);
-     writexml();
- }
- Clock_Output.open(".\\Output\\Clock.txt");
- Clock_Output << minutes_zero << minu << clock_symbol << seconds_zero << seco;
- Clock_Output.close();
- if(ui->pushButton->text() == "Disable")
- {
-     client->write(QString("Clock:  " + QString::fromStdString(minutes_zero) + QString::number(minu) + QString::fromStdString(clock_symbol) + QString::fromStdString(seconds_zero) + QString::number(seco)).toUtf8());
- }
- if(getinput == true)
- {
-     ui->Minutes_Input->setValue(minu);
-     ui->Seconds_Input->setValue(seco);
-
- }
- if(minu == 1 && Milliseconds == true && seco == 0 && many == false)
- {
-     many = true;
-     seco = 10;
-     minu = 59;
-     speed = Millisecond_Speed;
-     seconds_zero = "";
-     clock_symbol = ".";
-     clock->start(speed);
- }
- if(seco == 0 && many == false)
- {
-   seco = 60;
-   minu--;
- }
- if(minu < 10 && many == 0 && Minute_Zero == true)
- {
-     minutes_zero = "0";
- }else
- {
-     minutes_zero = "";
- }
- if(minu == mins && seco == secs && to_switch == true)
- {
-     ScoreboardMain::on_Start_Button_clicked();
-     if(!ui->BrowseFile_Input->text().isEmpty())
-     {
-     player->play();
-     ui->StopMusic_Button->setVisible(true);
-     ui->TestSound_Button->setText("Stop Sound");
+    ui->Clock_Label->setText("  " + QString::fromStdString(minutes_zero) + QString::number(minu) + QString::fromStdString(clock_symbol) + QString::fromStdString(seconds_zero) + QString::number(seco));
+    di->Clock(QString::fromStdString(minutes_zero) + QString::number(minu) + QString::fromStdString(clock_symbol) + QString::fromStdString(seconds_zero) + QString::number(seco));
+    if(ui->checkBox->isChecked())
+    {
+        Clock_text = QString::fromStdString(minutes_zero) + QString::number(minu) + QString::fromStdString(clock_symbol) + QString::fromStdString(seconds_zero) + QString::number(seco);
+        writexml();
+    }
+    Clock_Output.open(".\\Output\\Clock.txt");
+    Clock_Output << minutes_zero << minu << clock_symbol << seconds_zero << seco;
+    Clock_Output.close();
+    if(ui->pushButton->text() == "Disable")
+    {
+        client->write(QString("Clock:  " + QString::fromStdString(minutes_zero) + QString::number(minu) + QString::fromStdString(clock_symbol) + QString::fromStdString(seconds_zero) + QString::number(seco)).toUtf8());
+    }
+    if(getinput == true)
+    {
+        ui->Minutes_Input->setValue(minu);
+        ui->Seconds_Input->setValue(seco);
+    }
+    if(minu == 1 && Milliseconds == true && seco == 0 && many == false)
+    {
+        many = true;
+        seco = 10;
+        minu = 59;
+        speed = Millisecond_Speed;
+        seconds_zero = "";
+        clock_symbol = ".";
+        clock->start(speed);
+    }
+    if(seco == 0 && many == false)
+    {
+        seco = 60;
+        minu--;
+    }
+    if(minu < 10 && many == 0 && Minute_Zero == true)
+    {
+        minutes_zero = "0";
+    }
+    else
+    {
+        minutes_zero = "";
+    }
+    if(minu == mins && seco == secs && to_switch == true)
+    {
+        ScoreboardMain::on_Start_Button_clicked();
+        if(!ui->BrowseFile_Input->text().isEmpty())
+        {
+            player->play();
+            ui->StopMusic_Button->setVisible(true);
+            ui->TestSound_Button->setText("Stop Sound");
+        }
      }
-     }
- if(seco < 11 && many == false)
- {
-     seconds_zero = "0";
- }
- if(minu < 10 && many == 0 && Minute_Zero == true)
- {
-     minutes_zero = "0";
- }else
- {
-     minutes_zero = "";
- }
- if(seco == 0 && many == true)
- {
-     minu--;
-     seco = 10;
- }
- seco--;
- if(minu == -1 && seco == 59 && Milliseconds == false)
- {
-     clock->stop();
-     ui->Testing->setText("Error Output:");
-     ui->Clock_Label->setText("  00:00");
-     ui->Start_Button->setText("Start");
+    if(seco < 11 && many == false)
+    {
+        seconds_zero = "0";
+    }
+    if(minu < 10 && many == 0 && Minute_Zero == true)
+    {
+        minutes_zero = "0";
+    }
+    else
+    {
+        minutes_zero = "";
+    }
+    if(seco == 0 && many == true)
+    {
+        minu--;
+        seco = 10;
+    }
+    seco--;
+    if(minu == -1 && seco == 59 && Milliseconds == false)
+    {
+        clock->stop();
+        ui->Testing->setText("Error Output:");
+        ui->Clock_Label->setText("  00:00");
+        ui->Start_Button->setText("Start");
      Clock_button = 0;
      minu = 0;
      seco = 0;
@@ -812,34 +824,34 @@ void ScoreboardMain::Timer() //Timer
      speed = Normal_Speed;
      if(!ui->BrowseFile_Input->text().isEmpty())
      {
-     player->play();
-     ui->StopMusic_Button->setVisible(true);
-     ui->TestSound_Button->setText("Stop Sound");
+        player->play();
+        ui->StopMusic_Button->setVisible(true);
+        ui->TestSound_Button->setText("Stop Sound");
      }
      clock->stop();
  }
  if(minu == 0 && seco == 0 && Milliseconds == true)
  {
-     clock->stop();
-     ui->Testing->setText("Error Output:");
-     ui->Clock_Label->setText("  00:00");
-     ui->Start_Button->setText("Start");
-     Clock_button = 0;
-     minu = 0;
-     seco = 0;
-     input_stop = false;
-     many = 0;
-     ui->Seconds_Input->setValue(0);
-     ui->Minutes_Input->setValue(0);
-     speed = Normal_Speed;
-     if(!ui->BrowseFile_Input->text().isEmpty())
-     {
-     player->play();
-     ui->StopMusic_Button->setVisible(true);
-     ui->TestSound_Button->setText("Stop Sound");
-     }
-     clock->stop();
- }
+    clock->stop();
+    ui->Testing->setText("Error Output:");
+    ui->Clock_Label->setText("  00:00");
+    ui->Start_Button->setText("Start");
+    Clock_button = 0;
+    minu = 0;
+    seco = 0;
+    input_stop = false;
+    many = 0;
+    ui->Seconds_Input->setValue(0);
+    ui->Minutes_Input->setValue(0);
+    speed = Normal_Speed;
+    if(!ui->BrowseFile_Input->text().isEmpty())
+    {
+        player->play();
+        ui->StopMusic_Button->setVisible(true);
+        ui->TestSound_Button->setText("Stop Sound");
+    }
+    clock->stop();
+    }
 }
 
 void ScoreboardMain::on_Reset_Button_clicked() //Reset Clock button
@@ -847,7 +859,9 @@ void ScoreboardMain::on_Reset_Button_clicked() //Reset Clock button
     if(Clock_button == 1)
     {
         ui->Testing->setText("Error Output: Please stop your timer");
-    }else{
+    }
+    else
+    {
     Clock_button = 0,many = 0;
     if(presetbool == true && PresetRadio == 1 && Stopwatch_input == false)
     {
@@ -868,9 +882,10 @@ void ScoreboardMain::on_Reset_Button_clicked() //Reset Clock button
         ui->Clock_Label->setText("  40:00");
         if(ui->pushButton->text() == "Disable")
         {
-        client->write(QString("Clock:  40:00").toUtf8());
+            client->write(QString("Clock:  40:00").toUtf8());
         }
-    }else if(presetbool == true && PresetRadio == 2 && Stopwatch_input == false)
+    }
+    else if(presetbool == true && PresetRadio == 2 && Stopwatch_input == false)
     {
         ui->Clock_Label->setText("  60:00");
         ui->Seconds_Input->setValue(0);
@@ -889,9 +904,10 @@ void ScoreboardMain::on_Reset_Button_clicked() //Reset Clock button
         ui->Clock_Label->setText("  60:00");
         if(ui->pushButton->text() == "Disable")
         {
-        client->write(QString("Clock:  60:00").toUtf8());
+            client->write(QString("Clock:  60:00").toUtf8());
         }
-    }else if(presetbool == true && PresetRadio == 3 && Stopwatch_input == false)
+    }
+    else if(presetbool == true && PresetRadio == 3 && Stopwatch_input == false)
     {
         ui->Clock_Label->setText("  65:00");
         ui->Seconds_Input->setValue(0);
@@ -910,9 +926,10 @@ void ScoreboardMain::on_Reset_Button_clicked() //Reset Clock button
         ui->Clock_Label->setText("  65:00");
         if(ui->pushButton->text() == "Disable")
         {
-        client->write(QString("Clock:  65:00").toUtf8());
+            client->write(QString("Clock:  65:00").toUtf8());
         }
-    }else if(presetbool == true && PresetRadio == 4 && Stopwatch_input == false)
+    }
+    else if(presetbool == true && PresetRadio == 4 && Stopwatch_input == false)
     {
         ui->Clock_Label->setText("  70:00");
         ui->Seconds_Input->setValue(0);
@@ -931,9 +948,11 @@ void ScoreboardMain::on_Reset_Button_clicked() //Reset Clock button
         ui->Clock_Label->setText("  70:00");
         if(ui->pushButton->text() == "Disable")
         {
-        client->write(QString("Clock:  70:00").toUtf8());
+            client->write(QString("Clock:  70:00").toUtf8());
         }
-    }else{
+    }
+    else
+    {
         if(ui->checkBox->isChecked())
         {
             Clock_text = "00:00";
@@ -959,7 +978,7 @@ void ScoreboardMain::on_Reset_Button_clicked() //Reset Clock button
         clock_symbol = ":";
         if(ui->pushButton->text() == "Disable")
         {
-        client->write(QString("Clock:  00:00").toUtf8());
+            client->write(QString("Clock:  00:00").toUtf8());
         }
     }
     many = false;
@@ -976,17 +995,17 @@ void ScoreboardMain::on_Minutes_Input_valueChanged(int arg0)
 {
     if(input_stop == false)
     {
-    minu = arg0;
-    ifclockinputchanged();
+        minu = arg0;
+        ifclockinputchanged();
     }
-    }
+}
 
 void ScoreboardMain::on_Seconds_Input_valueChanged(int arg1)
 {
     if(input_stop == false)
     {
-    seco = arg1;
-     ifclockinputchanged();
+        seco = arg1;
+        ifclockinputchanged();
     }
 }
 
@@ -1012,7 +1031,9 @@ void ScoreboardMain::on_CurrentTime_Checkbox_clicked(bool current)
         currenttime = new QTimer(this);
         connect(currenttime, SIGNAL(timeout()),this, SLOT(timeclock()));
         currenttime->start(1000);
-    }else{
+    }
+    else
+    {
         currenttime->stop();
         ui->Clock_Label->setText("  00:00");
         if(ui->checkBox->isChecked())
@@ -1025,7 +1046,7 @@ void ScoreboardMain::on_CurrentTime_Checkbox_clicked(bool current)
         Clock_Output.close();
         seconds_zero = "";
         minutes_zero = "";
-}
+    }
 }
 
 void ScoreboardMain::timeclock()
@@ -1133,10 +1154,9 @@ void ScoreboardMain::on_About_ActionBar_triggered()
     QMessageBox about;
     about.setText("About");
     about.setInformativeText("                                                                                                                  ");
-    about.setInformativeText("This Program is made by: HakanCarlstrom and based upon Scoreboard+ by ha0511kr \n Idea by: XxRocketShotxX \n Adding Soon: \n "
-                             "\nIf you have any questions or suggetions please contact me in \n"
+    about.setInformativeText("This Program is made by: HakanCarlstrom and based upon Scoreboard+ by ha0511kr \n"
+                             "\nIf you have any questions or suggetions please contact me at \n"
                              "Email: hakan.aw.carlstrom at gmail.com \n"
-                             "OBS fourm page disscusion \n"
                              "\nThank you for downloading and enjoy Scoreboard for Netrunner");
     about.exec();
 }
@@ -1153,11 +1173,9 @@ void ScoreboardMain::on_ChangeLog_ActionBar_triggered()
 {
     QMessageBox Changelog;
     Changelog.setText("Changelog:");
-    Changelog.setInformativeText("0.9: \n"
-                           "- Based on Scoreboard+ 1.8.1Dev but revamped for Netrunner"
+    Changelog.setInformativeText("Based on Scoreboard+ 1.8.1Dev but revamped for Netrunner"
                            "Coming Soon:\n"
-                           "Pictures for Choosen Id:s"
-                           "And More... Please leave a suggestions in the comments");
+                           "- Possibility to show Cards from Netrunnerdb.com");
     Changelog.exec();
 }
 
@@ -1300,14 +1318,6 @@ void ScoreboardMain::acceptConnection()
     ui->pushButton->setText("Disable");
     //Connect to the startread to read from the client
     connect(client, SIGNAL(readyRead()),this,SLOT(startRead()));
-}
-
-void ScoreboardMain::on_actionSickmind33_triggered()
-{
-    QMessageBox Sick;
-    Sick.setText("About: Sickmind33");
-    Sick.setInformativeText("Thank you to Sickmind33 for creating an awesome icon!\nPress Ok to continue");
-    Sick.exec();
 }
 
 void ScoreboardMain::on_PlaySound_Checkbox_clicked(bool checked10)
@@ -1474,14 +1484,6 @@ void ScoreboardMain::on_Seventy_Radio_clicked()
     }
 }
 
-void ScoreboardMain::on_actionXxRocketshotxX_triggered()
-{
-    QMessageBox Xx;
-    Xx.setText("About: XxRocketshotxX");
-    Xx.setInformativeText("Thank you an idea of Scoreboard+!");
-    Xx.exec();
-}
-
 void ScoreboardMain::xml()
 {
     //Creates QFile to the directory
@@ -1542,14 +1544,9 @@ void ScoreboardMain::on_checkBox_clicked(bool checked20)
 void ScoreboardMain::on_actionDonate_triggered()
 {
     QMessageBox DonateBox;
-    DonateBox.setText("<a href=https://goo.gl/fQD3gI>Donate!</a>");
+    //DonateBox.setText("<a href=https://goo.gl/fQD3gI>Donate!</a>");
     DonateBox.setInformativeText("Want to support me? I know this is completely optional\nbut it will definitely help me to keep working on this project!\nI don't care how much remember,every little bit counts!");
     DonateBox.exec();
-}
-
-void ScoreboardMain::on_Player1Name_Input_returnPressed()
-{
-//
 }
 
 void ScoreboardMain::on_SoundSpeed_Slider_sliderMoved(int slidepos)
@@ -1557,7 +1554,7 @@ void ScoreboardMain::on_SoundSpeed_Slider_sliderMoved(int slidepos)
     qreal test = (qreal)slidepos;
     if(test < 0.0)
     {
-        test = -0.9;
+        //test = -0.9;
     }
     player->setPlaybackRate(test);
 }

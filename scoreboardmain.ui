@@ -1229,9 +1229,9 @@ start</string>
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>170</y>
+        <y>165</y>
         <width>71</width>
-        <height>16</height>
+        <height>21</height>
        </rect>
       </property>
       <property name="font">
@@ -1355,8 +1355,6 @@ start</string>
     <property name="title">
      <string>Contributers</string>
     </property>
-    <addaction name="actionXxRocketshotxX"/>
-    <addaction name="actionSickmind33"/>
    </widget>
    <widget class="QMenu" name="menuDonate">
     <property name="font">
