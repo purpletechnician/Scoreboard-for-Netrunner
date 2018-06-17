@@ -1,4 +1,5 @@
-# Scoreboard-for-Netrunner 0.94
+# Scoreboard-for-Netrunner 0.95
+0,95 Fixing bugs in GUI and code
 0,94 Fixing bugs in GUI, Up/next-screen-presentation and update-functionality.<br/>
 0,93 Added the possibility to show "up-next"-screen between rounds<br/>
 0,92 Fixing bugs<br/>
