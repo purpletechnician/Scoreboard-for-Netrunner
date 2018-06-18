@@ -32,7 +32,13 @@ private slots:
 
     void WarningBox();
 
-    void ScoreboardGetCards();
+    void readyToReadCards(QNetworkReply *reply);
+
+    void getCardsResult(QNetworkReply *reply);
+
+    void on_UA_Button_clicked();
+
+    void on_UpNextScreen_clicked();
 
     void on_Player1UP_Button_clicked();
 
@@ -100,8 +106,6 @@ private slots:
 
     void startRead();
 
-    //void on_actionSickmind33_triggered();
-
     void on_PlaySound_Checkbox_clicked(bool checked10);
 
     void on_Browsefile_Button_clicked();
@@ -132,8 +136,6 @@ private slots:
 
     void on_Seventy_Radio_clicked();
 
-    //void on_actionXxRocketshotxX_triggered();
-
     void xml();
 
     void on_checkBox_clicked(bool checked20);
@@ -143,8 +145,6 @@ private slots:
     void replyFinished(QNetworkReply *reply);
 
     void on_actionDonate_triggered();
-
-    //void on_Player1Name_Input_returnPressed();
 
     void on_SoundSpeed_Slider_sliderMoved(int slidepos);
 

@@ -10,17 +10,27 @@
 #include <sstream>
 #include <QMediaMetaData>
 #include <QComboBox>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonValue>
+
 #ifdef Q_OS_WIN
     #include <windows.h> //For Hotkey/Shortcut key
 #endif
 
 using namespace std;
 
-string version_info = "0.94";
+string version_info = "0.95";
 string Update_URL = "https://github.com/purpletechnician/Scoreboard-for-Netrunner";
+string CardDB_URL = "http://www.netrunnerdb.com/api/2.0/public/cards" ;
+//string CardDB_URL = "http://www.netrunnerdb.com/api/2.0/public/card/01001" ;
 
 string Window_Name = "Scoreboard for Netrunner "+version_info; //Please Change this after a update!
 QString QUpdate_URL = QString::fromStdString(Update_URL);
+QString QCardDB_URL = QString::fromStdString(CardDB_URL);
+
+QString *cardJsonData(new QString) ;
 
 int Player1_Score = 0, Player2_Score = 0; //Team Score integer
 int minu = 65, seco = 0; //Minutes and Seconds integer
@@ -49,7 +59,8 @@ QString Clock_text = "65:00"; //Clock Text
 QList<QString> IdList;
 
 ofstream Player1_Name_Output, Player2_Name_Output, Player1_Id_Output, Player2_Id_Output, Player1_Score_Output, Player2_Score_Output, Period_Output, Clock_Output; //Ofstream for outputting to .txt
-ofstream Round_Output, Round_info_Output, NR_Output, NRS_Output;
+ofstream Round_Output, Round_info_Output, NR_Output, NRS_Output, UA_Output;
+ofstream CardDB ;
 
 ScoreboardMain::ScoreboardMain(QWidget *parent) :
     QMainWindow(parent),
@@ -81,11 +92,14 @@ void ScoreboardMain::Opened() //Resets all
     Round_Output.open(".\\Output\\Round.txt");
     NR_Output.open(".\\Output\\Next_round.txt");
     NRS_Output.open(".\\Output\\Next_round_start.txt");
+    UA_Output.open(".\\Output\\Unattended.txt");
 
     Player1_Name_Output << "";
     Player2_Name_Output << "";
     Player1_Id_Output << "";
     Player2_Id_Output << "";
+    UA_Output << "";
+
     if (ui->NoScoreIdOutput->isChecked())
     {
         Player1_Score_Output << "";
@@ -100,6 +114,7 @@ void ScoreboardMain::Opened() //Resets all
     Round_Output << "";
     NR_Output << "";
     NRS_Output << "";
+    UA_Output << "";
 
     Player1_Name_Output.close();
     Player2_Name_Output.close();
@@ -111,6 +126,7 @@ void ScoreboardMain::Opened() //Resets all
     Round_Output.close();
     NR_Output.close();
     NRS_Output.close();
+    UA_Output.close();
 
     IdList.append("Anarch: Quetzal"); IdList.append("Anarch: Edward Kim"); IdList.append("Anarch: MaxX"); IdList.append("Anarch: Valencia Estevez"); IdList.append("Anarch: Null");
     IdList.append("Anarch: Omar Keung"); IdList.append("Anarch: Alice Merchant"); IdList.append("Anarch: Reina Roja"); IdList.append("Anarch: Freedom Khumalo");
@@ -161,28 +177,88 @@ void ScoreboardMain::Opened() //Resets all
     ui->StopMusic_Button->setVisible(false);
     ui->Warning_Label->setVisible(false);
 
-    //Makes new QNetworkAccessMangager and parents to this
+    /*QPalette pal = ui->Start_Button->palette();
+    pal.setColor(QPalette::Button, QColor(Qt::green));
+    ui->Start_Button->setAutoFillBackground(true);
+    ui->Start_Button->setPalette(pal);*/
+    ui->Start_Button->setStyleSheet("* { background-color: rgba(0,255,0) }");
+
+    //Makes new QNetworkAccessManager and parents to this
     manager = new QNetworkAccessManager(this);
     //Get From the URL
     if (QUrl(QUpdate_URL).isValid())
     {
-        ui->Testing->setText("Valid URL");
+        qDebug () << "Valid Update-URL";
     }
     //Connect to replyFinished QnetworkReply
     connect(manager,SIGNAL(finished(QNetworkReply*)),this,SLOT(replyFinished(QNetworkReply*)));
     manager->get(QNetworkRequest(QUrl(QUpdate_URL)));
 
-    ScoreboardMain::ScoreboardGetCards();
+    if (QUrl(QCardDB_URL).isValid())
+    {
+        qDebug () << "Valid CardDB-URL";
+    }
+    // Connect networkManager response to the handler
+    //connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getCardsResult(QNetworkReply*)));
+    //connect(manager, SIGNAL(QIODevice::readyRead()), this, SLOT(readyToReadCards(QNetworkReply*)));
+    // We get the data, namely JSON file from a site on a particular url
+    //request.setHeader(QNetworkRequest::ContentTypeHeader, “application/json”);
+    //manager->get(QNetworkRequest(QUrl(QCardDB_URL)));
+    getCardsResult();
 }
 
-void ScoreboardMain::ScoreboardGetCards()
+void ScoreboardMain::getCardsResult()
 {
+    qDebug() << "Cards";
+    CardDB.open(".\\CardDB\\cards.json");
+    // If there are no errors
+    //if(!reply->error()){
 
+        // So create an object Json Document, by reading into it all the data from the response
+        //qDebug() << reply->readAll();
+        QString strReply = CardDB->readAll();
+
+        qDebug() << strReply;
+
+        //QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+        //QJsonDocument document = QJsonDocument::fromJson(cardJsonBytes);
+
+        // Taking from the document root object
+        //QJsonObject root = document.object();
+
+        //qDebug() << document ;
+        //qDebug() << root;
+        /* We find the object "departament", which is the very first in the root object.
+         * Use the keys() method gets a list of all objects and the first index
+         * Take away the name of the object on which we obtain its value
+         * */
+        /*ui->textEdit->append(root.keys().at(0) + ": " + root.value(root.keys().at(0)).toString());
+
+        // The second value prescribe line
+        QJsonValue jv = root.value("employees");
+        // If the value is an array, ...
+        if(jv.isArray()){
+            // ... then pick from an array of properties
+            QJsonArray ja = jv.toArray();
+            // Going through all the elements of the array ...
+            for(int i = 0; i < ja.count(); i++){
+                QJsonObject subtree = ja.at(i).toObject();
+                // Taking the values of the properties and last name by adding them to textEdit
+                ui->textEdit->append(subtree.value("firstName").toString() +
+                                     " " +
+                                     subtree.value("lastName").toString());
+            }
+        }
+        // At the end we take away the property of the number of employees of the department and also to output textEdit
+        ui->textEdit->append(QString::number(root.value("number").toInt()));*/
+    //}
+    CardDB.close();
 }
 
 
 void ScoreboardMain::replyFinished(QNetworkReply *reply)
 {
+    //qDebug() << "Update";
     string getstring = "";
     size_t str;
     int a = 0;
@@ -279,6 +355,49 @@ void ScoreboardMain::Changed() //Changed Score,etc
     ui->Player2Score_Label->setText(QString::number(Player2_Score));
 }
 
+void ScoreboardMain::on_UA_Button_clicked() //Unattended Button
+{
+    UA_Output.open(".\\Output\\Unattended.txt");
+    if (ui->UA_Button->text()=="set Unattended")
+    {
+        UA_Output << "Currently unattended";
+        ui->UA_Button->setText("Unattended");
+    }
+    else
+    {
+        UA_Output << "";
+        ui->UA_Button->setText("set Unattended");
+    }
+    UA_Output.close();
+}
+
+void ScoreboardMain::on_UpNextScreen_clicked() //Unattended Button
+{
+    QString TextNRSI= ui->Next_round_start_Input->text(), TextNRI=ui->Next_round_Input->text();
+    NR_text=TextNRI.toUtf8().constData(); NRS_text=TextNRSI.toUtf8().constData();
+    NR_Output.open(".\\Output\\Next_round.txt");
+    NRS_Output.open(".\\Output\\Next_round_start.txt");
+    if (ui->UpNextScreen->text()=="Show UpNextScreen")
+    {
+         QFile::copy(".\\ID_Pictures\\UpNext.png",".\\Output\\UpNext.png");
+         NR_Output<<NR_text;
+         NRS_Output<<NRS_text;
+         ui->UpNextScreen->setText("Hide UpNextScreen");
+    }
+    else
+    {
+        if (QFile::exists(".\\Output\\UpNext.png"))
+        {
+            QFile::remove(".\\Output\\UpNext.png");
+        }
+        NR_Output<<"";
+        NRS_Output<<"";
+        ui->UpNextScreen->setText("Show UpNextScreen");
+    }
+    NR_Output.close();
+    NRS_Output.close();
+}
+
 void ScoreboardMain::on_Player1UP_Button_clicked() //Player1_Up Button
 {
     Player1_Score++;
@@ -339,11 +458,10 @@ void ScoreboardMain::on_Update_Team_Button_clicked() //Update Team Name Button
 {
     QString Player1N = ui->Player1Name_Input->text(), Player2N = ui->Player2Name_Input->text();
     QString Player1I = ui->Player1Id_Input->currentText(), Player2I = ui->Player2Id_Input->currentText();
-    QString RoundI = ui->Round_Input->text(), TextNRSI= ui->Next_round_start_Input->text(), TextNRI=ui->Next_round_Input->text();
+    QString RoundI = ui->Round_Input->text();
     Player1_Name = Player1N.toUtf8().constData(), Player2_Name = Player2N.toUtf8().constData();
     Player1_Id = Player1I.toUtf8().constData(), Player2_Id = Player2I.toUtf8().constData();
-    Round= RoundI.toUtf8().constData(), NR_text=TextNRI.toUtf8().constData(); NRS_text=TextNRSI.toUtf8().constData();
-
+    Round= RoundI.toUtf8().constData();
     if(ui->checkBox->isChecked())
     {
         writexml();
@@ -354,13 +472,12 @@ void ScoreboardMain::on_Update_Team_Button_clicked() //Update Team Name Button
         Player2_Name_Output.open(".\\Output\\Player2_Name.txt");
         Round_Output.open(".\\Output\\Round.txt");
         Round_info_Output.open(".\\Output\\Round_info.txt");
-        NR_Output.open(".\\Output\\Next_round.txt");
-        NRS_Output.open(".\\Output\\Next_round_start.txt");
         Player1_Name_Output << Player1_Name;
         Player2_Name_Output << Player2_Name;
         Player1_Id_Output.open(".\\Output\\Player1_Id.txt");
         Player2_Id_Output.open(".\\Output\\Player2_Id.txt");
         Round_Output << Round ;
+
         if(ui->Swiss_Radio->isChecked())
         {
             Round_info_Output << "Swiss Round " << Round;
@@ -441,30 +558,12 @@ void ScoreboardMain::on_Update_Team_Button_clicked() //Update Team Name Button
             QFile::copy(".\\ID_pictures\\AgendaPoint.png",".\\Output\\AgendaPoint.png");
         }
 
-        if (ui->UpNextScreen->isChecked())
-        {
-             QFile::copy(".\\ID_Pictures\\UpNext.png",".\\Output\\UpNext.png");
-             NR_Output<<NR_text;
-             NRS_Output<<NRS_text;
-        }
-        else
-        {
-            if (QFile::exists(".\\Output\\UpNext.png"))
-            {
-                QFile::remove(".\\Output\\UpNext.png");
-            }
-            NR_Output<<"";
-            NRS_Output<<"";
-        }
-
         Player1_Name_Output.close();
         Player2_Name_Output.close();
         Player1_Id_Output.close();
         Player2_Id_Output.close();
         Round_Output.close();
         Round_info_Output.close();
-        NR_Output.close();
-        NRS_Output.close();
     }
 
     di->Player1_Name(QString::fromStdString(Player1_Name));
@@ -596,6 +695,24 @@ void ScoreboardMain::on_Start_Button_clicked() //Start button
         input_stop = true;
         ui->Start_Button->setText("Stop");
         ScoreboardMain::Stopwatch_Control();
+    }
+    if (ui->Start_Button->text() == "Stop")
+    {
+        ui->Start_Button->setStyleSheet("* { background-color: rgba(255,0,0) }");
+        /*QPalette pal = ui->Start_Button->palette();
+        pal.setColor(QPalette::Button, QColor(Qt::red));
+        ui->Start_Button->setAutoFillBackground(true);
+        ui->Start_Button->setPalette(pal);
+        ui->Start_Button->update();*/
+    }
+    if (ui->Start_Button->text() == "Start")
+    {
+        ui->Start_Button->setStyleSheet("* { background-color: rgba(0,255,0) }");
+        /*QPalette pal = ui->Start_Button->palette();
+        pal.setColor(QPalette::Button, QColor(Qt::green));
+        ui->Start_Button->setAutoFillBackground(true);
+        ui->Start_Button->setPalette(pal);
+        ui->Start_Button->update();*/
     }
 }
 
