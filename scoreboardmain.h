@@ -32,9 +32,7 @@ private slots:
 
     void WarningBox();
 
-    void readyToReadCards(QNetworkReply *reply);
-
-    void getCardsResult(QNetworkReply *reply);
+    void getCardsResult();
 
     void on_UA_Button_clicked();
 

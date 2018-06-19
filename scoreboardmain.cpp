@@ -60,7 +60,7 @@ QList<QString> IdList;
 
 ofstream Player1_Name_Output, Player2_Name_Output, Player1_Id_Output, Player2_Id_Output, Player1_Score_Output, Player2_Score_Output, Period_Output, Clock_Output; //Ofstream for outputting to .txt
 ofstream Round_Output, Round_info_Output, NR_Output, NRS_Output, UA_Output;
-ofstream CardDB ;
+QFile CardDB ;
 
 ScoreboardMain::ScoreboardMain(QWidget *parent) :
     QMainWindow(parent),
@@ -177,10 +177,6 @@ void ScoreboardMain::Opened() //Resets all
     ui->StopMusic_Button->setVisible(false);
     ui->Warning_Label->setVisible(false);
 
-    /*QPalette pal = ui->Start_Button->palette();
-    pal.setColor(QPalette::Button, QColor(Qt::green));
-    ui->Start_Button->setAutoFillBackground(true);
-    ui->Start_Button->setPalette(pal);*/
     ui->Start_Button->setStyleSheet("* { background-color: rgba(0,255,0) }");
 
     //Makes new QNetworkAccessManager and parents to this
@@ -209,49 +205,26 @@ void ScoreboardMain::Opened() //Resets all
 
 void ScoreboardMain::getCardsResult()
 {
-    qDebug() << "Cards";
-    CardDB.open(".\\CardDB\\cards.json");
-    // If there are no errors
-    //if(!reply->error()){
-
-        // So create an object Json Document, by reading into it all the data from the response
-        //qDebug() << reply->readAll();
-        QString strReply = CardDB->readAll();
-
-        qDebug() << strReply;
-
-        //QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-        //QJsonDocument document = QJsonDocument::fromJson(cardJsonBytes);
-
-        // Taking from the document root object
-        //QJsonObject root = document.object();
-
-        //qDebug() << document ;
-        //qDebug() << root;
-        /* We find the object "departament", which is the very first in the root object.
-         * Use the keys() method gets a list of all objects and the first index
-         * Take away the name of the object on which we obtain its value
-         * */
-        /*ui->textEdit->append(root.keys().at(0) + ": " + root.value(root.keys().at(0)).toString());
-
-        // The second value prescribe line
-        QJsonValue jv = root.value("employees");
-        // If the value is an array, ...
-        if(jv.isArray()){
-            // ... then pick from an array of properties
-            QJsonArray ja = jv.toArray();
-            // Going through all the elements of the array ...
-            for(int i = 0; i < ja.count(); i++){
-                QJsonObject subtree = ja.at(i).toObject();
-                // Taking the values of the properties and last name by adding them to textEdit
-                ui->textEdit->append(subtree.value("firstName").toString() +
-                                     " " +
-                                     subtree.value("lastName").toString());
-            }
-        }
-        // At the end we take away the property of the number of employees of the department and also to output textEdit
-        ui->textEdit->append(QString::number(root.value("number").toInt()));*/
-    //}
+    qDebug() << QFile::exists(".\\CardDB\\cards.json");
+    CardDB.setFileName(".\\CardDB\\cards.json");
+    bool CardDBopen = CardDB.open(QIODevice::ReadOnly | QIODevice::Text);
+    qDebug() << CardDBopen;
+    qDebug() << "open";
+    QJsonParseError jsonError;
+    //QString Carddata = CardDB.readAll();
+    //qDebug() << Carddata;
+    QJsonDocument CardJson = QJsonDocument::fromJson(CardDB.readAll(),&jsonError);
+    //QJsonDocument CardJson = QJsonDocument::fromJson(Carddata.toUtf8(),&jsonError);
+    qDebug() << CardJson;
+    if (jsonError.error != QJsonParseError::NoError){
+      qDebug() << jsonError.errorString();
+    }
+    qDebug() << "parse done";
+    QList<QVariant> cardlist = CardJson.toVariant().toList();
+    qDebug() << "qlist done";
+    qDebug() << cardlist;
+    //QMap<QString, QVariant> cardmap = cardlist[0].toMap();
+    //qDebug() << cardmap["title"].toString();
     CardDB.close();
 }
 
