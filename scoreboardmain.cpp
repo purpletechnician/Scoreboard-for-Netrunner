@@ -45,7 +45,7 @@ int Clock_button = 0; //Start/Stop button
 int Normal_Speed = 1000, Millisecond_Speed = 93;
 int PresetRadio = 3;
 
-bool bol = false; //Open/Close for the server
+bool bol = false; //Open/Close for the serve
 bool many = false; //For milliseconds register
 bool input_stop = false; //Stop getting the number from the input
 bool getinput = false;
@@ -61,6 +61,19 @@ string Round = "", Round_info = "", NR_text="", NRS_text="";
 string clock_symbol = ":"; //Clock Symbol | Default = : | Milliseconds = .
 QString Clock_text = "65:00"; //Clock Text
 QList<QString> IdList;
+
+struct Card_info {
+    QString Title;
+    QString Code;
+    QString Image_url ;
+};
+QList<Card_info> Card_infoList ;
+
+struct Pack_info {
+    int Pack_code;
+    int Total_cards;
+};
+QList<Pack_info> Pack_infoList;
 
 ofstream Player1_Name_Output, Player2_Name_Output, Player1_Id_Output, Player2_Id_Output, Player1_Score_Output, Player2_Score_Output, Period_Output, Clock_Output; //Ofstream for outputting to .txt
 ofstream Round_Output, Round_info_Output, NR_Output, NRS_Output, UA_Output;
@@ -207,46 +220,59 @@ void ScoreboardMain::getCardsResult()
     connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getCardResult(QNetworkReply*)));
     // We get the data, namely JSON file from a site on a particular url
     //request.setHeader(QNetworkRequest::ContentTypeHeader, “application/json”);
-    QString Cardnumber = "01001";
-    for (int i=1; i<60;i++)
+    Pack_info pack_info;
+    pack_info = {1,113}; Pack_infoList.append(pack_info); // Core
+    pack_info = {2,120}; Pack_infoList.append(pack_info); // Genesis
+    pack_info = {3,55}; Pack_infoList.append(pack_info); // Creation&Control
+    pack_info = {4,120}; Pack_infoList.append(pack_info); // Spin
+    pack_info = {5,55}; Pack_infoList.append(pack_info); // Honor&Profit
+    pack_info = {6,120}; Pack_infoList.append(pack_info); // Lunar
+    pack_info = {7,55}; Pack_infoList.append(pack_info); // Order&Chaos
+    pack_info = {8,120}; Pack_infoList.append(pack_info); // SanSan
+    pack_info = {9,55}; Pack_infoList.append(pack_info); // Data&Destiny
+    pack_info = {10,120}; Pack_infoList.append(pack_info); // Mumbad
+    pack_info = {11,120}; Pack_infoList.append(pack_info); // Flashpoint
+    pack_info = {12,120}; Pack_infoList.append(pack_info); // Red Sand
+    pack_info = {13,57}; Pack_infoList.append(pack_info); // Terminal Directive
+    pack_info = {20,132}; Pack_infoList.append(pack_info); // Revised Core
+    pack_info = {21,120}; Pack_infoList.append(pack_info); // Kitara
+    pack_info = {22,57}; Pack_infoList.append(pack_info); // Reign and Reverie
+
+    QList<Pack_info>::iterator p;
+    for (p=Pack_infoList.begin(); p != Pack_infoList.end(); p++)
     {
-        QString Cardnumber = "010"+ QString("%1").arg(i,2,10,QChar('0')) ;
-        QString CardURL = QCardDB_URL+Cardnumber;
-        qDebug() << CardURL;
-        manager->get(QNetworkRequest(QUrl(CardURL)));
+        qDebug() <<(*p).Total_cards;
+
+        QString Cardnumber ;
+        for (int j=1; j<=(*p).Total_cards;j++)
+        {
+            QString Cardnumber = QString("%1").arg((*p).Pack_code,2,10,QChar('0'))+ QString("%1").arg(j,3,10,QChar('0')) ;
+            qDebug() << Cardnumber;
+            QString CardURL = QCardDB_URL+Cardnumber;
+            manager->get(QNetworkRequest(QUrl(CardURL)));
+        }
     }
 }
 
 void ScoreboardMain::getCardResult(QNetworkReply *replyCard)
 {
-    //qDebug() << QFile::exists(CardDB_filename);
-    //CardDB.setFileName(CardDB_filename);
-    //bool CardDBopen = CardDB.open(QIODevice::ReadOnly);
-    //qDebug() << CardDB_filename << ":" << CardDBopen;
-    //QFile CardDBopen(CardDB_filename);
-    //if (!CardDBopen.open(QIODevice::ReadOnly | QIODevice::Text))
-    //        return;
-    //QTextStream Cardtextfile(&CardDBopen);
-    //qDebug() << "open";
     QJsonParseError jsonError;
-    //QString Carddata = CardDB.readAll();
-    //QString Carddata = replyCard->readAll();
     QString Carddata = replyCard->readAll();
-    //qDebug() << Carddata;
     QJsonDocument CardJson = QJsonDocument::fromJson(Carddata.toUtf8(),&jsonError);
-    //QJsonDocument CardJson = QJsonDocument::fromJson(Carddata.toUtf8(),&jsonError);
-    //qDebug() << CardJson;
     if (jsonError.error != QJsonParseError::NoError){
       qDebug() << jsonError.errorString();
     }
-    //qDebug() << "parse done";
     QJsonArray CarddataArray = CardJson.object().value("data").toArray();
     foreach (const QJsonValue & v, CarddataArray)
     {
-        //QJsonValue Cardcode = v.toObject().value("code");
-        QString Cardtitle = v.toObject().value("title").toString();
-        QString Cardcode = v.toObject().value("code").toString();
-        qDebug() << Cardtitle << ":" << Cardcode;
+        Card_info temp_Card_info;
+        temp_Card_info.Title = v.toObject().value("title").toString();
+        temp_Card_info.Code = v.toObject().value("code").toString();
+        temp_Card_info.Image_url = v.toObject().value("image_url").toString();
+        if (temp_Card_info.Image_url == "")
+            temp_Card_info.Image_url = "https://www.netrunnerdb.com/card_image/"+temp_Card_info.Code+".png";
+        qDebug() << temp_Card_info.Title << ":" <<temp_Card_info.Code<<":"<<temp_Card_info.Image_url;
+        Card_infoList.append(temp_Card_info);
     }
     replyCard->deleteLater();
 }
