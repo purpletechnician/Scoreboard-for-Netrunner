@@ -34,6 +34,8 @@ private slots:
 
     void getCardsResult();
 
+    void getCardResult(QNetworkReply *replyCard);
+
     void on_UA_Button_clicked();
 
     void on_UpNextScreen_clicked();

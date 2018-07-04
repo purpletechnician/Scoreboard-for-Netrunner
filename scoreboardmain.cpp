@@ -14,6 +14,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
+#include <QFile>
 
 #ifdef Q_OS_WIN
     #include <windows.h> //For Hotkey/Shortcut key
@@ -21,12 +22,15 @@
 
 using namespace std;
 
-string version_info = "0.95";
+string version_info = "0.96"; //Please Change this after a update!
 string Update_URL = "https://github.com/purpletechnician/Scoreboard-for-Netrunner";
-string CardDB_URL = "http://www.netrunnerdb.com/api/2.0/public/cards" ;
+//string CardDB_URL = "http://www.netrunnerdb.com/api/2.0/public/cards" ;
+string CardDB_URL = "http://www.netrunnerdb.com/api/2.0/public/card/" ;
 //string CardDB_URL = "http://www.netrunnerdb.com/api/2.0/public/card/01001" ;
+//QString CardDB_filename = ".\\CardDB\\cards.json";
+//QString CardDB_filename = ".\\CardDB\\01001.json";
 
-string Window_Name = "Scoreboard for Netrunner "+version_info; //Please Change this after a update!
+string Window_Name = "Scoreboard for Netrunner "+version_info;
 QString QUpdate_URL = QString::fromStdString(Update_URL);
 QString QCardDB_URL = QString::fromStdString(CardDB_URL);
 
@@ -60,7 +64,7 @@ QList<QString> IdList;
 
 ofstream Player1_Name_Output, Player2_Name_Output, Player1_Id_Output, Player2_Id_Output, Player1_Score_Output, Player2_Score_Output, Period_Output, Clock_Output; //Ofstream for outputting to .txt
 ofstream Round_Output, Round_info_Output, NR_Output, NRS_Output, UA_Output;
-QFile CardDB ;
+ofstream CardDB ;
 
 ScoreboardMain::ScoreboardMain(QWidget *parent) :
     QMainWindow(parent),
@@ -129,25 +133,25 @@ void ScoreboardMain::Opened() //Resets all
     UA_Output.close();
 
     IdList.append("Anarch: Quetzal"); IdList.append("Anarch: Edward Kim"); IdList.append("Anarch: MaxX"); IdList.append("Anarch: Valencia Estevez"); IdList.append("Anarch: Null");
-    IdList.append("Anarch: Omar Keung"); IdList.append("Anarch: Alice Merchant"); IdList.append("Anarch: Reina Roja"); IdList.append("Anarch: Freedom Khumalo");
+    IdList.append("Anarch: Omar Keung"); IdList.append("Anarch: Alice Merchant"); IdList.append("Anarch: Reina Roja"); IdList.append("Anarch: Freedom Khumalo"); IdList.append("Anarch: Nathaniel Gnat Hall");
     IdList.append("Criminal: Iain Stirling"); IdList.append("Criminal: Ken Express Tenma"); IdList.append("Criminal: Silouette"); IdList.append("Criminal: Leela Patel");
     IdList.append("Criminal: Armand Geist Walker"); IdList.append("Criminal: Laramy Fisk");IdList.append("Criminal: Nero Severn");IdList.append("Criminal: Khan");
-    IdList.append("Criminal: Los"); IdList.append("Criminal: Steve Cambridge"); IdList.append("Criminal: Gabriel Santiago"); IdList.append("Criminal: 419");
+    IdList.append("Criminal: Los"); IdList.append("Criminal: Steve Cambridge"); IdList.append("Criminal: Gabriel Santiago"); IdList.append("Criminal: 419"); IdList.append("Criminal: Liza Talking Thunder");
     IdList.append("Shaper: Rielle Kit Peddler"); IdList.append("Shaper: The Professor"); IdList.append("Shaper: Exile"); IdList.append("Shaper: Nasir Meidan");
     IdList.append("Shaper: Hayley Kaplan") ;IdList.append("Shaper: Jesminder Sareen"); IdList.append("Shaper: Ele Smoke Scovak"); IdList.append("Shaper: Ayla Bios Rahim");
-    IdList.append("Shaper: Chaos Theory"); IdList.append("Shaper: Kabonesa Wu");
+    IdList.append("Shaper: Chaos Theory"); IdList.append("Shaper: Kabonesa Wu"); IdList.append("Shaper:Akiko Nisei");
     IdList.append("Adam"); IdList.append("Apex"); IdList.append("Sunny Lebeau");
 
     IdList.append("HB: Cerebral Imaging"); IdList.append("HB: Custom Biotics"); IdList.append("HB: NEXT Design"); IdList.append("HB: The Foundry"); IdList.append("HB: Cybernetics Division");
-    IdList.append("HB: Architects of Tomorrow"); IdList.append("HB: Seidr Laboratiries");  IdList.append("HB: Stronger Together"); IdList.append("HB: Asa Group");
+    IdList.append("HB: Architects of Tomorrow"); IdList.append("HB: Seidr Laboratiries");  IdList.append("HB: Stronger Together"); IdList.append("HB: Asa Group"); IdList.append("HB: Sportsmetal");
     IdList.append("NBN: Near-Earth Hub"); IdList.append("NBN: Haarpsichord Studios"); IdList.append("NBN: SYNC"); IdList.append("NBN: New Angeles Sol"); IdList.append("NBN: Spark Agency");
-    IdList.append("NBN: Harishchandra Ent."); IdList.append("NBN: Controlling the Message"); IdList.append("NBN: Making News"); IdList.append("NBN: Azmari EdTech");
+    IdList.append("NBN: Harishchandra Ent."); IdList.append("NBN: Controlling the Message"); IdList.append("NBN: Making News"); IdList.append("NBN: Azmari EdTech"); IdList.append("NBN: Acme Consulting");
     IdList.append("Jinteki: Harmony Medtech"); IdList.append("Jinteki: Nisei Division"); IdList.append("Jinteki: Tennin Institute"); IdList.append("Jinteki: Industrial Genomics");
     IdList.append("Jinteki: Jinteki Biotech"); IdList.append("Jinteki: Chronos Protocol"); IdList.append("Jinteki: Palana Foods"); IdList.append("Jinteki: Potential Unleashed");
-    IdList.append("Jinteki: Aginfusion"); IdList.append("Jinteki: Personal Evolution"); IdList.append("Jinteki: Mti Mwekundu");
+    IdList.append("Jinteki: Aginfusion"); IdList.append("Jinteki: Personal Evolution"); IdList.append("Jinteki: Mti Mwekundu"); IdList.append("Jinteki: Saraswati Mnemonics");
     IdList.append("Weyland: Blue Sun"); IdList.append("Weyland: Argus Security"); IdList.append("Weyland: Gagarin Deep Space"); IdList.append("Weyland: Titan Transnational");
     IdList.append("Weyland: Builder of Nations"); IdList.append("Weyland: Jemison Astronautics"); IdList.append("Weyland: Skorpios Defence Systems"); IdList.append("Weyland: Building a Better World");
-    IdList.append("Weyland: SSO Industries");
+    IdList.append("Weyland: SSO Industries"); IdList.append("Weyland: The Outfit");
 
     ui->Player1Id_Input->addItems(IdList);
     ui->Player2Id_Input->addItems(IdList);
@@ -184,48 +188,67 @@ void ScoreboardMain::Opened() //Resets all
     //Get From the URL
     if (QUrl(QUpdate_URL).isValid())
     {
-        qDebug () << "Valid Update-URL";
+        //qDebug () << "Valid Update-URL";
     }
     //Connect to replyFinished QnetworkReply
-    connect(manager,SIGNAL(finished(QNetworkReply*)),this,SLOT(replyFinished(QNetworkReply*)));
+/*    connect(manager,SIGNAL(finished(QNetworkReply*)),this,SLOT(replyFinished(QNetworkReply*)));
     manager->get(QNetworkRequest(QUrl(QUpdate_URL)));
 
     if (QUrl(QCardDB_URL).isValid())
     {
-        qDebug () << "Valid CardDB-URL";
-    }
-    // Connect networkManager response to the handler
-    //connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getCardsResult(QNetworkReply*)));
-    //connect(manager, SIGNAL(QIODevice::readyRead()), this, SLOT(readyToReadCards(QNetworkReply*)));
-    // We get the data, namely JSON file from a site on a particular url
-    //request.setHeader(QNetworkRequest::ContentTypeHeader, “application/json”);
-    //manager->get(QNetworkRequest(QUrl(QCardDB_URL)));
+        //qDebug () << "Valid CardDB-URL";
+    }*/
     getCardsResult();
 }
 
 void ScoreboardMain::getCardsResult()
 {
-    qDebug() << QFile::exists(".\\CardDB\\cards.json");
-    CardDB.setFileName(".\\CardDB\\cards.json");
-    bool CardDBopen = CardDB.open(QIODevice::ReadOnly | QIODevice::Text);
-    qDebug() << CardDBopen;
-    qDebug() << "open";
+    // Connect networkManager response to the handler
+    connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getCardResult(QNetworkReply*)));
+    // We get the data, namely JSON file from a site on a particular url
+    //request.setHeader(QNetworkRequest::ContentTypeHeader, “application/json”);
+    QString Cardnumber = "01001";
+    for (int i=1; i<60;i++)
+    {
+        QString Cardnumber = "010"+ QString("%1").arg(i,2,10,QChar('0')) ;
+        QString CardURL = QCardDB_URL+Cardnumber;
+        qDebug() << CardURL;
+        manager->get(QNetworkRequest(QUrl(CardURL)));
+    }
+}
+
+void ScoreboardMain::getCardResult(QNetworkReply *replyCard)
+{
+    //qDebug() << QFile::exists(CardDB_filename);
+    //CardDB.setFileName(CardDB_filename);
+    //bool CardDBopen = CardDB.open(QIODevice::ReadOnly);
+    //qDebug() << CardDB_filename << ":" << CardDBopen;
+    //QFile CardDBopen(CardDB_filename);
+    //if (!CardDBopen.open(QIODevice::ReadOnly | QIODevice::Text))
+    //        return;
+    //QTextStream Cardtextfile(&CardDBopen);
+    //qDebug() << "open";
     QJsonParseError jsonError;
     //QString Carddata = CardDB.readAll();
+    //QString Carddata = replyCard->readAll();
+    QString Carddata = replyCard->readAll();
     //qDebug() << Carddata;
-    QJsonDocument CardJson = QJsonDocument::fromJson(CardDB.readAll(),&jsonError);
+    QJsonDocument CardJson = QJsonDocument::fromJson(Carddata.toUtf8(),&jsonError);
     //QJsonDocument CardJson = QJsonDocument::fromJson(Carddata.toUtf8(),&jsonError);
-    qDebug() << CardJson;
+    //qDebug() << CardJson;
     if (jsonError.error != QJsonParseError::NoError){
       qDebug() << jsonError.errorString();
     }
-    qDebug() << "parse done";
-    QList<QVariant> cardlist = CardJson.toVariant().toList();
-    qDebug() << "qlist done";
-    qDebug() << cardlist;
-    //QMap<QString, QVariant> cardmap = cardlist[0].toMap();
-    //qDebug() << cardmap["title"].toString();
-    CardDB.close();
+    //qDebug() << "parse done";
+    QJsonArray CarddataArray = CardJson.object().value("data").toArray();
+    foreach (const QJsonValue & v, CarddataArray)
+    {
+        //QJsonValue Cardcode = v.toObject().value("code");
+        QString Cardtitle = v.toObject().value("title").toString();
+        QString Cardcode = v.toObject().value("code").toString();
+        qDebug() << Cardtitle << ":" << Cardcode;
+    }
+    replyCard->deleteLater();
 }
 
 

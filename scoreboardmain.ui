@@ -140,7 +140,7 @@
       <property name="geometry">
        <rect>
         <x>710</x>
-        <y>280</y>
+        <y>310</y>
         <width>121</width>
         <height>61</height>
        </rect>
@@ -313,9 +313,7 @@ Score and Timer</string>
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">
-
-</string>
+       <string notr="true"/>
       </property>
       <property name="text">
        <string>Start</string>
@@ -421,7 +419,7 @@ start</string>
       <property name="geometry">
        <rect>
         <x>770</x>
-        <y>420</y>
+        <y>424</y>
         <width>61</width>
         <height>30</height>
        </rect>
@@ -555,9 +553,9 @@ start</string>
      <widget class="Line" name="line_11">
       <property name="geometry">
        <rect>
-        <x>640</x>
-        <y>300</y>
-        <width>251</width>
+        <x>420</x>
+        <y>330</y>
+        <width>471</width>
         <height>20</height>
        </rect>
       </property>
@@ -569,9 +567,9 @@ start</string>
       <property name="geometry">
        <rect>
         <x>630</x>
-        <y>310</y>
+        <y>340</y>
         <width>20</width>
-        <height>201</height>
+        <height>171</height>
        </rect>
       </property>
       <property name="orientation">
@@ -607,14 +605,27 @@ start</string>
      <widget class="QPushButton" name="UpNextScreen">
       <property name="geometry">
        <rect>
-        <x>450</x>
-        <y>360</y>
+        <x>480</x>
+        <y>320</y>
         <width>121</width>
         <height>41</height>
        </rect>
       </property>
       <property name="text">
        <string>Show UpNextScreen</string>
+      </property>
+     </widget>
+     <widget class="Line" name="line_13">
+      <property name="geometry">
+       <rect>
+        <x>410</x>
+        <y>340</y>
+        <width>20</width>
+        <height>171</height>
+       </rect>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
       </property>
      </widget>
      <zorder>Minutes_To_In</zorder>
@@ -653,6 +664,7 @@ start</string>
      <zorder>Casual_Radio</zorder>
      <zorder>UA_Button</zorder>
      <zorder>UpNextScreen</zorder>
+     <zorder>line_13</zorder>
     </widget>
     <widget class="QWidget" name="S">
      <attribute name="title">
