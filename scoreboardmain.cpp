@@ -22,13 +22,10 @@
 
 using namespace std;
 
-string version_info = "0.96"; //Please Change this after a update!
+string version_info = "0.97"; //Please Change this after a update!
 string Update_URL = "https://github.com/purpletechnician/Scoreboard-for-Netrunner";
-//string CardDB_URL = "http://www.netrunnerdb.com/api/2.0/public/cards" ;
 string CardDB_URL = "http://www.netrunnerdb.com/api/2.0/public/card/" ;
-//string CardDB_URL = "http://www.netrunnerdb.com/api/2.0/public/card/01001" ;
-//QString CardDB_filename = ".\\CardDB\\cards.json";
-//QString CardDB_filename = ".\\CardDB\\01001.json";
+QString BaseCardURL = "http://www.netrunnerdb.com/card_image/";
 
 string Window_Name = "Scoreboard for Netrunner "+version_info;
 QString QUpdate_URL = QString::fromStdString(Update_URL);
@@ -60,6 +57,8 @@ string Player1_Id = "", Player2_Id = ""; //Id for Player1, Player2
 string Round = "", Round_info = "", NR_text="", NRS_text="";
 string clock_symbol = ":"; //Clock Symbol | Default = : | Milliseconds = .
 QString Clock_text = "65:00"; //Clock Text
+QString choosenCard;
+
 QList<QString> IdList;
 
 struct Card_info {
@@ -98,6 +97,8 @@ ScoreboardMain::~ScoreboardMain()
 
 void ScoreboardMain::Opened() //Resets all
 {
+    connect(ui->search_Input, SIGNAL(textChanged(const QString &)), this, SLOT(searchChanged(const QString &)));
+
     writexml();
     Player1_Name_Output.open(".\\Output\\Player1_Name.txt");
     Player2_Name_Output.open(".\\Output\\Player2_Name.txt");
@@ -204,54 +205,189 @@ void ScoreboardMain::Opened() //Resets all
         //qDebug () << "Valid Update-URL";
     }
     //Connect to replyFinished QnetworkReply
-/*    connect(manager,SIGNAL(finished(QNetworkReply*)),this,SLOT(replyFinished(QNetworkReply*)));
+/*  connect(manager,SIGNAL(finished(QNetworkReply*)),this,SLOT(replyFinished(QNetworkReply*)));
     manager->get(QNetworkRequest(QUrl(QUpdate_URL)));
+*/
 
-    if (QUrl(QCardDB_URL).isValid())
+    if (QFile::exists(".\\CardDB\\Cards.bin"))
     {
-        //qDebug () << "Valid CardDB-URL";
-    }*/
-    getCardsResult();
+        QFile file(".\\CardDB\\Cards.bin");
+        if (!file.open(QIODevice::ReadOnly))
+            qDebug() << "Cannot open file for read";
+        QDataStream stream(&file);
+        stream >> Card_infoList ;
+        file.close();
+        foreach (Card_info data, Card_infoList)
+        {
+            qDebug() << data.Title << ":" << data.Code << ":" << data.Image_url;
+        }
+    }
+}
+
+void ScoreboardMain::searchChanged(const QString &newvalue)
+{
+   ui->List_Output->clear();
+    qDebug()<< newvalue;
+    if (newvalue.count()>=3)
+    {
+        foreach(Card_info data, Card_infoList)
+        {
+            if (data.Title.toLower().contains(newvalue))
+            {
+                QString text = data.Title+"  _"+data.Code;
+                ui->List_Output->addItem(text);
+                qDebug() << data.Title<<":"<<data.Code;
+            }
+        }
+    }
+}
+
+void ScoreboardMain::on_List_Output_clicked()
+{
+    QListWidgetItem *card = ui->List_Output->currentItem();
+    QString str = card->text();
+    choosenCard = str.mid(str.indexOf("_")+1,str.length());
+    qDebug()<<choosenCard;
+}
+
+void ScoreboardMain::on_Show_right_clicked()
+{
+    qDebug()<<choosenCard;
+    if (QFile::exists(".\\Output\\Card_right.png"))
+    {
+        QFile::remove(".\\Output\\Card_right.png");
+    }
+    QFile::copy(".\\CardDB\\"+choosenCard+".png",".\\Output\\Card_right.png");
+
+    if (ui->Show_right->text()=="Show right")
+    {
+        ui->Show_right->setText("Hide right");
+    }
+    else
+    {
+        ui->Show_right->setText("Show right");
+        QFile::remove(".\\Output\\Card_right.png");
+    }
+
+}
+
+void ScoreboardMain::on_Show_left_clicked()
+{
+    qDebug()<<choosenCard;
+    if (QFile::exists(".\\Output\\Card_left.png"))
+    {
+        QFile::remove(".\\Output\\Card_left.png");
+    }
+    QFile::copy(".\\CardDB\\"+choosenCard+".png",".\\Output\\Card_left.png");
+
+    if (ui->Show_left->text()=="Show left")
+    {
+        ui->Show_left->setText("Hide left");
+    }
+    else
+    {
+        ui->Show_left->setText("Show left");
+        QFile::remove(".\\Output\\Card_left.png");
+    }
+
 }
 
 void ScoreboardMain::getCardsResult()
 {
-    // Connect networkManager response to the handler
-    connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getCardResult(QNetworkReply*)));
-    // We get the data, namely JSON file from a site on a particular url
-    //request.setHeader(QNetworkRequest::ContentTypeHeader, “application/json”);
-    Pack_info pack_info;
-    pack_info = {1,113}; Pack_infoList.append(pack_info); // Core
-    pack_info = {2,120}; Pack_infoList.append(pack_info); // Genesis
-    pack_info = {3,55}; Pack_infoList.append(pack_info); // Creation&Control
-    pack_info = {4,120}; Pack_infoList.append(pack_info); // Spin
-    pack_info = {5,55}; Pack_infoList.append(pack_info); // Honor&Profit
-    pack_info = {6,120}; Pack_infoList.append(pack_info); // Lunar
-    pack_info = {7,55}; Pack_infoList.append(pack_info); // Order&Chaos
-    pack_info = {8,120}; Pack_infoList.append(pack_info); // SanSan
-    pack_info = {9,55}; Pack_infoList.append(pack_info); // Data&Destiny
-    pack_info = {10,120}; Pack_infoList.append(pack_info); // Mumbad
-    pack_info = {11,120}; Pack_infoList.append(pack_info); // Flashpoint
-    pack_info = {12,120}; Pack_infoList.append(pack_info); // Red Sand
-    pack_info = {13,57}; Pack_infoList.append(pack_info); // Terminal Directive
-    pack_info = {20,132}; Pack_infoList.append(pack_info); // Revised Core
-    pack_info = {21,120}; Pack_infoList.append(pack_info); // Kitara
-    pack_info = {22,57}; Pack_infoList.append(pack_info); // Reign and Reverie
-
-    QList<Pack_info>::iterator p;
-    for (p=Pack_infoList.begin(); p != Pack_infoList.end(); p++)
+    if (!QFile::exists(".\\CardDB\\Cards.bin"))
     {
-        qDebug() <<(*p).Total_cards;
-
-        QString Cardnumber ;
-        for (int j=1; j<=(*p).Total_cards;j++)
+        // Connect networkManager response to the handler
+        connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getCardResult(QNetworkReply*)));
+        // We get the data, namely JSON file from a site on a particular url
+        //request.setHeader(QNetworkRequest::ContentTypeHeader, “application/json”);
+        Pack_info pack_info;
+        pack_info = {1,113}; Pack_infoList.append(pack_info); // Core
+        pack_info = {2,120}; Pack_infoList.append(pack_info); // Genesis
+        pack_info = {3,55}; Pack_infoList.append(pack_info); // Creation&Control
+        pack_info = {4,120}; Pack_infoList.append(pack_info); // Spin
+        pack_info = {5,55}; Pack_infoList.append(pack_info); // Honor&Profit
+        pack_info = {6,120}; Pack_infoList.append(pack_info); // Lunar
+        pack_info = {7,55}; Pack_infoList.append(pack_info); // Order&Chaos
+        pack_info = {8,120}; Pack_infoList.append(pack_info); // SanSan
+        pack_info = {9,55}; Pack_infoList.append(pack_info); // Data&Destiny
+        pack_info = {10,114}; Pack_infoList.append(pack_info); // Mumbad
+        pack_info = {11,120}; Pack_infoList.append(pack_info); // Flashpoint
+        pack_info = {12,120}; Pack_infoList.append(pack_info); // Red Sand
+        pack_info = {13,57}; Pack_infoList.append(pack_info); // Terminal Directive
+        pack_info = {20,132}; Pack_infoList.append(pack_info); // Revised Core
+        pack_info = {21,120}; Pack_infoList.append(pack_info); // Kitara
+        pack_info = {22,57}; Pack_infoList.append(pack_info); // Reign and Reverie
+        QList<Pack_info>::iterator p;
+        for (p=Pack_infoList.begin(); p != Pack_infoList.end(); p++)
         {
-            QString Cardnumber = QString("%1").arg((*p).Pack_code,2,10,QChar('0'))+ QString("%1").arg(j,3,10,QChar('0')) ;
-            qDebug() << Cardnumber;
-            QString CardURL = QCardDB_URL+Cardnumber;
-            manager->get(QNetworkRequest(QUrl(CardURL)));
+            //qDebug() <<(*p).Total_cards;
+
+            QString Cardnumber ;
+            for (int j=1; j<=(*p).Total_cards;j++)
+            {
+                QString Cardnumber = QString("%1").arg((*p).Pack_code,2,10,QChar('0'))+ QString("%1").arg(j,3,10,QChar('0')) ;
+                //qDebug() << Cardnumber;
+                QString CardURL = QCardDB_URL+Cardnumber;
+                manager->get(QNetworkRequest(QUrl(CardURL)));
+            }
         }
     }
+}
+
+void ScoreboardMain::on_saveCards_Button_clicked()
+{
+    if (!QFile::exists(".\\CardDB\\Cards.bin"))
+    {
+        ui->saveCards_Label->setText("Saving Cards");
+        QFile file(".\\CardDB\\Cards.bin");
+        if (!file.open(QIODevice::WriteOnly))
+            qDebug() << "Cannot open file for write";
+        QDataStream stream(&file);
+        stream << Card_infoList ;
+        file.close();
+        ui->saveCards_Label->setText("Cards saved");
+
+        //qDebug() << "Cards saved to Cards.bin";
+    }
+
+    connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getCardURLResult(QNetworkReply*)));
+    foreach (Card_info data, Card_infoList)
+    {
+        QString CardURL = data.Image_url;
+        QString code = data.Code;
+        qDebug()<< "Card URL:" << CardURL << "Card: "<<code;
+        QNetworkReply* reply = manager->get(QNetworkRequest(QUrl(CardURL)));
+        reply->setProperty("code",code);
+    }
+}
+
+void ScoreboardMain::getCardURLResult(QNetworkReply *replyCard)
+{
+    QString code = replyCard->property("code").toString();
+    QFile file(".\\CardDB\\"+code+".png");
+    if (!file.open(QIODevice::ReadWrite))
+        qDebug() << "Cannot open file "<<code;
+    QByteArray data=replyCard->readAll();
+    qDebug() << code <<" recieved data of size: " << data.size();
+    file.write(data);
+    file.close();
+    ui->saveCards_Label->setText("Saving card "+code);
+
+    replyCard->deleteLater();
+}
+
+QDataStream &operator<<(QDataStream &stream, const Card_info &data)
+{
+    stream << data.Title << data.Code << data.Image_url ;
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, Card_info &data)
+{
+    stream >> data.Title ;
+    stream >> data.Code ;
+    stream >> data.Image_url ;
+    return stream ;
 }
 
 void ScoreboardMain::getCardResult(QNetworkReply *replyCard)
@@ -270,9 +406,10 @@ void ScoreboardMain::getCardResult(QNetworkReply *replyCard)
         temp_Card_info.Code = v.toObject().value("code").toString();
         temp_Card_info.Image_url = v.toObject().value("image_url").toString();
         if (temp_Card_info.Image_url == "")
-            temp_Card_info.Image_url = "https://www.netrunnerdb.com/card_image/"+temp_Card_info.Code+".png";
+            temp_Card_info.Image_url = BaseCardURL+temp_Card_info.Code+".png";
         qDebug() << temp_Card_info.Title << ":" <<temp_Card_info.Code<<":"<<temp_Card_info.Image_url;
         Card_infoList.append(temp_Card_info);
+        ui->downloadCards_Label->setText("Downloading data: "+temp_Card_info.Code);
     }
     replyCard->deleteLater();
 }
@@ -377,13 +514,19 @@ void ScoreboardMain::Changed() //Changed Score,etc
     ui->Player2Score_Label->setText(QString::number(Player2_Score));
 }
 
+
+void ScoreboardMain::on_downloadCards_Button_clicked() // downloadCards Button
+{
+    getCardsResult();
+}
+
 void ScoreboardMain::on_UA_Button_clicked() //Unattended Button
 {
     UA_Output.open(".\\Output\\Unattended.txt");
     if (ui->UA_Button->text()=="set Unattended")
     {
         UA_Output << "Currently unattended";
-        ui->UA_Button->setText("Unattended");
+        ui->UA_Button->setText("clear Unattended");
     }
     else
     {

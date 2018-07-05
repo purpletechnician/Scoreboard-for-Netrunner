@@ -638,21 +638,11 @@ start</string>
        </rect>
       </property>
      </widget>
-     <widget class="QComboBox" name="search_Output">
-      <property name="geometry">
-       <rect>
-        <x>350</x>
-        <y>340</y>
-        <width>151</width>
-        <height>22</height>
-       </rect>
-      </property>
-     </widget>
      <widget class="QPushButton" name="Show_left">
       <property name="geometry">
        <rect>
         <x>270</x>
-        <y>380</y>
+        <y>340</y>
         <width>75</width>
         <height>23</height>
        </rect>
@@ -665,13 +655,75 @@ start</string>
       <property name="geometry">
        <rect>
         <x>510</x>
-        <y>380</y>
+        <y>340</y>
         <width>75</width>
         <height>23</height>
        </rect>
       </property>
       <property name="text">
        <string>Show right</string>
+      </property>
+     </widget>
+     <widget class="QListWidget" name="List_Output">
+      <property name="geometry">
+       <rect>
+        <x>350</x>
+        <y>340</y>
+        <width>151</width>
+        <height>101</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="downloadCards_Button">
+      <property name="geometry">
+       <rect>
+        <x>720</x>
+        <y>320</y>
+        <width>121</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Download Cardinfo</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="saveCards_Button">
+      <property name="geometry">
+       <rect>
+        <x>720</x>
+        <y>370</y>
+        <width>121</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Save Cards</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="downloadCards_Label">
+      <property name="geometry">
+       <rect>
+        <x>720</x>
+        <y>350</y>
+        <width>131</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Info from Download Cards</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="saveCards_Label">
+      <property name="geometry">
+       <rect>
+        <x>720</x>
+        <y>400</y>
+        <width>111</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Info from Save Cards</string>
       </property>
      </widget>
      <zorder>Minutes_To_In</zorder>
@@ -712,9 +764,13 @@ start</string>
      <zorder>UpNextScreen</zorder>
      <zorder>line_13</zorder>
      <zorder>search_Input</zorder>
-     <zorder>search_Output</zorder>
      <zorder>Show_left</zorder>
      <zorder>Show_right</zorder>
+     <zorder>List_Output</zorder>
+     <zorder>downloadCards_Button</zorder>
+     <zorder>saveCards_Button</zorder>
+     <zorder>downloadCards_Label</zorder>
+     <zorder>saveCards_Label</zorder>
     </widget>
     <widget class="QWidget" name="S">
      <attribute name="title">

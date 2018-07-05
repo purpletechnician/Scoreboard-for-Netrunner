@@ -30,9 +30,23 @@ public:
 private slots:
     void Opened();
 
+    void searchChanged(const QString &newvalue);
+
+    void on_List_Output_clicked();
+
+    void on_Show_right_clicked();
+
+    void on_Show_left_clicked();
+
     void WarningBox();
 
     void getCardsResult();
+
+    void on_downloadCards_Button_clicked();
+
+    void on_saveCards_Button_clicked();
+
+    void getCardURLResult(QNetworkReply *replyCard);
 
     void getCardResult(QNetworkReply *replyCard);
 
