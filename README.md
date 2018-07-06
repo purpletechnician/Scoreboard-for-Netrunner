@@ -1,5 +1,8 @@
-# Scoreboard-for-Netrunner 0.94
-0,94 Fixing bugs in GUI, Up/next-screen-presentation and update-functionality.<br/>
+# Scoreboard-for-Netrunner 0.97<br/>
+0,97 Added possibility to search for cards and "show" them to the left or right<br/>
+0,96 Fixing bugs in GUI and code<br/>
+0,95 Fixing bugs in GUI and code<br/>
+0,94 Fixing bugs in GUI, Up/next-screen-presentation and update-functionality<br/>
 0,93 Added the possibility to show "up-next"-screen between rounds<br/>
 0,92 Fixing bugs<br/>
 <br/>
@@ -12,6 +15,7 @@ The software has the following features:<br/>
 • Show actual agendapoint for runner/corp. Manual and can be disabled when software is unmanned.<br/>
 • Show Corp and Runner identity (text and picture). Can be disabled when software is unmanned.<br/>
 • UpNext-screen can be shown between round with information which round is next and when it starts.<br/>
+• Search-function of Cards and possibility to show them on left or right.<br/>
 • Mp3-music can be a added/played.<br/>
 <br/>
 Below files are created by the software (Output-folder):<br/>
@@ -25,4 +29,5 @@ Below files are created by the software (Output-folder):<br/>
 • "UpNext.png": Shows a "UpNext"-screen used between round. The below "Next_round.txt" and "Next_round_starts.txt" are enabled at the same time. Output can be disabled in software.<br/>
 • "Next_round.txt": Shows which next round is on  the "Up next screen". Input: textfield. Output can be enabled/disabled in software.<br/>
 • "Next_round_start.txt": Shows when next round starts in the "Up next screen". Input: textfield. Output can be enabled/disabled in software.<br/>
+• "Card_left.png"/"Card_right.png": Shows the card choosen from a search. Cards can afterwards be hidden in software.
 • "Xml.xml": Shows Player names, score and time. Output can be enabled/disabled in software. Feature not fully implemented.<br/>
