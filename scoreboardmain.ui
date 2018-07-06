@@ -69,6 +69,9 @@
         <height>22</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>The timer ends at this minute-value</string>
+      </property>
      </widget>
      <widget class="QLabel" name="Player2Score_Label">
       <property name="geometry">
@@ -84,6 +87,9 @@
         <family>Arial</family>
         <pointsize>48</pointsize>
        </font>
+      </property>
+      <property name="toolTip">
+       <string>Score for Player 2</string>
       </property>
       <property name="text">
        <string>0</string>
@@ -103,6 +109,9 @@
         <pointsize>14</pointsize>
        </font>
       </property>
+      <property name="toolTip">
+       <string>Name of Player 2</string>
+      </property>
       <property name="text">
        <string>Player 2</string>
       </property>
@@ -119,6 +128,9 @@
         <height>22</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>The timer ends at this second-value</string>
+      </property>
       <property name="maximum">
        <number>59</number>
       </property>
@@ -131,6 +143,9 @@
         <width>42</width>
         <height>22</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Preset second-value when timer is reset</string>
       </property>
       <property name="maximum">
        <number>59</number>
@@ -150,6 +165,9 @@
         <pointsize>10</pointsize>
        </font>
       </property>
+      <property name="toolTip">
+       <string>Update All below info and Player name and fractions</string>
+      </property>
       <property name="styleSheet">
        <string notr="true">alternate-background-color: rgb(85, 170, 127);</string>
       </property>
@@ -167,6 +185,9 @@ Score and Timer</string>
         <width>71</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Add 1 to Player 2 score</string>
       </property>
       <property name="text">
        <string>UP</string>
@@ -186,6 +207,9 @@ Score and Timer</string>
         <pointsize>14</pointsize>
        </font>
       </property>
+      <property name="toolTip">
+       <string>Name of Player 1</string>
+      </property>
       <property name="text">
        <string>Player 1</string>
       </property>
@@ -202,6 +226,9 @@ Score and Timer</string>
         <height>31</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Add 1 to Player 1 score</string>
+      </property>
       <property name="text">
        <string>UP</string>
       </property>
@@ -214,6 +241,9 @@ Score and Timer</string>
         <width>71</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Subtracts 1 to Player 2 score</string>
       </property>
       <property name="text">
        <string>DOWN</string>
@@ -273,6 +303,9 @@ Score and Timer</string>
         <pointsize>48</pointsize>
        </font>
       </property>
+      <property name="toolTip">
+       <string>Score for Player 1</string>
+      </property>
       <property name="text">
        <string>0</string>
       </property>
@@ -290,6 +323,9 @@ Score and Timer</string>
        <font>
         <pointsize>10</pointsize>
        </font>
+      </property>
+      <property name="toolTip">
+       <string>Resets timer to values set below right or on settings screen</string>
       </property>
       <property name="text">
        <string>Reset Timer</string>
@@ -312,6 +348,9 @@ Score and Timer</string>
         <bold>false</bold>
        </font>
       </property>
+      <property name="toolTip">
+       <string>Starts and pauses Timer</string>
+      </property>
       <property name="styleSheet">
        <string notr="true"/>
       </property>
@@ -328,6 +367,9 @@ Score and Timer</string>
         <height>31</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Subtracts 1 to Player 1 score</string>
+      </property>
       <property name="text">
        <string>DOWN</string>
       </property>
@@ -340,6 +382,9 @@ Score and Timer</string>
         <width>42</width>
         <height>22</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Preset minute-value when timer is reset</string>
       </property>
      </widget>
      <widget class="QPushButton" name="Reset_Score_Button">
@@ -355,6 +400,9 @@ Score and Timer</string>
        <font>
         <pointsize>10</pointsize>
        </font>
+      </property>
+      <property name="toolTip">
+       <string>Resets score to 0</string>
       </property>
       <property name="styleSheet">
        <string notr="true"/>
@@ -377,6 +425,9 @@ Score and Timer</string>
         <family>Arial</family>
        </font>
       </property>
+      <property name="toolTip">
+       <string>Check to activate another End-value for Timer</string>
+      </property>
       <property name="text">
        <string>To(optional)</string>
       </property>
@@ -390,6 +441,9 @@ Score and Timer</string>
         <height>22</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Fraction for Player 1</string>
+      </property>
      </widget>
      <widget class="QComboBox" name="Player2Id_Input">
       <property name="geometry">
@@ -399,6 +453,9 @@ Score and Timer</string>
         <width>181</width>
         <height>22</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Fraction for Player 2</string>
       </property>
      </widget>
      <widget class="QLabel" name="Info_text_label">
@@ -429,6 +486,9 @@ start</string>
         <pointsize>14</pointsize>
        </font>
       </property>
+      <property name="toolTip">
+       <string>Input valid for Swiss and Top cut</string>
+      </property>
       <property name="text">
        <string>1</string>
       </property>
@@ -447,6 +507,9 @@ start</string>
         <pointsize>14</pointsize>
        </font>
       </property>
+      <property name="toolTip">
+       <string>Input for when next roud starts</string>
+      </property>
       <property name="text">
        <string>approx 12:00</string>
       </property>
@@ -459,6 +522,9 @@ start</string>
         <width>211</width>
         <height>17</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Check to don't output score and Fractin to screen(textfiles). Prefect when a stream is unattended.</string>
       </property>
       <property name="text">
        <string>Don´t Output Score and Id to stream</string>
@@ -533,6 +599,9 @@ start</string>
         <pointsize>14</pointsize>
        </font>
       </property>
+      <property name="toolTip">
+       <string>Input for which next round is</string>
+      </property>
       <property name="text">
        <string>Swiss 2</string>
       </property>
@@ -542,9 +611,12 @@ start</string>
        <rect>
         <x>280</x>
         <y>580</y>
-        <width>91</width>
+        <width>101</width>
         <height>41</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Starts ans stops choosen music (in tab Sound)</string>
       </property>
       <property name="text">
        <string>Stop Music</string>
@@ -594,12 +666,15 @@ start</string>
        <rect>
         <x>280</x>
         <y>510</y>
-        <width>91</width>
+        <width>101</width>
         <height>41</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Show unattended infotext</string>
+      </property>
       <property name="text">
-       <string>set Unattended</string>
+       <string>Show Unattended</string>
       </property>
      </widget>
      <widget class="QPushButton" name="UpNextScreen">
@@ -610,6 +685,9 @@ start</string>
         <width>121</width>
         <height>41</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Show UpNextscreen</string>
       </property>
       <property name="text">
        <string>Show UpNextScreen</string>
@@ -631,21 +709,27 @@ start</string>
      <widget class="QLineEdit" name="search_Input">
       <property name="geometry">
        <rect>
-        <x>352</x>
+        <x>322</x>
         <y>310</y>
-        <width>151</width>
+        <width>211</width>
         <height>20</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Searchfiled for Cards</string>
       </property>
      </widget>
      <widget class="QPushButton" name="Show_left">
       <property name="geometry">
        <rect>
-        <x>270</x>
+        <x>230</x>
         <y>340</y>
         <width>75</width>
         <height>23</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Show choosen Card to left side of screen</string>
       </property>
       <property name="text">
        <string>Show left</string>
@@ -654,11 +738,14 @@ start</string>
      <widget class="QPushButton" name="Show_right">
       <property name="geometry">
        <rect>
-        <x>510</x>
+        <x>550</x>
         <y>340</y>
         <width>75</width>
         <height>23</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Show choosen Card to right side of screen</string>
       </property>
       <property name="text">
        <string>Show right</string>
@@ -667,11 +754,14 @@ start</string>
      <widget class="QListWidget" name="List_Output">
       <property name="geometry">
        <rect>
-        <x>350</x>
+        <x>322</x>
         <y>340</y>
-        <width>151</width>
+        <width>211</width>
         <height>101</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Field to show Cards matching searchfield</string>
       </property>
      </widget>
      <widget class="QPushButton" name="downloadCards_Button">
@@ -682,6 +772,9 @@ start</string>
         <width>121</width>
         <height>23</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Inital download of Cardinfo from Netrunnerdb.com</string>
       </property>
       <property name="text">
        <string>Download Cardinfo</string>
@@ -695,6 +788,9 @@ start</string>
         <width>121</width>
         <height>23</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Saving downloaded cards in internal format. Also saves png-files to CardDB-folder</string>
       </property>
       <property name="text">
        <string>Save Cards</string>
@@ -724,6 +820,19 @@ start</string>
       </property>
       <property name="text">
        <string>Info from Save Cards</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_3">
+      <property name="geometry">
+       <rect>
+        <x>323</x>
+        <y>290</y>
+        <width>61</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Searchfield:</string>
       </property>
      </widget>
      <zorder>Minutes_To_In</zorder>
@@ -771,6 +880,7 @@ start</string>
      <zorder>saveCards_Button</zorder>
      <zorder>downloadCards_Label</zorder>
      <zorder>saveCards_Label</zorder>
+     <zorder>label_3</zorder>
     </widget>
     <widget class="QWidget" name="S">
      <attribute name="title">

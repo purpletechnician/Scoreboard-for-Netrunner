@@ -217,16 +217,16 @@ void ScoreboardMain::Opened() //Resets all
         QDataStream stream(&file);
         stream >> Card_infoList ;
         file.close();
-        foreach (Card_info data, Card_infoList)
+        /*foreach (Card_info data, Card_infoList)
         {
             qDebug() << data.Title << ":" << data.Code << ":" << data.Image_url;
-        }
+        }*/
     }
 }
 
 void ScoreboardMain::searchChanged(const QString &newvalue)
 {
-   ui->List_Output->clear();
+    ui->List_Output->clear();
     qDebug()<< newvalue;
     if (newvalue.count()>=3)
     {
@@ -234,9 +234,9 @@ void ScoreboardMain::searchChanged(const QString &newvalue)
         {
             if (data.Title.toLower().contains(newvalue))
             {
-                QString text = data.Title+"  _"+data.Code;
+                QString text = data.Title+" #"+data.Code;
                 ui->List_Output->addItem(text);
-                qDebug() << data.Title<<":"<<data.Code;
+                //qDebug() << data.Title<<":"<<data.Code;
             }
         }
     }
@@ -246,13 +246,13 @@ void ScoreboardMain::on_List_Output_clicked()
 {
     QListWidgetItem *card = ui->List_Output->currentItem();
     QString str = card->text();
-    choosenCard = str.mid(str.indexOf("_")+1,str.length());
-    qDebug()<<choosenCard;
+    choosenCard = str.mid(str.indexOf("#")+1,str.length());
+    //qDebug()<<choosenCard;
 }
 
 void ScoreboardMain::on_Show_right_clicked()
 {
-    qDebug()<<choosenCard;
+    //qDebug()<<choosenCard;
     if (QFile::exists(".\\Output\\Card_right.png"))
     {
         QFile::remove(".\\Output\\Card_right.png");
@@ -273,7 +273,7 @@ void ScoreboardMain::on_Show_right_clicked()
 
 void ScoreboardMain::on_Show_left_clicked()
 {
-    qDebug()<<choosenCard;
+    //qDebug()<<choosenCard;
     if (QFile::exists(".\\Output\\Card_left.png"))
     {
         QFile::remove(".\\Output\\Card_left.png");
@@ -355,7 +355,7 @@ void ScoreboardMain::on_saveCards_Button_clicked()
     {
         QString CardURL = data.Image_url;
         QString code = data.Code;
-        qDebug()<< "Card URL:" << CardURL << "Card: "<<code;
+        //qDebug()<< "Card URL:" << CardURL << "Card: "<<code;
         QNetworkReply* reply = manager->get(QNetworkRequest(QUrl(CardURL)));
         reply->setProperty("code",code);
     }
@@ -368,7 +368,7 @@ void ScoreboardMain::getCardURLResult(QNetworkReply *replyCard)
     if (!file.open(QIODevice::ReadWrite))
         qDebug() << "Cannot open file "<<code;
     QByteArray data=replyCard->readAll();
-    qDebug() << code <<" recieved data of size: " << data.size();
+    //qDebug() << code <<" recieved data of size: " << data.size();
     file.write(data);
     file.close();
     ui->saveCards_Label->setText("Saving card "+code);
@@ -407,7 +407,7 @@ void ScoreboardMain::getCardResult(QNetworkReply *replyCard)
         temp_Card_info.Image_url = v.toObject().value("image_url").toString();
         if (temp_Card_info.Image_url == "")
             temp_Card_info.Image_url = BaseCardURL+temp_Card_info.Code+".png";
-        qDebug() << temp_Card_info.Title << ":" <<temp_Card_info.Code<<":"<<temp_Card_info.Image_url;
+        //qDebug() << temp_Card_info.Title << ":" <<temp_Card_info.Code<<":"<<temp_Card_info.Image_url;
         Card_infoList.append(temp_Card_info);
         ui->downloadCards_Label->setText("Downloading data: "+temp_Card_info.Code);
     }
@@ -420,7 +420,7 @@ void ScoreboardMain::replyFinished(QNetworkReply *reply)
     //qDebug() << "Update";
     string getstring = "";
     size_t str;
-    int a = 0;
+    uint a = 0;
     bool updateyes = false;
     //Check if there is a error
     if(reply->error())
@@ -444,8 +444,6 @@ void ScoreboardMain::replyFinished(QNetworkReply *reply)
             {
                 ui->Testing->setStyleSheet("QLabel{color: rgb(0, 0, 0);}");
                 str = getstring.find(version_info);
-                //qDebug()<<QString::fromStdString(getstring);
-                //qDebug()<<" size:"<<str<<" at pos:"<<string::npos;
                 if(str!=string::npos)
                 {
                     ui->Testing->setText("Status: No Update");
@@ -523,20 +521,20 @@ void ScoreboardMain::on_downloadCards_Button_clicked() // downloadCards Button
 void ScoreboardMain::on_UA_Button_clicked() //Unattended Button
 {
     UA_Output.open(".\\Output\\Unattended.txt");
-    if (ui->UA_Button->text()=="set Unattended")
+    if (ui->UA_Button->text()=="Show Unattended")
     {
         UA_Output << "Currently unattended";
-        ui->UA_Button->setText("clear Unattended");
+        ui->UA_Button->setText("Hide Unattended");
     }
     else
     {
         UA_Output << "";
-        ui->UA_Button->setText("set Unattended");
+        ui->UA_Button->setText("Show Unattended");
     }
     UA_Output.close();
 }
 
-void ScoreboardMain::on_UpNextScreen_clicked() //Unattended Button
+void ScoreboardMain::on_UpNextScreen_clicked() //UpNext Button
 {
     QString TextNRSI= ui->Next_round_start_Input->text(), TextNRI=ui->Next_round_Input->text();
     NR_text=TextNRI.toUtf8().constData(); NRS_text=TextNRSI.toUtf8().constData();
@@ -858,26 +856,16 @@ void ScoreboardMain::on_Start_Button_clicked() //Start button
     if(Clock_button == 1 && Stopwatch_input == true)
     {
         input_stop = true;
-        ui->Start_Button->setText("Stop");
+        ui->Start_Button->setText("Paus");
         ScoreboardMain::Stopwatch_Control();
     }
-    if (ui->Start_Button->text() == "Stop")
+    if (ui->Start_Button->text() == "Paus")
     {
         ui->Start_Button->setStyleSheet("* { background-color: rgba(255,0,0) }");
-        /*QPalette pal = ui->Start_Button->palette();
-        pal.setColor(QPalette::Button, QColor(Qt::red));
-        ui->Start_Button->setAutoFillBackground(true);
-        ui->Start_Button->setPalette(pal);
-        ui->Start_Button->update();*/
     }
     if (ui->Start_Button->text() == "Start")
     {
         ui->Start_Button->setStyleSheet("* { background-color: rgba(0,255,0) }");
-        /*QPalette pal = ui->Start_Button->palette();
-        pal.setColor(QPalette::Button, QColor(Qt::green));
-        ui->Start_Button->setAutoFillBackground(true);
-        ui->Start_Button->setPalette(pal);
-        ui->Start_Button->update();*/
     }
 }
 
@@ -1463,9 +1451,7 @@ void ScoreboardMain::on_ChangeLog_ActionBar_triggered()
 {
     QMessageBox Changelog;
     Changelog.setText("Changelog:");
-    Changelog.setInformativeText("Based on Scoreboard+ 1.8.1Dev but revamped for Netrunner"
-                           "Coming Soon:\n"
-                           "- Possibility to show Cards from Netrunnerdb.com");
+    Changelog.setInformativeText("Based on Scoreboard+ 1.8.1Dev but revamped for Netrunner");
     Changelog.exec();
 }
 
