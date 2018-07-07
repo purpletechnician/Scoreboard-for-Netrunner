@@ -22,7 +22,7 @@
 
 using namespace std;
 
-string version_info = "0.97"; //Please Change this after a update!
+string version_info = "0.98"; //Please Change this after a update!
 string Update_URL = "https://github.com/purpletechnician/Scoreboard-for-Netrunner";
 string CardDB_URL = "http://www.netrunnerdb.com/api/2.0/public/card/" ;
 QString BaseCardURL = "http://www.netrunnerdb.com/card_image/";
@@ -228,6 +228,7 @@ void ScoreboardMain::searchChanged(const QString &newvalue)
 {
     ui->List_Output->clear();
     qDebug()<< newvalue;
+    bool found_first = false;
     if (newvalue.count()>=3)
     {
         foreach(Card_info data, Card_infoList)
@@ -236,6 +237,15 @@ void ScoreboardMain::searchChanged(const QString &newvalue)
             {
                 QString text = data.Title+" #"+data.Code;
                 ui->List_Output->addItem(text);
+                if (found_first == false)
+                {
+                    ui->List_Output->setCurrentRow(0);
+                    QListWidgetItem *card = ui->List_Output->currentItem();
+                    QString str = card->text();
+                    choosenCard = str.mid(str.indexOf("#")+1,str.length());
+                    //qDebug()<<choosenCard;
+                }
+                found_first=true;
                 //qDebug() << data.Title<<":"<<data.Code;
             }
         }
@@ -267,8 +277,9 @@ void ScoreboardMain::on_Show_right_clicked()
     {
         ui->Show_right->setText("Show right");
         QFile::remove(".\\Output\\Card_right.png");
+        ui->search_Input->setText("");
+        ui->search_Input->setFocus();
     }
-
 }
 
 void ScoreboardMain::on_Show_left_clicked()
@@ -288,8 +299,9 @@ void ScoreboardMain::on_Show_left_clicked()
     {
         ui->Show_left->setText("Show left");
         QFile::remove(".\\Output\\Card_left.png");
+        ui->search_Input->setText("");
+        ui->search_Input->setFocus();
     }
-
 }
 
 void ScoreboardMain::getCardsResult()
@@ -850,7 +862,7 @@ void ScoreboardMain::on_Start_Button_clicked() //Start button
     if(Clock_button == 1 && Stopwatch_input == false)
     {
         input_stop = true;
-        ui->Start_Button->setText("Stop");
+        ui->Start_Button->setText("Paus");
         ScoreboardMain::Timer_Control();
     }
     if(Clock_button == 1 && Stopwatch_input == true)
