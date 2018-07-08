@@ -716,7 +716,7 @@ start</string>
        </rect>
       </property>
       <property name="toolTip">
-       <string>Searchfiled for Cards</string>
+       <string>Searchfield for Cards. Minimum 3 characters</string>
       </property>
      </widget>
      <widget class="QPushButton" name="Show_left">
@@ -801,7 +801,7 @@ start</string>
        <rect>
         <x>720</x>
         <y>350</y>
-        <width>131</width>
+        <width>151</width>
         <height>16</height>
        </rect>
       </property>
@@ -814,7 +814,7 @@ start</string>
        <rect>
         <x>720</x>
         <y>400</y>
-        <width>111</width>
+        <width>141</width>
         <height>16</height>
        </rect>
       </property>
@@ -827,12 +827,12 @@ start</string>
        <rect>
         <x>323</x>
         <y>290</y>
-        <width>61</width>
+        <width>91</width>
         <height>16</height>
        </rect>
       </property>
       <property name="text">
-       <string>Searchfield:</string>
+       <string>Cards searchfield:</string>
       </property>
      </widget>
      <zorder>Minutes_To_In</zorder>

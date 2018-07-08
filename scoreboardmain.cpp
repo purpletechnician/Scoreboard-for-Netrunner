@@ -22,7 +22,7 @@
 
 using namespace std;
 
-string version_info = "0.98"; //Please Change this after a update!
+string version_info = "0.99"; //Please Change this after a update!
 string Update_URL = "https://github.com/purpletechnician/Scoreboard-for-Netrunner";
 string CardDB_URL = "http://www.netrunnerdb.com/api/2.0/public/card/" ;
 QString BaseCardURL = "http://www.netrunnerdb.com/card_image/";
@@ -196,16 +196,19 @@ void ScoreboardMain::Opened() //Resets all
     ui->Warning_Label->setVisible(false);
 
     ui->Start_Button->setStyleSheet("* { background-color: rgba(0,255,0) }");
-
+    if (QFile::exists(".\\CardDB\\Cards.bin"))
+    {
+        ui->downloadCards_Label->setText("Cards-file already downloaded");
+    }
     //Makes new QNetworkAccessManager and parents to this
     manager = new QNetworkAccessManager(this);
     //Get From the URL
-    if (QUrl(QUpdate_URL).isValid())
+    /*if (QUrl(QUpdate_URL).isValid())
     {
         //qDebug () << "Valid Update-URL";
     }
     //Connect to replyFinished QnetworkReply
-/*  connect(manager,SIGNAL(finished(QNetworkReply*)),this,SLOT(replyFinished(QNetworkReply*)));
+    connect(manager,SIGNAL(finished(QNetworkReply*)),this,SLOT(replyFinished(QNetworkReply*)));
     manager->get(QNetworkRequest(QUrl(QUpdate_URL)));
 */
 
@@ -306,13 +309,14 @@ void ScoreboardMain::on_Show_left_clicked()
 
 void ScoreboardMain::getCardsResult()
 {
-    if (!QFile::exists(".\\CardDB\\Cards.bin"))
-    {
+    //if (!QFile::exists(".\\CardDB\\Cards.bin"))
+    //{
         // Connect networkManager response to the handler
         connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getCardResult(QNetworkReply*)));
         // We get the data, namely JSON file from a site on a particular url
         //request.setHeader(QNetworkRequest::ContentTypeHeader, “application/json”);
         Pack_info pack_info;
+        Pack_infoList.clear();
         pack_info = {1,113}; Pack_infoList.append(pack_info); // Core
         pack_info = {2,120}; Pack_infoList.append(pack_info); // Genesis
         pack_info = {3,55}; Pack_infoList.append(pack_info); // Creation&Control
@@ -343,7 +347,7 @@ void ScoreboardMain::getCardsResult()
                 manager->get(QNetworkRequest(QUrl(CardURL)));
             }
         }
-    }
+    //}
 }
 
 void ScoreboardMain::on_saveCards_Button_clicked()
@@ -404,6 +408,7 @@ QDataStream &operator>>(QDataStream &stream, Card_info &data)
 
 void ScoreboardMain::getCardResult(QNetworkReply *replyCard)
 {
+    //qDebug() << "Getting Card results";
     QJsonParseError jsonError;
     QString Carddata = replyCard->readAll();
     QJsonDocument CardJson = QJsonDocument::fromJson(Carddata.toUtf8(),&jsonError);
