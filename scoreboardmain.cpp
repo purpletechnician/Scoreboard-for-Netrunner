@@ -15,6 +15,7 @@
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QFile>
+#include <QStandardPaths>
 
 #ifdef Q_OS_WIN
     #include <windows.h> //For Hotkey/Shortcut key
@@ -26,8 +27,11 @@ string version_info = "0.99"; //Please Change this after a update!
 string Update_URL = "https://github.com/purpletechnician/Scoreboard-for-Netrunner";
 string CardDB_URL = "http://www.netrunnerdb.com/api/2.0/public/card/" ;
 QString BaseCardURL = "http://www.netrunnerdb.com/card_image/";
+QString appName = "Scoreboard for Netrunner" ;
 
-string Window_Name = "Scoreboard for Netrunner "+version_info;
+QString saveLocation = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)+"/"+appName ;
+string sLocation = saveLocation.toStdString();
+QString Window_Name = appName +" "+QString::fromStdString(version_info);
 QString QUpdate_URL = QString::fromStdString(Update_URL);
 QString QCardDB_URL = QString::fromStdString(CardDB_URL);
 
@@ -99,18 +103,40 @@ void ScoreboardMain::Opened() //Resets all
 {
     connect(ui->search_Input, SIGNAL(textChanged(const QString &)), this, SLOT(searchChanged(const QString &)));
 
+    QDir oDir(saveLocation+"/Output/");
+    if (!oDir.exists())
+    {
+        oDir.mkpath(saveLocation+"/Output/");
+        qDebug() << saveLocation+"/Output/";
+    }
+    QDir cDir(saveLocation+"/CardDB/");
+    if (!cDir.exists())
+    {
+        cDir.mkpath(saveLocation+"/CardDB/");
+        qDebug() << saveLocation+"/CardDB/";
+    }
+    QDir uDir(saveLocation+"/Update/");
+    if (!uDir.exists())
+    {
+        uDir.mkpath(saveLocation+"/Update/");
+    }
+
+    //mkdir(".\\Output\\");
+    //mkdir(".\\Update\\");
+
+
     writexml();
-    Player1_Name_Output.open(".\\Output\\Player1_Name.txt");
-    Player2_Name_Output.open(".\\Output\\Player2_Name.txt");
-    Player1_Id_Output.open(".\\Output\\Player1_Id.txt");
-    Player2_Id_Output.open(".\\Output\\Player2_Id.txt");
-    Player1_Score_Output.open(".\\Output\\Player1_Score.txt");
-    Player2_Score_Output.open(".\\Output\\Player2_Score.txt");
-    Clock_Output.open(".\\Output\\Clock.txt");
-    Round_Output.open(".\\Output\\Round.txt");
-    NR_Output.open(".\\Output\\Next_round.txt");
-    NRS_Output.open(".\\Output\\Next_round_start.txt");
-    UA_Output.open(".\\Output\\Unattended.txt");
+    Player1_Name_Output.open(sLocation+"/Output/Player1_Name.txt");
+    Player2_Name_Output.open(sLocation+"/Output/Player2_Name.txt");
+    Player1_Id_Output.open(sLocation+"/Output/Player1_Id.txt");
+    Player2_Id_Output.open(sLocation+"/Output/Player2_Id.txt");
+    Player1_Score_Output.open(sLocation+"/Output/Player1_Score.txt");
+    Player2_Score_Output.open(sLocation+"/Output/Player2_Score.txt");
+    Clock_Output.open(sLocation+"/Output/Clock.txt");
+    Round_Output.open(sLocation+"/Output/Round.txt");
+    NR_Output.open(sLocation+"/Output/Next_round.txt");
+    NRS_Output.open(sLocation+"/Output/Next_round_start.txt");
+    UA_Output.open(sLocation+"/Output/Unattended.txt");
 
     Player1_Name_Output << "";
     Player2_Name_Output << "";
@@ -191,12 +217,13 @@ void ScoreboardMain::Opened() //Resets all
     ui->Player2DOWN_Button->setFont(font5);
 
     this->setFixedSize(this->size());
-    this->setWindowTitle(Window_Name.c_str());
+    //this->setWindowTitle(Window_Name.c_str());
+    this->setWindowTitle(Window_Name);
     ui->StopMusic_Button->setVisible(false);
     ui->Warning_Label->setVisible(false);
 
     ui->Start_Button->setStyleSheet("* { background-color: rgba(0,255,0) }");
-    if (QFile::exists(".\\CardDB\\Cards.bin"))
+    if (QFile::exists("/CardDB/Cards.bin"))
     {
         ui->downloadCards_Label->setText("Cards-file already downloaded");
     }
@@ -212,9 +239,9 @@ void ScoreboardMain::Opened() //Resets all
     manager->get(QNetworkRequest(QUrl(QUpdate_URL)));
 */
 
-    if (QFile::exists(".\\CardDB\\Cards.bin"))
+    if (QFile::exists(saveLocation+"/CardDB/Cards.bin"))
     {
-        QFile file(".\\CardDB\\Cards.bin");
+        QFile file(saveLocation+"/CardDB/Cards.bin");
         if (!file.open(QIODevice::ReadOnly))
             qDebug() << "Cannot open file for read";
         QDataStream stream(&file);
@@ -266,11 +293,11 @@ void ScoreboardMain::on_List_Output_clicked()
 void ScoreboardMain::on_Show_right_clicked()
 {
     //qDebug()<<choosenCard;
-    if (QFile::exists(".\\Output\\Card_right.png"))
+    if (QFile::exists(saveLocation+"/Output/Card_right.png"))
     {
-        QFile::remove(".\\Output\\Card_right.png");
+        QFile::remove(saveLocation+"/Output/Card_right.png");
     }
-    QFile::copy(".\\CardDB\\"+choosenCard+".png",".\\Output\\Card_right.png");
+    QFile::copy(saveLocation+"/CardDB/"+choosenCard+".png",saveLocation+"/Output/Card_right.png");
 
     if (ui->Show_right->text()=="Show right")
     {
@@ -279,7 +306,7 @@ void ScoreboardMain::on_Show_right_clicked()
     else
     {
         ui->Show_right->setText("Show right");
-        QFile::remove(".\\Output\\Card_right.png");
+        QFile::remove(saveLocation+"/Output/Card_right.png");
         ui->search_Input->setText("");
         ui->search_Input->setFocus();
     }
@@ -288,11 +315,11 @@ void ScoreboardMain::on_Show_right_clicked()
 void ScoreboardMain::on_Show_left_clicked()
 {
     //qDebug()<<choosenCard;
-    if (QFile::exists(".\\Output\\Card_left.png"))
+    if (QFile::exists(saveLocation+"/Output/Card_left.png"))
     {
-        QFile::remove(".\\Output\\Card_left.png");
+        QFile::remove(saveLocation+"/Output/Card_left.png");
     }
-    QFile::copy(".\\CardDB\\"+choosenCard+".png",".\\Output\\Card_left.png");
+    QFile::copy(saveLocation+"/CardDB/"+choosenCard+".png",saveLocation+"/Output/Card_left.png");
 
     if (ui->Show_left->text()=="Show left")
     {
@@ -301,7 +328,7 @@ void ScoreboardMain::on_Show_left_clicked()
     else
     {
         ui->Show_left->setText("Show left");
-        QFile::remove(".\\Output\\Card_left.png");
+        QFile::remove(saveLocation+"/Output/Card_left.png");
         ui->search_Input->setText("");
         ui->search_Input->setFocus();
     }
@@ -309,7 +336,7 @@ void ScoreboardMain::on_Show_left_clicked()
 
 void ScoreboardMain::getCardsResult()
 {
-    //if (!QFile::exists(".\\CardDB\\Cards.bin"))
+    //if (!QFile::exists(sLocation+"/CardDB/Cards.bin"))
     //{
         // Connect networkManager response to the handler
         connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getCardResult(QNetworkReply*)));
@@ -352,10 +379,10 @@ void ScoreboardMain::getCardsResult()
 
 void ScoreboardMain::on_saveCards_Button_clicked()
 {
-    if (!QFile::exists(".\\CardDB\\Cards.bin"))
+    if (!QFile::exists(saveLocation+"/CardDB/Cards.bin"))
     {
         ui->saveCards_Label->setText("Saving Cards");
-        QFile file(".\\CardDB\\Cards.bin");
+        QFile file(saveLocation+"/CardDB/Cards.bin");
         if (!file.open(QIODevice::WriteOnly))
             qDebug() << "Cannot open file for write";
         QDataStream stream(&file);
@@ -380,7 +407,7 @@ void ScoreboardMain::on_saveCards_Button_clicked()
 void ScoreboardMain::getCardURLResult(QNetworkReply *replyCard)
 {
     QString code = replyCard->property("code").toString();
-    QFile file(".\\CardDB\\"+code+".png");
+    QFile file(saveLocation+"/CardDB/"+code+".png");
     if (!file.open(QIODevice::ReadWrite))
         qDebug() << "Cannot open file "<<code;
     QByteArray data=replyCard->readAll();
@@ -449,12 +476,12 @@ void ScoreboardMain::replyFinished(QNetworkReply *reply)
         ui->Testing->setText("Reading URL");
 
         ofstream textout;
-        textout.open(".\\Update\\out.txt");
+        textout.open(sLocation+"/Update/out.txt");
         //Read all from the url and writes to a file
         textout << reply->readAll().toStdString();
         textout.close();
         ifstream textin;
-        textin.open(".\\Update\\out.txt");
+        textin.open(sLocation+"/Update/out.txt");
         if(textin.is_open())
         {
             while(getline(textin, getstring))
@@ -506,8 +533,8 @@ void ScoreboardMain::Changed() //Changed Score,etc
     }
     else
     {
-        Player1_Score_Output.open(".\\Output\\Player1_Score.txt");
-        Player2_Score_Output.open(".\\Output\\Player2_Score.txt");
+        Player1_Score_Output.open(sLocation+"/Output/Player1_Score.txt");
+        Player2_Score_Output.open(sLocation+"/Output/Player2_Score.txt");
 
         if (ui->NoScoreIdOutput->isChecked())
         {
@@ -537,7 +564,7 @@ void ScoreboardMain::on_downloadCards_Button_clicked() // downloadCards Button
 
 void ScoreboardMain::on_UA_Button_clicked() //Unattended Button
 {
-    UA_Output.open(".\\Output\\Unattended.txt");
+    UA_Output.open(sLocation+"/Output/Unattended.txt");
     if (ui->UA_Button->text()=="Show Unattended")
     {
         UA_Output << "Currently unattended";
@@ -555,20 +582,20 @@ void ScoreboardMain::on_UpNextScreen_clicked() //UpNext Button
 {
     QString TextNRSI= ui->Next_round_start_Input->text(), TextNRI=ui->Next_round_Input->text();
     NR_text=TextNRI.toUtf8().constData(); NRS_text=TextNRSI.toUtf8().constData();
-    NR_Output.open(".\\Output\\Next_round.txt");
-    NRS_Output.open(".\\Output\\Next_round_start.txt");
+    NR_Output.open(sLocation+"/Output/Next_round.txt");
+    NRS_Output.open(sLocation+"/Output/Next_round_start.txt");
     if (ui->UpNextScreen->text()=="Show UpNextScreen")
     {
-         QFile::copy(".\\ID_Pictures\\UpNext.png",".\\Output\\UpNext.png");
+         QFile::copy(saveLocation+"/ID_Pictures/UpNext.png",saveLocation+"/Output/UpNext.png");
          NR_Output<<NR_text;
          NRS_Output<<NRS_text;
          ui->UpNextScreen->setText("Hide UpNextScreen");
     }
     else
     {
-        if (QFile::exists(".\\Output\\UpNext.png"))
+        if (QFile::exists(saveLocation+"/Output/UpNext.png"))
         {
-            QFile::remove(".\\Output\\UpNext.png");
+            QFile::remove(saveLocation+"/Output/UpNext.png");
         }
         NR_Output<<"";
         NRS_Output<<"";
@@ -648,14 +675,14 @@ void ScoreboardMain::on_Update_Team_Button_clicked() //Update Team Name Button
     }
     else
     {
-        Player1_Name_Output.open(".\\Output\\Player1_Name.txt");
-        Player2_Name_Output.open(".\\Output\\Player2_Name.txt");
-        Round_Output.open(".\\Output\\Round.txt");
-        Round_info_Output.open(".\\Output\\Round_info.txt");
+        Player1_Name_Output.open(sLocation+"/Output/Player1_Name.txt");
+        Player2_Name_Output.open(sLocation+"/Output/Player2_Name.txt");
+        Round_Output.open(sLocation+"/Output/Round.txt");
+        Round_info_Output.open(sLocation+"/Output/Round_info.txt");
         Player1_Name_Output << Player1_Name;
         Player2_Name_Output << Player2_Name;
-        Player1_Id_Output.open(".\\Output\\Player1_Id.txt");
-        Player2_Id_Output.open(".\\Output\\Player2_Id.txt");
+        Player1_Id_Output.open(sLocation+"/Output/Player1_Id.txt");
+        Player2_Id_Output.open(sLocation+"/Output/Player2_Id.txt");
         Round_Output << Round ;
 
         if(ui->Swiss_Radio->isChecked())
@@ -685,8 +712,8 @@ void ScoreboardMain::on_Update_Team_Button_clicked() //Update Team Name Button
 
         if (ui->NoScoreIdOutput->isChecked())
         {
-            Player1_Score_Output.open(".\\Output\\Player1_Score.txt");
-            Player2_Score_Output.open(".\\Output\\Player2_Score.txt");
+            Player1_Score_Output.open(sLocation+"/Output/Player1_Score.txt");
+            Player2_Score_Output.open(sLocation+"/Output/Player2_Score.txt");
             Player1_Score_Output << "";
             Player2_Score_Output << "";
             Player1_Score_Output.close();
@@ -695,19 +722,19 @@ void ScoreboardMain::on_Update_Team_Button_clicked() //Update Team Name Button
             Player1_Id_Output << "";
             Player2_Id_Output << "";
 
-            if (QFile::exists(".\\Output\\Player1_Id.png"))
+            if (QFile::exists(saveLocation+"/Output/Player1_Id.png"))
             {
-                QFile::remove(".\\Output\\Player1_Id.png");
+                QFile::remove(saveLocation+"/Output/Player1_Id.png");
             }
 
-            if (QFile::exists(".\\Output\\Player2_Id.png"))
+            if (QFile::exists(saveLocation+"/Output/Player2_Id.png"))
             {
-                QFile::remove(".\\Output\\Player2_Id.png");
+                QFile::remove(saveLocation+"/Output/Player2_Id.png");
             }
 
-            if (QFile::exists(".\\Output\\AgendaPoint.png"))
+            if (QFile::exists(saveLocation+"/Output/AgendaPoint.png"))
             {
-                QFile::remove(".\\Output\\AgendaPoint.png");
+                QFile::remove(saveLocation+"/Output/AgendaPoint.png");
             }
         }
         else
@@ -715,27 +742,27 @@ void ScoreboardMain::on_Update_Team_Button_clicked() //Update Team Name Button
             Player1_Id_Output << Player1_Id;
             Player2_Id_Output << Player2_Id;
 
-            if (QFile::exists(".\\Output\\Player1_Id.png"))
+            if (QFile::exists(saveLocation+"/Output/Player1_Id.png"))
             {
-                QFile::remove(".\\Output\\Player1_Id.png");
+                QFile::remove(saveLocation+"/Output/Player1_Id.png");
             }
             QString p1_id=QString::fromStdString(Player1_Id.substr(0,2));
-            QString p1_idfile=".\\ID_Pictures\\" ;
+            QString p1_idfile=saveLocation+"/ID_Pictures/" ;
             p1_idfile.append(p1_id);
             p1_idfile.append(".png");
-            QFile::copy(p1_idfile,".\\Output\\Player1_Id.png");
+            QFile::copy(p1_idfile,saveLocation+"/Output/Player1_Id.png");
 
-            if (QFile::exists(".\\Output\\Player2_Id.png"))
+            if (QFile::exists(saveLocation+"/Output/Player2_Id.png"))
             {
-                QFile::remove(".\\Output\\Player2_Id.png");
+                QFile::remove(saveLocation+"/Output/Player2_Id.png");
             }
             QString p2_id=QString::fromStdString(Player2_Id.substr(0,2));
-            QString p2_idfile=".\\ID_pictures\\" ;
+            QString p2_idfile=saveLocation+"/ID_pictures/" ;
             p2_idfile.append(p2_id);
             p2_idfile.append(".png");
-            QFile::copy(p2_idfile,".\\Output\\Player2_Id.png");
+            QFile::copy(p2_idfile,saveLocation+"/Output/Player2_Id.png");
 
-            QFile::copy(".\\ID_pictures\\AgendaPoint.png",".\\Output\\AgendaPoint.png");
+            QFile::copy(saveLocation+"/ID_pictures/AgendaPoint.png",saveLocation+"/Output/AgendaPoint.png");
         }
 
         Player1_Name_Output.close();
@@ -1166,7 +1193,7 @@ void ScoreboardMain::on_Reset_Button_clicked() //Reset Clock button
         clock_symbol = ":";
         minu = 40;
         seco = 0;
-        Clock_Output.open(".\\Output\\Clock.txt");
+        Clock_Output.open(sLocation+"/Output/Clock.txt");
         Clock_Output << "40:00";
         Clock_Output.close();
         if(ui->checkBox->isChecked())
@@ -1188,7 +1215,7 @@ void ScoreboardMain::on_Reset_Button_clicked() //Reset Clock button
         clock_symbol = ":";
         minu = 60;
         seco = 0;
-        Clock_Output.open(".\\Output\\Clock.txt");
+        Clock_Output.open(sLocation+"/Output/Clock.txt");
         Clock_Output << "60:00";
         Clock_Output.close();
         if(ui->checkBox->isChecked())
@@ -1210,7 +1237,7 @@ void ScoreboardMain::on_Reset_Button_clicked() //Reset Clock button
         clock_symbol = ":";
         minu = 65;
         seco = 0;
-        Clock_Output.open(".\\Output\\Clock.txt");
+        Clock_Output.open(sLocation+"/Output/Clock.txt");
         Clock_Output << "65:00";
         Clock_Output.close();
         if(ui->checkBox->isChecked())
@@ -1232,7 +1259,7 @@ void ScoreboardMain::on_Reset_Button_clicked() //Reset Clock button
         minu = 70;
         seco = 0;
         clock_symbol = ":";
-        Clock_Output.open(".\\Output\\Clock.txt");
+        Clock_Output.open(sLocation+"/Output/Clock.txt");
         Clock_Output << "70:00";
         Clock_Output.close();
         if(ui->checkBox->isChecked())
@@ -1253,7 +1280,7 @@ void ScoreboardMain::on_Reset_Button_clicked() //Reset Clock button
             Clock_text = "00:00";
             writexml();
         }
-        Clock_Output.open(".\\Output\\Clock.txt");
+        Clock_Output.open(sLocation+"/Output/Clock.txt");
         Clock_Output << "00:00";
         Clock_Output.close();
         ui->Clock_Label->setText("  00:00");
@@ -1261,7 +1288,7 @@ void ScoreboardMain::on_Reset_Button_clicked() //Reset Clock button
         ui->Minutes_Input->setValue(0);
         minu = 0;
         seco = 0;
-        Clock_Output.open(".\\Output\\Clock.txt");
+        Clock_Output.open(sLocation+"/Output/Clock.txt");
         Clock_Output << "00:00";
         Clock_Output.close();
         if(ui->checkBox->isChecked())
@@ -1336,7 +1363,7 @@ void ScoreboardMain::on_CurrentTime_Checkbox_clicked(bool current)
             Clock_text = "00:00";
             writexml();
         }
-        Clock_Output.open(".\\Output\\Clock.txt");
+        Clock_Output.open(sLocation+"/Output/Clock.txt");
         Clock_Output << "00:00";
         Clock_Output.close();
         seconds_zero = "";
@@ -1366,7 +1393,7 @@ void ScoreboardMain::timeclock()
     {
         Clock_text = QString::number(local->tm_hour) + ":" + QString::fromStdString(minutes_zero) + QString::number(local->tm_min) + ":" + QString::fromStdString(seconds_zero) + QString::number(local->tm_sec);
     }
-    Clock_Output.open(".\\Output\\Clock.txt");
+    Clock_Output.open(sLocation+"/Output/Clock.txt");
     Clock_Output << local->tm_hour << ":" << minutes_zero << local->tm_min << ":" << seconds_zero << local->tm_sec;
     Clock_Output.close();
     if(ui->pushButton->text() == "Disable")
@@ -1389,7 +1416,7 @@ void ScoreboardMain::ifclockinputchanged()
         Clock_text = QString::fromStdString(minutes_zero) + QString::number(minu) + QString::fromStdString(clock_symbol) + QString::fromStdString(seconds_zero) + QString::number(seco);
         writexml();
     }
-    Clock_Output.open(".\\Output\\Clock.txt");
+    Clock_Output.open(sLocation+"/Output/Clock.txt");
     Clock_Output << minutes_zero << minu << clock_symbol << seconds_zero << seco;
     Clock_Output.close();
     if(ui->pushButton->text() == "Disable")
@@ -1780,7 +1807,7 @@ void ScoreboardMain::on_Seventy_Radio_clicked()
 void ScoreboardMain::xml()
 {
     //Creates QFile to the directory
-    QFile file(".//Output//Xml.xml");
+    QFile file(saveLocation+"/Output/Xml.xml");
 
     //Check if file is writeable
     if(!file.open(QIODevice::WriteOnly | QIODevice::Text))
@@ -1798,7 +1825,7 @@ void ScoreboardMain::writexml()
 
     a++;
     //Creates a new xml file
-    QFile file(".//Output//Xml.xml");
+    QFile file(saveLocation+"/Output/Xml.xml");
     //Make sure file is only writeonly
     file.open(QIODevice::WriteOnly);
     //Set QXmlStreamWriter to file path to &file
@@ -1829,8 +1856,8 @@ void ScoreboardMain::on_checkBox_clicked(bool checked20)
     {
         xml();
     }else{
-        QFile::remove(".\\Output\\Xml.xml");
-        QFile::remove(".\\Update\\out.txt");
+        QFile::remove(saveLocation+"/Output/Xml.xml");
+        QFile::remove(saveLocation+"/Update/out.txt");
     }
 }
 
