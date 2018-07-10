@@ -1426,7 +1426,7 @@ void ScoreboardMain::on_Hotkey_Checkbox_clicked(bool Hotkey1)
     hotkey->start(speed2);
 }
 
-void ScoreboardMain::hotkeys()
+/*void ScoreboardMain::hotkeys()
 {
     if(GetAsyncKeyState(VK_LCONTROL) && Hotkey == true)
     {
@@ -1442,7 +1442,7 @@ void ScoreboardMain::hotkeys()
     {
         ScoreboardMain::on_Start_Button_clicked();
     }
-}
+}*/
 
 void ScoreboardMain::on_About_ActionBar_triggered()
 {

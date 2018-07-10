@@ -104,7 +104,7 @@ private slots:
 
     void on_Hotkey_Checkbox_clicked(bool hotkey);
 
-    void hotkeys();
+    //void hotkeys();
 
     void on_About_ActionBar_triggered();
 
