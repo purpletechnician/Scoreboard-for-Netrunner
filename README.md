@@ -1,4 +1,6 @@
-# Scoreboard-for-Netrunner 0.97<br/>
+# Scoreboard-for-Netrunner 0.99<br/>
+0,99 Bugfixing<br/>
+0,98 UI-improvements and bugfixing<br/>
 0,97 Added possibility to search for cards and "show" them to the left or right<br/>
 0,96 Fixing bugs in GUI and code<br/>
 0,95 Fixing bugs in GUI and code<br/>
