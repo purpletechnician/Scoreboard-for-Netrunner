@@ -29,7 +29,8 @@ string CardDB_URL = "http://www.netrunnerdb.com/api/2.0/public/card/" ;
 QString BaseCardURL = "http://www.netrunnerdb.com/card_image/";
 QString appName = "Scoreboard for Netrunner" ;
 
-QString saveLocation = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)+"/"+appName ;
+QString saveLocation = QDir::currentPath() ;
+//QString saveLocation = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)+"/"+appName ;
 string sLocation = saveLocation.toStdString();
 QString Window_Name = appName +" "+QString::fromStdString(version_info);
 QString QUpdate_URL = QString::fromStdString(Update_URL);
@@ -223,9 +224,13 @@ void ScoreboardMain::Opened() //Resets all
     ui->Warning_Label->setVisible(false);
 
     ui->Start_Button->setStyleSheet("* { background-color: rgba(0,255,0) }");
-    if (QFile::exists("/CardDB/Cards.bin"))
+    if (QFile::exists(saveLocation+"/CardDB/Cards.bin"))
     {
         ui->downloadCards_Label->setText("Cards-file already downloaded");
+    }
+    if (QFile::exists(saveLocation+"/CardDB/01001.png"))
+    {
+        ui->saveCards_Label->setText("1+ cards already downloaded");
     }
     //Makes new QNetworkAccessManager and parents to this
     manager = new QNetworkAccessManager(this);
