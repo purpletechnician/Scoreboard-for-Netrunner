@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>962</width>
+    <width>986</width>
     <height>723</height>
    </rect>
   </property>
@@ -28,7 +28,7 @@
      <rect>
       <x>20</x>
       <y>0</y>
-      <width>921</width>
+      <width>941</width>
       <height>681</height>
      </rect>
     </property>
@@ -627,7 +627,7 @@ start</string>
        <rect>
         <x>420</x>
         <y>480</y>
-        <width>501</width>
+        <width>521</width>
         <height>20</height>
        </rect>
       </property>
@@ -801,11 +801,7 @@ start</string>
        <rect>
         <x>720</x>
         <y>350</y>
-<<<<<<< Updated upstream
-        <width>181</width>
-=======
         <width>171</width>
->>>>>>> Stashed changes
         <height>16</height>
        </rect>
       </property>
@@ -818,11 +814,7 @@ start</string>
        <rect>
         <x>720</x>
         <y>400</y>
-<<<<<<< Updated upstream
-        <width>181</width>
-=======
         <width>161</width>
->>>>>>> Stashed changes
         <height>16</height>
        </rect>
       </property>
@@ -1591,8 +1583,8 @@ start</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>962</width>
-     <height>21</height>
+     <width>986</width>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuAbout">

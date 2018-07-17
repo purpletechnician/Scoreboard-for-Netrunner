@@ -223,6 +223,8 @@ void ScoreboardMain::Opened() //Resets all
     ui->StopMusic_Button->setVisible(false);
     ui->Warning_Label->setVisible(false);
 
+    ui->search_Input->setFocus();
+
     ui->Start_Button->setStyleSheet("* { background-color: rgba(0,255,0) }");
     if (QFile::exists(saveLocation+"/CardDB/Cards.bin"))
     {
