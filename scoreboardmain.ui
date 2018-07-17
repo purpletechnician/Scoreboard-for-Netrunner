@@ -801,7 +801,11 @@ start</string>
        <rect>
         <x>720</x>
         <y>350</y>
+<<<<<<< Updated upstream
         <width>181</width>
+=======
+        <width>171</width>
+>>>>>>> Stashed changes
         <height>16</height>
        </rect>
       </property>
@@ -814,7 +818,11 @@ start</string>
        <rect>
         <x>720</x>
         <y>400</y>
+<<<<<<< Updated upstream
         <width>181</width>
+=======
+        <width>161</width>
+>>>>>>> Stashed changes
         <height>16</height>
        </rect>
       </property>
