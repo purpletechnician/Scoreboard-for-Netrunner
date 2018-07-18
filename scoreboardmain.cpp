@@ -405,6 +405,7 @@ void ScoreboardMain::on_saveCards_Button_clicked()
         QString code = data.Code;
         //qDebug()<< "Card URL:" << CardURL << "Card: "<<code;
         QNetworkReply* reply = manager->get(QNetworkRequest(QUrl(CardURL)));
+        QNetworkReply* reply = managerTwo->get(QNetworkRequest(QUrl(CardURL)));
         reply->setProperty("code",code);
     }
 }
