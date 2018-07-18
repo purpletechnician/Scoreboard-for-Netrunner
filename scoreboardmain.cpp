@@ -474,6 +474,7 @@ void ScoreboardMain::replyFinished(QNetworkReply *reply)
     if(reply->error())
     {
         ui->Testing->setText("Error: 0001, Not able to check for updates!");
+        qDebug() << reply->error();
     }
     else
     {
