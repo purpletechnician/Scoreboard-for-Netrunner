@@ -398,7 +398,7 @@ void ScoreboardMain::on_saveCards_Button_clicked()
         //qDebug() << "Cards saved to Cards.bin";
     }
 
-    connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getCardURLResult(QNetworkReply*)));
+    connect(managerTwo, SIGNAL(finished(QNetworkReply*)), this, SLOT(getCardURLResult(QNetworkReply*)));
     foreach (Card_info data, Card_infoList)
     {
         QString CardURL = data.Image_url;
