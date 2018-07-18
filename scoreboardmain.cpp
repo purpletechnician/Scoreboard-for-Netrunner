@@ -38,7 +38,7 @@ QString QCardDB_URL = QString::fromStdString(CardDB_URL);
 
 QString *cardJsonData(new QString) ;
 
-int Player1_Score = 0, Player2_Score = 0; //Team Score integer
+int Player1_Score = 0, Player2_Score = 0; //Players Score integer
 int minu = 65, seco = 0; //Minutes and Seconds integer
 int mins = 0, secs = 0; //Used for To_input
 int saved_speed = 0, last_speed = 0; //Stored speed integer
@@ -121,10 +121,6 @@ void ScoreboardMain::Opened() //Resets all
     {
         uDir.mkpath(saveLocation+"/Update/");
     }
-
-    //mkdir(".\\Output\\");
-    //mkdir(".\\Update\\");
-
 
     writexml();
     Player1_Name_Output.open(sLocation+"/Output/Player1_Name.txt");
@@ -233,16 +229,16 @@ void ScoreboardMain::Opened() //Resets all
         ui->saveCards_Label->setText("1+ cards already downloaded");
     }
     //Makes new QNetworkAccessManager and parents to this
-    manager = new QNetworkAccessManager(this);
+    managerOne = new QNetworkAccessManager(this);
     //Get From the URL
-    /*if (QUrl(QUpdate_URL).isValid())
+    if (QUrl(QUpdate_URL).isValid())
     {
         //qDebug () << "Valid Update-URL";
     }
     //Connect to replyFinished QnetworkReply
-    connect(manager,SIGNAL(finished(QNetworkReply*)),this,SLOT(replyFinished(QNetworkReply*)));
-    manager->get(QNetworkRequest(QUrl(QUpdate_URL)));
-*/
+    connect(managerOne,SIGNAL(finished(QNetworkReply*)),this,SLOT(replyFinished(QNetworkReply*)));
+    managerOne->get(QNetworkRequest(QUrl(QUpdate_URL)));
+
 
     if (QFile::exists(saveLocation+"/CardDB/Cards.bin"))
     {
@@ -344,7 +340,8 @@ void ScoreboardMain::getCardsResult()
     //if (!QFile::exists(sLocation+"/CardDB/Cards.bin"))
     //{
         // Connect networkManager response to the handler
-        connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getCardResult(QNetworkReply*)));
+        managerTwo = new QNetworkAccessManager(this);
+        connect(managerTwo, SIGNAL(finished(QNetworkReply*)), this, SLOT(getCardResult(QNetworkReply*)));
         // We get the data, namely JSON file from a site on a particular url
         //request.setHeader(QNetworkRequest::ContentTypeHeader, “application/json”);
         Pack_info pack_info;
@@ -376,7 +373,7 @@ void ScoreboardMain::getCardsResult()
                 QString Cardnumber = QString("%1").arg((*p).Pack_code,2,10,QChar('0'))+ QString("%1").arg(j,3,10,QChar('0')) ;
                 //qDebug() << Cardnumber;
                 QString CardURL = QCardDB_URL+Cardnumber;
-                manager->get(QNetworkRequest(QUrl(CardURL)));
+                managerTwo->get(QNetworkRequest(QUrl(CardURL)));
             }
         }
     //}
@@ -404,7 +401,6 @@ void ScoreboardMain::on_saveCards_Button_clicked()
         QString CardURL = data.Image_url;
         QString code = data.Code;
         //qDebug()<< "Card URL:" << CardURL << "Card: "<<code;
-        QNetworkReply* reply = manager->get(QNetworkRequest(QUrl(CardURL)));
         QNetworkReply* reply = managerTwo->get(QNetworkRequest(QUrl(CardURL)));
         reply->setProperty("code",code);
     }
