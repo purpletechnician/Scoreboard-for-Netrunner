@@ -66,10 +66,19 @@ QString choosenCard;
 
 QList<QString> IdList;
 
+struct FactionColorCode {
+    QString Faction;
+    QString StartColor;
+    QString EndColor;
+};
+
+QList<FactionColorCode> FactionColorCodes;
+
 struct Card_info {
     QString Title;
     QString Code;
     QString Image_url ;
+    QString Faction ;
 };
 QList<Card_info> Card_infoList ;
 
@@ -104,6 +113,7 @@ void ScoreboardMain::Opened() //Resets all
 {
     connect(ui->search_Input, SIGNAL(textChanged(const QString &)), this, SLOT(searchChanged(const QString &)));
 
+    qDebug() << saveLocation ;
     QDir oDir(saveLocation+"/Output/");
     if (!oDir.exists())
     {
@@ -190,6 +200,15 @@ void ScoreboardMain::Opened() //Resets all
     IdList.append("Weyland: Builder of Nations"); IdList.append("Weyland: Jemison Astronautics"); IdList.append("Weyland: Skorpios Defence Systems"); IdList.append("Weyland: Building a Better World");
     IdList.append("Weyland: SSO Industries"); IdList.append("Weyland: The Outfit");
 
+    FactionColorCodes.append({"HB", "#564B8A", "#EEE0F8"});
+    FactionColorCodes.append({"NBN", "#F2CA50", "#EFE4D0"});
+    FactionColorCodes.append({"Jinteki", "#8C0712", "#F5DED9"});
+    FactionColorCodes.append({"Weyland", "#FFFFFF", "#FFFFFF"});
+    FactionColorCodes.append({"Anarch", "#F26D3D", "#EFE6DF"});
+    FactionColorCodes.append({"Shaper", "#60B54E", "#EBFFEA"});
+    FactionColorCodes.append({"Criminal", "#6093DE", "#DDE7FD"});
+    FactionColorCodes.append({"Neutral", "#B3B7BF", "#EFEFF4"});
+
     ui->Player1Id_Input->addItems(IdList);
     ui->Player2Id_Input->addItems(IdList);
 
@@ -214,12 +233,14 @@ void ScoreboardMain::Opened() //Resets all
     ui->Player2DOWN_Button->setFont(font5);
 
     this->setFixedSize(this->size());
-    //this->setWindowTitle(Window_Name.c_str());
+
     this->setWindowTitle(Window_Name);
     ui->StopMusic_Button->setVisible(false);
     ui->Warning_Label->setVisible(false);
 
     ui->search_Input->setFocus();
+
+    //this->setStyleSheet("* { background-color: qlineargradient(x1: 0, y1: 0, x2:0, y2: 1, stop: 0 #F26D3D, stop:1 #EFE6DF) }");
 
     ui->Start_Button->setStyleSheet("* { background-color: rgba(0,255,0) }");
     if (QFile::exists(saveLocation+"/CardDB/Cards.bin"))
@@ -232,6 +253,7 @@ void ScoreboardMain::Opened() //Resets all
     }
     //Makes new QNetworkAccessManager and parents to this
     managerOne = new QNetworkAccessManager(this);
+    managerTwo = new QNetworkAccessManager(this);
     //Get From the URL
     if (QUrl(QUpdate_URL).isValid())
     {
@@ -252,7 +274,7 @@ void ScoreboardMain::Opened() //Resets all
         file.close();
         /*foreach (Card_info data, Card_infoList)
         {
-            qDebug() << data.Title << ":" << data.Code << ":" << data.Image_url;
+            qDebug() << data.Title << ":" << data.Code << ":" << data.Image_url<<":"<<data.Faction;
         }*/
     }
 }
@@ -270,6 +292,8 @@ void ScoreboardMain::searchChanged(const QString &newvalue)
             {
                 QString text = data.Title+" #"+data.Code;
                 ui->List_Output->addItem(text);
+                ui->List_Output->currentItem()->backgroundColor()
+                //ui->List_Output->setStyleSheet("* { background-color: qlineargradient(x1: 0, y1: 0, x2:0, y2: 1, stop: 0 #F26D3D, stop:1 #EFE6DF) }");
                 if (found_first == false)
                 {
                     ui->List_Output->setCurrentRow(0);
@@ -342,12 +366,12 @@ void ScoreboardMain::getCardsResult()
     //if (!QFile::exists(sLocation+"/CardDB/Cards.bin"))
     //{
         // Connect networkManager response to the handler
-        managerTwo = new QNetworkAccessManager(this);
         connect(managerTwo, SIGNAL(finished(QNetworkReply*)), this, SLOT(getCardResult(QNetworkReply*)));
         // We get the data, namely JSON file from a site on a particular url
         //request.setHeader(QNetworkRequest::ContentTypeHeader, “application/json”);
         Pack_info pack_info;
         Pack_infoList.clear();
+        Card_infoList.clear();
         pack_info = {1,113}; Pack_infoList.append(pack_info); // Core
         pack_info = {2,120}; Pack_infoList.append(pack_info); // Genesis
         pack_info = {3,55}; Pack_infoList.append(pack_info); // Creation&Control
@@ -387,6 +411,7 @@ void ScoreboardMain::on_saveCards_Button_clicked()
     {
         ui->saveCards_Label->setText("Saving Cards");
         QFile file(saveLocation+"/CardDB/Cards.bin");
+        //qDebug() << saveLocation ;
         if (!file.open(QIODevice::WriteOnly))
             qDebug() << "Cannot open file for write";
         QDataStream stream(&file);
@@ -402,7 +427,8 @@ void ScoreboardMain::on_saveCards_Button_clicked()
     {
         QString CardURL = data.Image_url;
         QString code = data.Code;
-        //qDebug()<< "Card URL:" << CardURL << "Card: "<<code;
+        QString faction = data.Faction ;
+        //qDebug()<< "Card URL:" << CardURL << "Card: "<<code << "Faction: " << faction;
         QNetworkReply* reply = managerTwo->get(QNetworkRequest(QUrl(CardURL)));
         reply->setProperty("code",code);
     }
@@ -425,7 +451,7 @@ void ScoreboardMain::getCardURLResult(QNetworkReply *replyCard)
 
 QDataStream &operator<<(QDataStream &stream, const Card_info &data)
 {
-    stream << data.Title << data.Code << data.Image_url ;
+    stream << data.Title << data.Code << data.Image_url << data.Faction;
     return stream;
 }
 
@@ -434,6 +460,7 @@ QDataStream &operator>>(QDataStream &stream, Card_info &data)
     stream >> data.Title ;
     stream >> data.Code ;
     stream >> data.Image_url ;
+    stream >> data.Faction ;
     return stream ;
 }
 
@@ -453,9 +480,10 @@ void ScoreboardMain::getCardResult(QNetworkReply *replyCard)
         temp_Card_info.Title = v.toObject().value("title").toString();
         temp_Card_info.Code = v.toObject().value("code").toString();
         temp_Card_info.Image_url = v.toObject().value("image_url").toString();
+        temp_Card_info.Faction = v.toObject().value("faction_code").toString();
         if (temp_Card_info.Image_url == "")
             temp_Card_info.Image_url = BaseCardURL+temp_Card_info.Code+".png";
-        //qDebug() << temp_Card_info.Title << ":" <<temp_Card_info.Code<<":"<<temp_Card_info.Image_url;
+        //qDebug() << temp_Card_info.Title << ":" <<temp_Card_info.Code<<":"<<temp_Card_info.Image_url<<":"<<temp_Card_info.Faction;
         Card_infoList.append(temp_Card_info);
         ui->downloadCards_Label->setText("Downloading data: "+temp_Card_info.Code);
     }

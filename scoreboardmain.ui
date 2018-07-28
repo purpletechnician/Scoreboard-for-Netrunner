@@ -564,7 +564,7 @@ start</string>
        <rect>
         <x>680</x>
         <y>610</y>
-        <width>91</width>
+        <width>101</width>
         <height>17</height>
        </rect>
       </property>
@@ -891,7 +891,7 @@ start</string>
        <rect>
         <x>420</x>
         <y>60</y>
-        <width>175</width>
+        <width>151</width>
         <height>51</height>
        </rect>
       </property>
@@ -917,7 +917,7 @@ start</string>
        <rect>
         <x>420</x>
         <y>110</y>
-        <width>171</width>
+        <width>151</width>
         <height>61</height>
        </rect>
       </property>
@@ -1584,7 +1584,7 @@ start</string>
      <x>0</x>
      <y>0</y>
      <width>986</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuAbout">
