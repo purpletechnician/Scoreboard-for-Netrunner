@@ -30,6 +30,8 @@ public:
 private slots:
     void Opened();
 
+    void createColors();
+
     void searchChanged(const QString &newvalue);
 
     void on_List_Output_clicked();
