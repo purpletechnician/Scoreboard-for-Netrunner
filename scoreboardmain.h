@@ -32,6 +32,8 @@ private slots:
 
     void createColors();
 
+    void comboFactionColor_currentIndexChanged(int index);
+
     void searchChanged(const QString &newvalue);
 
     void on_List_Output_clicked();

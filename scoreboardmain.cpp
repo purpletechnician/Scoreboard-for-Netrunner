@@ -286,37 +286,47 @@ void ScoreboardMain::createColors()
     FactionColorCodes.append({"Criminal", "#6093DE", "#DDE7FD"});
     FactionColorCodes.append({"Neutral", "#B3B7BF", "#EFEFF4"});*/
 
-    linearGrad.setStart(QPoint(0,0)); linearGrad.setFinalStop(QPoint(100,0));
+    ui->comboFactionColor->addItem("None");
+
+    linearGrad.setStart(QPoint(0,0)); linearGrad.setFinalStop(QPoint(ui->search_Input->width()/2,0));
     linearGrad.setColorAt(0,"#564B8A"); linearGrad.setColorAt(1,"#EEE0F8");
     FactionColorCodes.append({"haas-bioroid", "HB", "#564B8A", "#EEE0F8", linearGrad});
+    ui->comboFactionColor->addItem("HB");
 
     //linearGrad.setStart(QPoint(0,0)); linearGrad.setFinalStop(QPoint(100,0));
     linearGrad.setColorAt(0,"#F2CA50"); linearGrad.setColorAt(1,"#EFE4D0");
     FactionColorCodes.append({"nbn", "NBN", "#F2CA50", "#EFE4D0", linearGrad});
+    ui->comboFactionColor->addItem("NBN");
 
     //linearGrad.setStart(QPoint(0,0)); linearGrad.setFinalStop(QPoint(100,0));
     linearGrad.setColorAt(0,"#8C0712"); linearGrad.setColorAt(1,"#EFE6DF");
     FactionColorCodes.append({"jinteki", "Jinteki", "#8C0712", "#EFE6DF", linearGrad});
+    ui->comboFactionColor->addItem("Jinteki");
 
     //linearGrad.setStart(QPoint(0,0)); linearGrad.setFinalStop(QPoint(100,0));
     linearGrad.setColorAt(0,"#39735E"); linearGrad.setColorAt(1,"#EBF4F0");
     FactionColorCodes.append({"weyland-consortium", "Weyland", "#39735E", "#EBF4F0", linearGrad});
+    ui->comboFactionColor->addItem("Weyland");
 
     //linearGrad.setStart(QPoint(0,0)); linearGrad.setFinalStop(QPoint(100,0));
     linearGrad.setColorAt(0,"#F26D3D"); linearGrad.setColorAt(1,"#EFE6DF");
     FactionColorCodes.append({"anarch", "Anarch", "#F26D3D", "#EFE6DF", linearGrad});
+    ui->comboFactionColor->addItem("Anarch");
 
     //linearGrad.setStart(QPoint(0,0)); linearGrad.setFinalStop(QPoint(100,0));
     linearGrad.setColorAt(0,"#60B54E"); linearGrad.setColorAt(1,"#EBFFEA");
     FactionColorCodes.append({"shaper", "Shaper", "#60B54E", "#EBFFEA", linearGrad});
+    ui->comboFactionColor->addItem("Shaper");
 
     //linearGrad.setStart(QPoint(0,0)); linearGrad.setFinalStop(QPoint(100,0));
     linearGrad.setColorAt(0,"#6093DE"); linearGrad.setColorAt(1,"#DDE7FD");
     FactionColorCodes.append({"criminal", "Criminal", "#6093DE", "#DDE7FD", linearGrad});
+    ui->comboFactionColor->addItem("Criminal");
 
     //linearGrad.setStart(QPoint(0,0)); linearGrad.setFinalStop(QPoint(100,0));
     linearGrad.setColorAt(0,"#B3B7BF"); linearGrad.setColorAt(1,"#EFEFF4");
     FactionColorCodes.append({"neutral-runner", "Neutral", "#B3B7BF", "#EFEFF4", linearGrad});
+    ui->comboFactionColor->addItem("Neutral");
 
     //linearGrad.setStart(QPoint(0,0)); linearGrad.setFinalStop(QPoint(100,0));
     linearGrad.setColorAt(0,"#B3B7BF"); linearGrad.setColorAt(1,"#EFEFF4");
@@ -325,14 +335,39 @@ void ScoreboardMain::createColors()
     //linearGrad.setStart(QPoint(0,0)); linearGrad.setFinalStop(QPoint(100,0));
     linearGrad.setColorAt(0,"#B3B7BF"); linearGrad.setColorAt(1,"#EFEFF4");
     FactionColorCodes.append({"adam", "Adam", "#B3B7BF", "#EFEFF4", linearGrad});
+    ui->comboFactionColor->addItem("Adam");
 
     //linearGrad.setStart(QPoint(0,0)); linearGrad.setFinalStop(QPoint(100,0));
     linearGrad.setColorAt(0,"#B3B7BF"); linearGrad.setColorAt(1,"#EFEFF4");
     FactionColorCodes.append({"apex", "Apex", "#B3B7BF", "#EFEFF4", linearGrad});
+    ui->comboFactionColor->addItem("Apex");
 
     //linearGrad.setStart(QPoint(0,0)); linearGrad.setFinalStop(QPoint(100,0));
     linearGrad.setColorAt(0,"#B3B7BF"); linearGrad.setColorAt(1,"#EFEFF4");
     FactionColorCodes.append({"sunny-lebeau", "Sunny Lebeau", "#B3B7BF", "#EFEFF4", linearGrad});
+    ui->comboFactionColor->addItem("Sunny Lebeau");
+
+    connect(ui->comboFactionColor, SIGNAL(currentIndexChanged(int)), SLOT(comboFactionColor_currentIndexChanged(int)));
+}
+
+void ScoreboardMain::comboFactionColor_currentIndexChanged(int index)
+{
+    QPalette pal = palette();
+    QString choosenFaction=ui->comboFactionColor->currentText() ;
+    foreach(FactionColorCode faction, FactionColorCodes)
+    {
+        if (faction.Faction_rich == choosenFaction)
+        {
+            qDebug() << "found";
+            linearGrad.setStart(QPoint(0,0)); linearGrad.setFinalStop(QPoint(ui->LabelFactionColor->width(),ui->LabelFactionColor->height()));
+            linearGrad.setColorAt(0,faction.StartColor); linearGrad.setColorAt(1,faction.EndColor);
+            pal.setBrush(ui->LabelFactionColor->backgroundRole(), QBrush(linearGrad));
+            ui->LabelFactionColor->setAutoFillBackground(true);
+            ui->LabelFactionColor->setPalette(pal);
+            ui->LabelFactionColor->show();
+        }
+
+    }
 }
 
 void ScoreboardMain::searchChanged(const QString &newvalue)
