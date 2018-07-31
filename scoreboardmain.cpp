@@ -16,6 +16,7 @@
 #include <QJsonValue>
 #include <QFile>
 #include <QStandardPaths>
+#include <QTableWidget>
 
 #ifdef Q_OS_WIN
     #include <windows.h> //For Hotkey/Shortcut key
@@ -91,6 +92,8 @@ struct Pack_info {
 QList<Pack_info> Pack_infoList;
 
 QLinearGradient linearGrad;
+
+int row = 0 ;
 
 ofstream Player1_Name_Output, Player2_Name_Output, Player1_Id_Output, Player2_Id_Output, Player1_Score_Output, Player2_Score_Output, Period_Output, Clock_Output; //Ofstream for outputting to .txt
 ofstream Round_Output, Round_info_Output, NR_Output, NRS_Output, UA_Output;
@@ -272,6 +275,14 @@ void ScoreboardMain::Opened() //Resets all
         {
             qDebug() << data.Title << ":" << data.Code << ":" << data.Image_url<<":"<<data.Faction;
         }*/
+
+
+        //ui->tableDeck->setRowCount(2);
+        //ui->tableDeck->setColumnCount(2);
+        //ui->tableDeck->horizontalHeader()->setVisible(false);
+        //ui->tableDeck->verticalHeader()->setVisible(false);
+        ui->tableDeck->horizontalHeader()->resizeSection(0, 150);
+        ui->tableDeck->horizontalHeader()->resizeSection(1, 30);
     }
 }
 
@@ -373,7 +384,7 @@ void ScoreboardMain::comboFactionColor_currentIndexChanged(int index)
 void ScoreboardMain::searchChanged(const QString &newvalue)
 {
     ui->List_Output->clear();
-    qDebug()<< newvalue;
+    //qDebug()<< newvalue;
     bool found_first = false;
     if (newvalue.count()>=3)
     {
@@ -383,7 +394,7 @@ void ScoreboardMain::searchChanged(const QString &newvalue)
             {
                 //QString text = data.Title+" #"+data.Code;
                 QListWidgetItem *newCard = new QListWidgetItem(data.Title+" #"+data.Code);
-                qDebug()<<data.Faction;
+                //qDebug()<<data.Faction;
                 foreach(FactionColorCode faction, FactionColorCodes)
                 {
                     if (faction.Faction == data.Faction)
@@ -455,6 +466,23 @@ void ScoreboardMain::on_Show_left_clicked()
         ui->search_Input->setText("");
         ui->search_Input->setFocus();
     }
+}
+
+void ScoreboardMain::on_addCardToDeck_clicked()
+{
+    //qDebug() << "entered addCardToDeck" ;
+    QListWidgetItem *card = ui->List_Output->currentItem();
+    QString text = card->text();
+    QTableWidgetItem *widgetItem = new QTableWidgetItem(text) ;
+    ui->tableDeck->setItem(row, 0, widgetItem);
+    qDebug() << text << ":" << row;
+    row++;
+    ui->tableDeck->setRowCount(row+1);
+}
+
+void ScoreboardMain::on_saveToDeck_clicked()
+{
+
 }
 
 void ScoreboardMain::getCardsResult()

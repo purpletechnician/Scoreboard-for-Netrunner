@@ -42,6 +42,10 @@ private slots:
 
     void on_Show_left_clicked();
 
+    void on_addCardToDeck_clicked();
+
+    void on_saveToDeck_clicked();
+
     void WarningBox();
 
     void getCardsResult();

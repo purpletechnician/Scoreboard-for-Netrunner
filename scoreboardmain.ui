@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>986</width>
-    <height>723</height>
+    <height>881</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,7 +29,7 @@
       <x>20</x>
       <y>0</y>
       <width>941</width>
-      <height>681</height>
+      <height>841</height>
      </rect>
     </property>
     <property name="layoutDirection">
@@ -155,7 +155,7 @@
       <property name="geometry">
        <rect>
         <x>710</x>
-        <y>460</y>
+        <y>620</y>
         <width>121</width>
         <height>61</height>
        </rect>
@@ -335,7 +335,7 @@ Score and Timer</string>
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>510</y>
+        <y>670</y>
         <width>191</width>
         <height>111</height>
        </rect>
@@ -462,7 +462,7 @@ Score and Timer</string>
       <property name="geometry">
        <rect>
         <x>430</x>
-        <y>610</y>
+        <y>770</y>
         <width>71</width>
         <height>41</height>
        </rect>
@@ -476,7 +476,7 @@ start</string>
       <property name="geometry">
        <rect>
         <x>810</x>
-        <y>574</y>
+        <y>734</y>
         <width>61</width>
         <height>30</height>
        </rect>
@@ -497,7 +497,7 @@ start</string>
       <property name="geometry">
        <rect>
         <x>510</x>
-        <y>610</y>
+        <y>770</y>
         <width>131</width>
         <height>31</height>
        </rect>
@@ -518,7 +518,7 @@ start</string>
       <property name="geometry">
        <rect>
         <x>680</x>
-        <y>540</y>
+        <y>700</y>
         <width>251</width>
         <height>17</height>
        </rect>
@@ -534,7 +534,7 @@ start</string>
       <property name="geometry">
        <rect>
         <x>680</x>
-        <y>570</y>
+        <y>730</y>
         <width>101</width>
         <height>17</height>
        </rect>
@@ -550,7 +550,7 @@ start</string>
       <property name="geometry">
        <rect>
         <x>680</x>
-        <y>590</y>
+        <y>750</y>
         <width>111</width>
         <height>17</height>
        </rect>
@@ -563,7 +563,7 @@ start</string>
       <property name="geometry">
        <rect>
         <x>680</x>
-        <y>610</y>
+        <y>770</y>
         <width>101</width>
         <height>17</height>
        </rect>
@@ -576,7 +576,7 @@ start</string>
       <property name="geometry">
        <rect>
         <x>430</x>
-        <y>560</y>
+        <y>720</y>
         <width>71</width>
         <height>41</height>
        </rect>
@@ -589,7 +589,7 @@ start</string>
       <property name="geometry">
        <rect>
         <x>510</x>
-        <y>570</y>
+        <y>730</y>
         <width>131</width>
         <height>31</height>
        </rect>
@@ -610,7 +610,7 @@ start</string>
       <property name="geometry">
        <rect>
         <x>280</x>
-        <y>580</y>
+        <y>740</y>
         <width>101</width>
         <height>41</height>
        </rect>
@@ -626,7 +626,7 @@ start</string>
       <property name="geometry">
        <rect>
         <x>420</x>
-        <y>480</y>
+        <y>640</y>
         <width>521</width>
         <height>20</height>
        </rect>
@@ -639,7 +639,7 @@ start</string>
       <property name="geometry">
        <rect>
         <x>650</x>
-        <y>490</y>
+        <y>650</y>
         <width>20</width>
         <height>171</height>
        </rect>
@@ -652,7 +652,7 @@ start</string>
       <property name="geometry">
        <rect>
         <x>680</x>
-        <y>630</y>
+        <y>790</y>
         <width>91</width>
         <height>17</height>
        </rect>
@@ -665,7 +665,7 @@ start</string>
       <property name="geometry">
        <rect>
         <x>240</x>
-        <y>510</y>
+        <y>670</y>
         <width>141</width>
         <height>41</height>
        </rect>
@@ -681,7 +681,7 @@ start</string>
       <property name="geometry">
        <rect>
         <x>450</x>
-        <y>470</y>
+        <y>630</y>
         <width>151</width>
         <height>41</height>
        </rect>
@@ -697,7 +697,7 @@ start</string>
       <property name="geometry">
        <rect>
         <x>410</x>
-        <y>490</y>
+        <y>650</y>
         <width>20</width>
         <height>171</height>
        </rect>
@@ -848,6 +848,73 @@ start</string>
        <string/>
       </property>
      </widget>
+     <widget class="QLineEdit" name="lineSaveDeck">
+      <property name="geometry">
+       <rect>
+        <x>320</x>
+        <y>603</y>
+        <width>211</width>
+        <height>20</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="addCardToDeck">
+      <property name="geometry">
+       <rect>
+        <x>380</x>
+        <y>450</y>
+        <width>101</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Add Card to Deck</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="saveToDeck">
+      <property name="geometry">
+       <rect>
+        <x>384</x>
+        <y>574</y>
+        <width>81</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Save to Deck</string>
+      </property>
+     </widget>
+     <widget class="QTableWidget" name="tableDeck">
+      <property name="geometry">
+       <rect>
+        <x>320</x>
+        <y>490</y>
+        <width>211</width>
+        <height>81</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>7</pointsize>
+       </font>
+      </property>
+      <property name="rowCount">
+       <number>2</number>
+      </property>
+      <property name="columnCount">
+       <number>2</number>
+      </property>
+      <attribute name="horizontalHeaderVisible">
+       <bool>false</bool>
+      </attribute>
+      <attribute name="verticalHeaderVisible">
+       <bool>false</bool>
+      </attribute>
+      <row/>
+      <row/>
+      <column/>
+      <column/>
+     </widget>
      <zorder>LabelFactionColor</zorder>
      <zorder>Minutes_To_In</zorder>
      <zorder>Player2Score_Label</zorder>
@@ -895,6 +962,10 @@ start</string>
      <zorder>downloadCards_Label</zorder>
      <zorder>saveCards_Label</zorder>
      <zorder>label_3</zorder>
+     <zorder>lineSaveDeck</zorder>
+     <zorder>addCardToDeck</zorder>
+     <zorder>saveToDeck</zorder>
+     <zorder>tableDeck</zorder>
     </widget>
     <widget class="QWidget" name="S">
      <attribute name="title">
