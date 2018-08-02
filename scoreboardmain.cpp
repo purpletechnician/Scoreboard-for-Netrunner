@@ -17,6 +17,10 @@
 #include <QFile>
 #include <QStandardPaths>
 #include <QTableWidget>
+#include <QTextDocument>
+#include <QTextTableCell>
+//#include <QApplication>
+#include <QPrinter>
 
 #ifdef Q_OS_WIN
     #include <windows.h> //For Hotkey/Shortcut key
@@ -94,6 +98,7 @@ QList<Pack_info> Pack_infoList;
 QLinearGradient linearGrad;
 
 int row = 0 ;
+QString strFile ;
 
 ofstream Player1_Name_Output, Player2_Name_Output, Player1_Id_Output, Player2_Id_Output, Player1_Score_Output, Player2_Score_Output, Period_Output, Clock_Output; //Ofstream for outputting to .txt
 ofstream Round_Output, Round_info_Output, NR_Output, NRS_Output, UA_Output;
@@ -281,21 +286,14 @@ void ScoreboardMain::Opened() //Resets all
         //ui->tableDeck->setColumnCount(2);
         //ui->tableDeck->horizontalHeader()->setVisible(false);
         //ui->tableDeck->verticalHeader()->setVisible(false);
-        ui->tableDeck->horizontalHeader()->resizeSection(0, 150);
-        ui->tableDeck->horizontalHeader()->resizeSection(1, 30);
+        ui->tableDeck->horizontalHeader()->resizeSection(0, 190);
+        ui->tableDeck->horizontalHeader()->resizeSection(1, 20);
+        ui->tableDeck->verticalHeader()->setDefaultSectionSize(20);
     }
 }
 
 void ScoreboardMain::createColors()
 {
-    /*FactionColorCodes.append({"HB", "#564B8A", "#EEE0F8"});
-    FactionColorCodes.append({"NBN", "#F2CA50", "#EFE4D0"});
-    FactionColorCodes.append({"Jinteki", "#8C0712", "#F5DED9"});
-    FactionColorCodes.append({"Weyland", "#39735E", "#EBF4F0"});
-    FactionColorCodes.append({"Anarch", "#F26D3D", "#EFE6DF"});
-    FactionColorCodes.append({"Shaper", "#60B54E", "#EBFFEA"});
-    FactionColorCodes.append({"Criminal", "#6093DE", "#DDE7FD"});
-    FactionColorCodes.append({"Neutral", "#B3B7BF", "#EFEFF4"});*/
 
     ui->comboFactionColor->addItem("None");
 
@@ -304,56 +302,45 @@ void ScoreboardMain::createColors()
     FactionColorCodes.append({"haas-bioroid", "HB", "#564B8A", "#EEE0F8", linearGrad});
     ui->comboFactionColor->addItem("HB");
 
-    //linearGrad.setStart(QPoint(0,0)); linearGrad.setFinalStop(QPoint(100,0));
     linearGrad.setColorAt(0,"#F2CA50"); linearGrad.setColorAt(1,"#EFE4D0");
     FactionColorCodes.append({"nbn", "NBN", "#F2CA50", "#EFE4D0", linearGrad});
     ui->comboFactionColor->addItem("NBN");
 
-    //linearGrad.setStart(QPoint(0,0)); linearGrad.setFinalStop(QPoint(100,0));
     linearGrad.setColorAt(0,"#8C0712"); linearGrad.setColorAt(1,"#EFE6DF");
     FactionColorCodes.append({"jinteki", "Jinteki", "#8C0712", "#EFE6DF", linearGrad});
     ui->comboFactionColor->addItem("Jinteki");
 
-    //linearGrad.setStart(QPoint(0,0)); linearGrad.setFinalStop(QPoint(100,0));
     linearGrad.setColorAt(0,"#39735E"); linearGrad.setColorAt(1,"#EBF4F0");
     FactionColorCodes.append({"weyland-consortium", "Weyland", "#39735E", "#EBF4F0", linearGrad});
     ui->comboFactionColor->addItem("Weyland");
 
-    //linearGrad.setStart(QPoint(0,0)); linearGrad.setFinalStop(QPoint(100,0));
     linearGrad.setColorAt(0,"#F26D3D"); linearGrad.setColorAt(1,"#EFE6DF");
     FactionColorCodes.append({"anarch", "Anarch", "#F26D3D", "#EFE6DF", linearGrad});
     ui->comboFactionColor->addItem("Anarch");
 
-    //linearGrad.setStart(QPoint(0,0)); linearGrad.setFinalStop(QPoint(100,0));
     linearGrad.setColorAt(0,"#60B54E"); linearGrad.setColorAt(1,"#EBFFEA");
     FactionColorCodes.append({"shaper", "Shaper", "#60B54E", "#EBFFEA", linearGrad});
     ui->comboFactionColor->addItem("Shaper");
 
-    //linearGrad.setStart(QPoint(0,0)); linearGrad.setFinalStop(QPoint(100,0));
     linearGrad.setColorAt(0,"#6093DE"); linearGrad.setColorAt(1,"#DDE7FD");
     FactionColorCodes.append({"criminal", "Criminal", "#6093DE", "#DDE7FD", linearGrad});
     ui->comboFactionColor->addItem("Criminal");
 
-    //linearGrad.setStart(QPoint(0,0)); linearGrad.setFinalStop(QPoint(100,0));
     linearGrad.setColorAt(0,"#B3B7BF"); linearGrad.setColorAt(1,"#EFEFF4");
     FactionColorCodes.append({"neutral-runner", "Neutral", "#B3B7BF", "#EFEFF4", linearGrad});
     ui->comboFactionColor->addItem("Neutral");
 
-    //linearGrad.setStart(QPoint(0,0)); linearGrad.setFinalStop(QPoint(100,0));
     linearGrad.setColorAt(0,"#B3B7BF"); linearGrad.setColorAt(1,"#EFEFF4");
     FactionColorCodes.append({"neutral-corp", "Neutral", "#B3B7BF", "#EFEFF4", linearGrad});
 
-    //linearGrad.setStart(QPoint(0,0)); linearGrad.setFinalStop(QPoint(100,0));
     linearGrad.setColorAt(0,"#B3B7BF"); linearGrad.setColorAt(1,"#EFEFF4");
     FactionColorCodes.append({"adam", "Adam", "#B3B7BF", "#EFEFF4", linearGrad});
     ui->comboFactionColor->addItem("Adam");
 
-    //linearGrad.setStart(QPoint(0,0)); linearGrad.setFinalStop(QPoint(100,0));
     linearGrad.setColorAt(0,"#B3B7BF"); linearGrad.setColorAt(1,"#EFEFF4");
     FactionColorCodes.append({"apex", "Apex", "#B3B7BF", "#EFEFF4", linearGrad});
     ui->comboFactionColor->addItem("Apex");
 
-    //linearGrad.setStart(QPoint(0,0)); linearGrad.setFinalStop(QPoint(100,0));
     linearGrad.setColorAt(0,"#B3B7BF"); linearGrad.setColorAt(1,"#EFEFF4");
     FactionColorCodes.append({"sunny-lebeau", "Sunny Lebeau", "#B3B7BF", "#EFEFF4", linearGrad});
     ui->comboFactionColor->addItem("Sunny Lebeau");
@@ -398,7 +385,15 @@ void ScoreboardMain::searchChanged(const QString &newvalue)
                 foreach(FactionColorCode faction, FactionColorCodes)
                 {
                     if (faction.Faction == data.Faction)
+                    {
                         newCard->setBackground(QBrush(faction.FactionGradient));
+                        /*QColor color ;
+                        color.setNamedColor(faction.EndColor) ;
+                        QBrush brush ;
+                        brush.setColor(color);
+                        newCard->setForeground(brush);
+                        newCard->setTextColor(Qt::black);*/
+                    }
                 }
                 ui->List_Output->addItem(newCard);
                 if (found_first == false)
@@ -426,7 +421,6 @@ void ScoreboardMain::on_List_Output_clicked()
 
 void ScoreboardMain::on_Show_right_clicked()
 {
-    //qDebug()<<choosenCard;
     if (QFile::exists(saveLocation+"/Output/Card_right.png"))
     {
         QFile::remove(saveLocation+"/Output/Card_right.png");
@@ -448,7 +442,6 @@ void ScoreboardMain::on_Show_right_clicked()
 
 void ScoreboardMain::on_Show_left_clicked()
 {
-    //qDebug()<<choosenCard;
     if (QFile::exists(saveLocation+"/Output/Card_left.png"))
     {
         QFile::remove(saveLocation+"/Output/Card_left.png");
@@ -470,19 +463,59 @@ void ScoreboardMain::on_Show_left_clicked()
 
 void ScoreboardMain::on_addCardToDeck_clicked()
 {
-    //qDebug() << "entered addCardToDeck" ;
+    bool found = false ;
+    int inc = 1 ;
+    //QBrush endBrush ;
+    QColor endColor ;
     QListWidgetItem *card = ui->List_Output->currentItem();
+    foreach(FactionColorCode faction, FactionColorCodes)
+    {
+        if (card->background() == faction.FactionGradient)
+        {
+            qDebug() << "found color" << faction.Faction;
+            endColor.setNamedColor(faction.EndColor);
+        }
+    }
     QString text = card->text();
-    QTableWidgetItem *widgetItem = new QTableWidgetItem(text) ;
-    ui->tableDeck->setItem(row, 0, widgetItem);
-    qDebug() << text << ":" << row;
-    row++;
-    ui->tableDeck->setRowCount(row+1);
+    for (int r = 0 ; r < ui->tableDeck->rowCount() ; ++r)
+    {
+        if (ui->tableDeck->item(r,0))
+        {
+            qDebug() << "cell set" ;
+            if (text == ui->tableDeck->item(r, 0)->text())
+            {
+                inc =  ui->tableDeck->item(r,1)->text().toInt() + 1 ;
+                QString incString = QString::number(inc);
+                QTableWidgetItem *widgetItemPlus = new QTableWidgetItem(incString);
+                widgetItemPlus->setBackground(QBrush(endColor));
+                found = true ;
+
+                if (ui->tableDeck->item(r,1)->text().toInt() < 3)
+                    ui->tableDeck->setItem(r,1,widgetItemPlus);
+             }
+        }
+    }
+    if (found == false)
+    {
+        QBrush gradient = card->background() ;
+        QTableWidgetItem *widgetItem = new QTableWidgetItem(text) ;
+        QTableWidgetItem *widgetItemOne = new QTableWidgetItem("1");
+        widgetItem->setBackground(gradient);
+        widgetItemOne->setBackground(QBrush(endColor));
+        ui->tableDeck->setItem(row, 0, widgetItem);
+        ui->tableDeck->setItem(row,1,widgetItemOne);
+        row++;
+        ui->tableDeck->setRowCount(row+1);
+    }
 }
 
 void ScoreboardMain::on_saveToDeck_clicked()
 {
-
+    //ui->tableDeck->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    //ui->tableDeck->horizontalHeader()->resizeSection(0, 190);
+    ui->tableDeck->grab().save(saveLocation+"/Output/"+ui->lineSaveDeck->text()+".png");
+    //ui->tableDeck->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    //ui->tableDeck->horizontalHeader()->resizeSection(0, 170);
 }
 
 void ScoreboardMain::getCardsResult()
