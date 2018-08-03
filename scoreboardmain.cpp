@@ -28,7 +28,7 @@
 
 using namespace std;
 
-string version_info = "0.99"; //Please Change this after a update!
+string version_info = "1.00"; //Please Change this after a update!
 string Update_URL = "https://github.com/purpletechnician/Scoreboard-for-Netrunner";
 string CardDB_URL = "http://www.netrunnerdb.com/api/2.0/public/card/" ;
 QString BaseCardURL = "http://www.netrunnerdb.com/card_image/";
@@ -94,6 +94,8 @@ struct Pack_info {
     int Total_cards;
 };
 QList<Pack_info> Pack_infoList;
+
+QList<QString> DeckList;
 
 QLinearGradient linearGrad;
 
@@ -192,6 +194,7 @@ void ScoreboardMain::Opened() //Resets all
     UA_Output.close();
 
     createColors();
+
     IdList.append("Anarch: Quetzal"); IdList.append("Anarch: Edward Kim"); IdList.append("Anarch: MaxX"); IdList.append("Anarch: Valencia Estevez"); IdList.append("Anarch: Null");
     IdList.append("Anarch: Omar Keung"); IdList.append("Anarch: Alice Merchant"); IdList.append("Anarch: Reina Roja"); IdList.append("Anarch: Freedom Khumalo"); IdList.append("Anarch: Nathaniel Gnat Hall");
     IdList.append("Criminal: Iain Stirling"); IdList.append("Criminal: Ken Express Tenma"); IdList.append("Criminal: Silouette"); IdList.append("Criminal: Leela Patel");
@@ -212,6 +215,8 @@ void ScoreboardMain::Opened() //Resets all
     IdList.append("Weyland: Blue Sun"); IdList.append("Weyland: Argus Security"); IdList.append("Weyland: Gagarin Deep Space"); IdList.append("Weyland: Titan Transnational");
     IdList.append("Weyland: Builder of Nations"); IdList.append("Weyland: Jemison Astronautics"); IdList.append("Weyland: Skorpios Defence Systems"); IdList.append("Weyland: Building a Better World");
     IdList.append("Weyland: SSO Industries"); IdList.append("Weyland: The Outfit");
+
+    loadDecks();
 
     ui->Player1Id_Input->addItems(IdList);
     ui->Player2Id_Input->addItems(IdList);
@@ -244,8 +249,6 @@ void ScoreboardMain::Opened() //Resets all
 
     ui->search_Input->setFocus();
 
-    //this->setStyleSheet("* { background-color: qlineargradient(x1: 0, y1: 0, x2:0, y2: 1, stop: 0 #F26D3D, stop:1 #EFE6DF) }");
-
     ui->Start_Button->setStyleSheet("* { background-color: rgba(0,255,0) }");
     if (QFile::exists(saveLocation+"/CardDB/Cards.bin"))
     {
@@ -258,11 +261,7 @@ void ScoreboardMain::Opened() //Resets all
     //Makes new QNetworkAccessManager and parents to this
     managerOne = new QNetworkAccessManager(this);
     managerTwo = new QNetworkAccessManager(this);
-    //Get From the URL
-    if (QUrl(QUpdate_URL).isValid())
-    {
-        //qDebug () << "Valid Update-URL";
-    }
+
     //Connect to replyFinished QnetworkReply
     connect(managerOne,SIGNAL(finished(QNetworkReply*)),this,SLOT(replyFinished(QNetworkReply*)));
     managerOne->get(QNetworkRequest(QUrl(QUpdate_URL)));
@@ -272,21 +271,16 @@ void ScoreboardMain::Opened() //Resets all
     {
         QFile file(saveLocation+"/CardDB/Cards.bin");
         if (!file.open(QIODevice::ReadOnly))
-            qDebug() << "Cannot open file for read";
+            qDebug() << "Cannot open file Cards.bin for read";
         QDataStream stream(&file);
         stream >> Card_infoList ;
         file.close();
-        /*foreach (Card_info data, Card_infoList)
-        {
-            qDebug() << data.Title << ":" << data.Code << ":" << data.Image_url<<":"<<data.Faction;
-        }*/
-
 
         //ui->tableDeck->setRowCount(2);
         //ui->tableDeck->setColumnCount(2);
         //ui->tableDeck->horizontalHeader()->setVisible(false);
         //ui->tableDeck->verticalHeader()->setVisible(false);
-        ui->tableDeck->horizontalHeader()->resizeSection(0, 190);
+        ui->tableDeck->horizontalHeader()->resizeSection(0, 188);
         ui->tableDeck->horizontalHeader()->resizeSection(1, 20);
         ui->tableDeck->verticalHeader()->setDefaultSectionSize(20);
     }
@@ -387,12 +381,6 @@ void ScoreboardMain::searchChanged(const QString &newvalue)
                     if (faction.Faction == data.Faction)
                     {
                         newCard->setBackground(QBrush(faction.FactionGradient));
-                        /*QColor color ;
-                        color.setNamedColor(faction.EndColor) ;
-                        QBrush brush ;
-                        brush.setColor(color);
-                        newCard->setForeground(brush);
-                        newCard->setTextColor(Qt::black);*/
                     }
                 }
                 ui->List_Output->addItem(newCard);
@@ -472,7 +460,7 @@ void ScoreboardMain::on_addCardToDeck_clicked()
     {
         if (card->background() == faction.FactionGradient)
         {
-            qDebug() << "found color" << faction.Faction;
+            //qDebug() << "found color" << faction.Faction;
             endColor.setNamedColor(faction.EndColor);
         }
     }
@@ -481,7 +469,7 @@ void ScoreboardMain::on_addCardToDeck_clicked()
     {
         if (ui->tableDeck->item(r,0))
         {
-            qDebug() << "cell set" ;
+            //qDebug() << "cell set" ;
             if (text == ui->tableDeck->item(r, 0)->text())
             {
                 inc =  ui->tableDeck->item(r,1)->text().toInt() + 1 ;
@@ -497,6 +485,7 @@ void ScoreboardMain::on_addCardToDeck_clicked()
     }
     if (found == false)
     {
+        ui->tableDeck->setRowCount(row+1);
         QBrush gradient = card->background() ;
         QTableWidgetItem *widgetItem = new QTableWidgetItem(text) ;
         QTableWidgetItem *widgetItemOne = new QTableWidgetItem("1");
@@ -505,17 +494,119 @@ void ScoreboardMain::on_addCardToDeck_clicked()
         ui->tableDeck->setItem(row, 0, widgetItem);
         ui->tableDeck->setItem(row,1,widgetItemOne);
         row++;
-        ui->tableDeck->setRowCount(row+1);
+
+        int rowTotalHeight=0;
+        // Rows height
+        int count=ui->tableDeck->verticalHeader()->count();
+        for (int i = 0; i < count; ++i) {
+            // 2018-03 edit: only account for row if it is visible
+            //if (!ui->tableDeck->verticalHeader()->isSectionHidden(i)) {
+                rowTotalHeight+=ui->tableDeck->verticalHeader()->sectionSize(i);
+            //}
+        }
+        //rowTotalHeight+=ui->tableDeck->verticalHeader()->sectionSize(0);
+        rowTotalHeight+=2;
+        qDebug() << "Row heighs:" << rowTotalHeight ;
+        ui->tableDeck->setMinimumHeight(rowTotalHeight);
+        ui->tableDeck->setMaximumHeight(rowTotalHeight);
+    }
+}
+
+void ScoreboardMain::on_removeCardFromDeck_clicked()
+{
+    QList<QTableWidgetItem *> list = ui->tableDeck->selectedItems();
+    foreach(QTableWidgetItem *item, list)
+    {
+        //QTableWidgetItem *item = list.at(i);
+        qDebug() << item->text();
+        ui->tableDeck->removeRow(item->row());
+        row--;
     }
 }
 
 void ScoreboardMain::on_saveToDeck_clicked()
 {
-    //ui->tableDeck->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    //ui->tableDeck->horizontalHeader()->resizeSection(0, 190);
-    ui->tableDeck->grab().save(saveLocation+"/Output/"+ui->lineSaveDeck->text()+".png");
-    //ui->tableDeck->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-    //ui->tableDeck->horizontalHeader()->resizeSection(0, 170);
+    QString name = "Deck"+ui->lineTournamentName->text()+" "+ui->lineSaveDeck->text();
+    ui->tableDeck->grab().save(saveLocation+"/Output/"+name+".png");
+    ui->comboPlayer1Deck->addItem(name);
+    ui->comboPlayer2Deck->addItem(name);
+    DeckList.append(name);
+
+    QFile file(saveLocation+"/Output/Decks.bin");
+    //qDebug() << saveLocation ;
+    if (!file.open(QIODevice::WriteOnly))
+        qDebug() << "Cannot open file Decks.bin for write/append";
+    QDataStream stream(&file);
+    stream << DeckList ;
+    file.close();
+}
+
+void ScoreboardMain::loadDecks()
+{
+    QFile file(saveLocation+"/Output/Decks.bin");
+    //qDebug() << saveLocation ;
+    if (!file.open(QIODevice::ReadOnly))
+        qDebug() << "Cannot open file Decks.bin for read";
+    else
+    {
+        QDataStream stream(&file);
+        stream >> DeckList ;
+        file.close();
+        foreach(QString deck, DeckList)
+        {
+            ui->comboPlayer1Deck->addItem(deck);
+            ui->comboPlayer2Deck->addItem(deck);
+        }
+    }
+}
+
+void ScoreboardMain::on_pushClearDeck_clicked()
+{
+    ui->tableDeck->clear();
+    row=0;
+}
+
+void ScoreboardMain::on_pushShowPlayer1Deck_clicked()
+{
+    if (QFile::exists(saveLocation+"/Output/Deck_left.png"))
+    {
+        QFile::remove(saveLocation+"/Output/Deck_left.png");
+    }
+    QFile::copy(saveLocation+"/Output/"+ui->comboPlayer1Deck->currentText()+".png",saveLocation+"/Output/Deck_left.png");
+
+    if (ui->pushShowPlayer1Deck->text()=="Show Deck")
+    {
+        ui->pushShowPlayer1Deck->setText("Hide Deck");
+    }
+    else
+    {
+        ui->pushShowPlayer1Deck->setText("Show Deck");
+        QFile::remove(saveLocation+"/Output/Deck_left.png");
+        ui->search_Input->setText("");
+        ui->search_Input->setFocus();
+    }
+}
+
+void ScoreboardMain::on_pushShowPlayer2Deck_clicked()
+{
+    if (QFile::exists(saveLocation+"/Output/Deck_right.png"))
+    {
+        QFile::remove(saveLocation+"/Output/Deck_right.png");
+    }
+    QFile::copy(saveLocation+"/Output/"+ui->comboPlayer2Deck->currentText()+".png",saveLocation+"/Output/Deck_right.png");
+
+    if (ui->pushShowPlayer2Deck->text()=="Show Deck")
+    {
+        ui->pushShowPlayer2Deck->setText("Hide Deck");
+    }
+    else
+    {
+        ui->pushShowPlayer2Deck->setText("Show Deck");
+        QFile::remove(saveLocation+"/Output/Deck_right.png");
+        ui->search_Input->setText("");
+        ui->search_Input->setFocus();
+    }
+
 }
 
 void ScoreboardMain::getCardsResult()

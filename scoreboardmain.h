@@ -44,7 +44,17 @@ private slots:
 
     void on_addCardToDeck_clicked();
 
+    void on_removeCardFromDeck_clicked();
+
     void on_saveToDeck_clicked();
+
+    void loadDecks();
+
+    void on_pushClearDeck_clicked();
+
+    void on_pushShowPlayer1Deck_clicked();
+
+    void on_pushShowPlayer2Deck_clicked();
 
     void WarningBox();
 
