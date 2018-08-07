@@ -19,7 +19,7 @@
 #include <QTableWidget>
 #include <QTextDocument>
 #include <QTextTableCell>
-//#include <QApplication>
+#include <QClipboard>
 #include <QPrinter>
 
 #ifdef Q_OS_WIN
@@ -31,6 +31,7 @@ using namespace std;
 string version_info = "1.00"; //Please Change this after a update!
 string Update_URL = "https://github.com/purpletechnician/Scoreboard-for-Netrunner";
 string CardDB_URL = "http://www.netrunnerdb.com/api/2.0/public/card/" ;
+QString CardDB_DecklistURL = "http://www.netrunnerdb.com/api/2.0/public/decklist/" ;
 QString BaseCardURL = "http://www.netrunnerdb.com/card_image/";
 QString appName = "Scoreboard for Netrunner" ;
 
@@ -64,7 +65,7 @@ bool presetbool = true; //Preset timer
 string minutes_zero = "", seconds_zero = ""; //For 9 <-> 0 | Example: 09 05
 string Player1_Name = "", Player2_Name = ""; //Name for Player1, Player2
 string Player1_Id = "", Player2_Id = ""; //Id for Player1, Player2
-string Round = "", Round_info = "", NR_text="", NRS_text="";
+string Round = "", Round_info = "", Custom = "", NR_text="", NRS_text="";
 string clock_symbol = ":"; //Clock Symbol | Default = : | Milliseconds = .
 QString Clock_text = "65:00"; //Clock Text
 QString choosenCard;
@@ -89,6 +90,12 @@ struct Card_info {
 };
 QList<Card_info> Card_infoList ;
 
+struct Deck_info {
+    QString Card;
+    QString Number;
+};
+QList<Deck_info> Deck_infoList ;
+
 struct Pack_info {
     int Pack_code;
     int Total_cards;
@@ -102,8 +109,12 @@ QLinearGradient linearGrad;
 int row = 0 ;
 QString strFile ;
 
-ofstream Player1_Name_Output, Player2_Name_Output, Player1_Id_Output, Player2_Id_Output, Player1_Score_Output, Player2_Score_Output, Period_Output, Clock_Output; //Ofstream for outputting to .txt
+//Ofstream for outputting to .txt
+ofstream Player1_Name_Output, Player2_Name_Output, Player1_Id_Output, Player2_Id_Output, Player1_Score_Output, Player2_Score_Output ;
+ofstream Period_Output, Clock_Output;
 ofstream Round_Output, Round_info_Output, NR_Output, NRS_Output, UA_Output;
+//QFile Player1_Id_HTML, Player2_Id_HTML;
+
 ofstream CardDB ;
 
 ScoreboardMain::ScoreboardMain(QWidget *parent) :
@@ -195,26 +206,26 @@ void ScoreboardMain::Opened() //Resets all
 
     createColors();
 
-    IdList.append("Anarch: Quetzal"); IdList.append("Anarch: Edward Kim"); IdList.append("Anarch: MaxX"); IdList.append("Anarch: Valencia Estevez"); IdList.append("Anarch: Null");
-    IdList.append("Anarch: Omar Keung"); IdList.append("Anarch: Alice Merchant"); IdList.append("Anarch: Reina Roja"); IdList.append("Anarch: Freedom Khumalo"); IdList.append("Anarch: Nathaniel Gnat Hall");
-    IdList.append("Criminal: Iain Stirling"); IdList.append("Criminal: Ken Express Tenma"); IdList.append("Criminal: Silouette"); IdList.append("Criminal: Leela Patel");
-    IdList.append("Criminal: Armand Geist Walker"); IdList.append("Criminal: Laramy Fisk");IdList.append("Criminal: Nero Severn");IdList.append("Criminal: Khan");
-    IdList.append("Criminal: Los"); IdList.append("Criminal: Steve Cambridge"); IdList.append("Criminal: Gabriel Santiago"); IdList.append("Criminal: 419"); IdList.append("Criminal: Liza Talking Thunder");
-    IdList.append("Shaper: Rielle Kit Peddler"); IdList.append("Shaper: The Professor"); IdList.append("Shaper: Exile"); IdList.append("Shaper: Nasir Meidan");
-    IdList.append("Shaper: Hayley Kaplan") ;IdList.append("Shaper: Jesminder Sareen"); IdList.append("Shaper: Ele Smoke Scovak"); IdList.append("Shaper: Ayla Bios Rahim");
-    IdList.append("Shaper: Chaos Theory"); IdList.append("Shaper: Kabonesa Wu"); IdList.append("Shaper:Akiko Nisei");
-    IdList.append("Adam"); IdList.append("Apex"); IdList.append("Sunny Lebeau");
+    IdList.append("Anarch: Quetzal"); IdList.append("Anarch: Edward Kim"); IdList.append("Anarch: MaxX"); IdList.append("Anarch: Valencia Estevez"); IdList.append("Anarch: Null");
+    IdList.append("Anarch: Omar Keung"); IdList.append("Anarch: Alice Merchant"); IdList.append("Anarch: Reina Roja"); IdList.append("Anarch: Freedom Khumalo"); IdList.append("Anarch: Nathaniel Gnat Hall");
+    IdList.append("Criminal: Iain Stirling"); IdList.append("Criminal: Ken Express Tenma"); IdList.append("Criminal: Silouette"); IdList.append("Criminal: Leela Patel");
+    IdList.append("Criminal: Armand Geist Walker"); IdList.append("Criminal: Laramy Fisk");IdList.append("Criminal: Nero Severn");IdList.append("Criminal: Khan");
+    IdList.append("Criminal: Los"); IdList.append("Criminal: Steve Cambridge"); IdList.append("Criminal: Gabriel Santiago"); IdList.append("Criminal: 419"); IdList.append("Criminal: Liza Talking Thunder");
+    IdList.append("Shaper: Rielle Kit Peddler"); IdList.append("Shaper: The Professor"); IdList.append("Shaper: Exile"); IdList.append("Shaper: Nasir Meidan");
+    IdList.append("Shaper: Hayley Kaplan") ;IdList.append("Shaper: Jesminder Sareen"); IdList.append("Shaper: Ele Smoke Scovak"); IdList.append("Shaper: Ayla Bios Rahim");
+    IdList.append("Shaper: Chaos Theory"); IdList.append("Shaper: Kabonesa Wu"); IdList.append("Shaper:Akiko Nisei");
+    IdList.append(" Adam"); IdList.append(" Apex"); IdList.append(" Sunny Lebeau");
 
-    IdList.append("HB: Cerebral Imaging"); IdList.append("HB: Custom Biotics"); IdList.append("HB: NEXT Design"); IdList.append("HB: The Foundry"); IdList.append("HB: Cybernetics Division");
-    IdList.append("HB: Architects of Tomorrow"); IdList.append("HB: Seidr Laboratiries");  IdList.append("HB: Stronger Together"); IdList.append("HB: Asa Group"); IdList.append("HB: Sportsmetal");
-    IdList.append("NBN: Near-Earth Hub"); IdList.append("NBN: Haarpsichord Studios"); IdList.append("NBN: SYNC"); IdList.append("NBN: New Angeles Sol"); IdList.append("NBN: Spark Agency");
-    IdList.append("NBN: Harishchandra Ent."); IdList.append("NBN: Controlling the Message"); IdList.append("NBN: Making News"); IdList.append("NBN: Azmari EdTech"); IdList.append("NBN: Acme Consulting");
-    IdList.append("Jinteki: Harmony Medtech"); IdList.append("Jinteki: Nisei Division"); IdList.append("Jinteki: Tennin Institute"); IdList.append("Jinteki: Industrial Genomics");
-    IdList.append("Jinteki: Jinteki Biotech"); IdList.append("Jinteki: Chronos Protocol"); IdList.append("Jinteki: Palana Foods"); IdList.append("Jinteki: Potential Unleashed");
-    IdList.append("Jinteki: Aginfusion"); IdList.append("Jinteki: Personal Evolution"); IdList.append("Jinteki: Mti Mwekundu"); IdList.append("Jinteki: Saraswati Mnemonics");
-    IdList.append("Weyland: Blue Sun"); IdList.append("Weyland: Argus Security"); IdList.append("Weyland: Gagarin Deep Space"); IdList.append("Weyland: Titan Transnational");
-    IdList.append("Weyland: Builder of Nations"); IdList.append("Weyland: Jemison Astronautics"); IdList.append("Weyland: Skorpios Defence Systems"); IdList.append("Weyland: Building a Better World");
-    IdList.append("Weyland: SSO Industries"); IdList.append("Weyland: The Outfit");
+    IdList.append("HB: Cerebral Imaging"); IdList.append("HB: Custom Biotics"); IdList.append("HB: NEXT Design"); IdList.append("HB: The Foundry"); IdList.append("HB: Cybernetics Division");
+    IdList.append("HB: Architects of Tomorrow"); IdList.append("HB: Seidr Laboratiries");  IdList.append("HB: Stronger Together"); IdList.append("HB: Asa Group"); IdList.append("HB: Sportsmetal");
+    IdList.append("NBN: Near-Earth Hub"); IdList.append("NBN: Haarpsichord Studios"); IdList.append("NBN: SYNC"); IdList.append("NBN: New Angeles Sol"); IdList.append("NBN: Spark Agency");
+    IdList.append("NBN: Harishchandra Ent."); IdList.append("NBN: Controlling the Message"); IdList.append("NBN: Making News"); IdList.append("NBN: Azmari EdTech"); IdList.append("NBN: Acme Consulting");
+    IdList.append("Jinteki: Harmony Medtech"); IdList.append("Jinteki: Nisei Division"); IdList.append("Jinteki: Tennin Institute"); IdList.append("Jinteki: Industrial Genomics");
+    IdList.append("Jinteki: Jinteki Biotech"); IdList.append("Jinteki: Chronos Protocol"); IdList.append("Jinteki: Palana Foods"); IdList.append("Jinteki: Potential Unleashed");
+    IdList.append("Jinteki: Aginfusion"); IdList.append("Jinteki: Personal Evolution"); IdList.append("Jinteki: Mti Mwekundu"); IdList.append("Jinteki: Saraswati Mnemonics");
+    IdList.append("Weyland: Blue Sun"); IdList.append("Weyland: Argus Security"); IdList.append("Weyland: Gagarin Deep Space"); IdList.append("Weyland: Titan Transnational");
+    IdList.append("Weyland: Builder of Nations"); IdList.append("Weyland: Jemison Astronautics"); IdList.append("Weyland: Skorpios Defence Systems"); IdList.append("Weyland: Building a Better World");
+    IdList.append("Weyland: SSO Industries"); IdList.append("Weyland: The Outfit");
 
     loadDecks();
 
@@ -261,6 +272,7 @@ void ScoreboardMain::Opened() //Resets all
     //Makes new QNetworkAccessManager and parents to this
     managerOne = new QNetworkAccessManager(this);
     managerTwo = new QNetworkAccessManager(this);
+    managerThree = new QNetworkAccessManager(this) ;
 
     //Connect to replyFinished QnetworkReply
     connect(managerOne,SIGNAL(finished(QNetworkReply*)),this,SLOT(replyFinished(QNetworkReply*)));
@@ -275,20 +287,30 @@ void ScoreboardMain::Opened() //Resets all
         QDataStream stream(&file);
         stream >> Card_infoList ;
         file.close();
-
-        //ui->tableDeck->setRowCount(2);
-        //ui->tableDeck->setColumnCount(2);
-        //ui->tableDeck->horizontalHeader()->setVisible(false);
-        //ui->tableDeck->verticalHeader()->setVisible(false);
-        ui->tableDeck->horizontalHeader()->resizeSection(0, 188);
-        ui->tableDeck->horizontalHeader()->resizeSection(1, 20);
-        ui->tableDeck->verticalHeader()->setDefaultSectionSize(20);
     }
+
+     //ui->tableDeck->setRowCount(2);
+     //ui->tableDeck->setColumnCount(2);
+     //ui->tableDeck->horizontalHeader()->setVisible(false);
+     //ui->tableDeck->verticalHeader()->setVisible(false);
+     ui->tableDeck->horizontalHeader()->resizeSection(0, 188);
+     ui->tableDeck->horizontalHeader()->resizeSection(1, 20);
+     ui->tableDeck->verticalHeader()->setDefaultSectionSize(20);
+
+     QFontDatabase::addApplicationFont(":/fonts/netrunner.ttf");
+     QFontDatabase::addApplicationFont(":/fonts/Monkirta Pursuit NC.ttf");
+
+     QFont fontNetrunner = QFont("netrunner",12,1);
+     QFont fontMonkirta = QFont("Monkirta Pursuit NC",10, 1);
+     ui->tableDeck->setFont(fontMonkirta);
+     ui->Player1Id_Input->setFont(fontNetrunner);
+     ui->Player2Id_Input->setFont(fontNetrunner);
+
+     ui->pushImportDeck->setToolTip("Imports deck from these NetrunnerDb-sources:\n* bbCode (not yet implemented)\n* Markdown (not yet implemented)\n* Plaintext (not yet implemented)\n* Jinteki.net (implemented)\n* NetrunnerDb-URL (implemented)\n");
 }
 
 void ScoreboardMain::createColors()
 {
-
     ui->comboFactionColor->addItem("None");
 
     linearGrad.setStart(QPoint(0,0)); linearGrad.setFinalStop(QPoint(ui->search_Input->width()/2,0));
@@ -350,7 +372,6 @@ void ScoreboardMain::comboFactionColor_currentIndexChanged(int index)
     {
         if (faction.Faction_rich == choosenFaction)
         {
-            qDebug() << "found";
             linearGrad.setStart(QPoint(0,0)); linearGrad.setFinalStop(QPoint(ui->LabelFactionColor->width(),ui->LabelFactionColor->height()));
             linearGrad.setColorAt(0,faction.StartColor); linearGrad.setColorAt(1,faction.EndColor);
             pal.setBrush(ui->LabelFactionColor->backgroundRole(), QBrush(linearGrad));
@@ -365,7 +386,6 @@ void ScoreboardMain::comboFactionColor_currentIndexChanged(int index)
 void ScoreboardMain::searchChanged(const QString &newvalue)
 {
     ui->List_Output->clear();
-    //qDebug()<< newvalue;
     bool found_first = false;
     if (newvalue.count()>=3)
     {
@@ -373,9 +393,7 @@ void ScoreboardMain::searchChanged(const QString &newvalue)
         {
             if (data.Title.toLower().contains(newvalue))
             {
-                //QString text = data.Title+" #"+data.Code;
                 QListWidgetItem *newCard = new QListWidgetItem(data.Title+" #"+data.Code);
-                //qDebug()<<data.Faction;
                 foreach(FactionColorCode faction, FactionColorCodes)
                 {
                     if (faction.Faction == data.Faction)
@@ -390,10 +408,8 @@ void ScoreboardMain::searchChanged(const QString &newvalue)
                     QListWidgetItem *card = ui->List_Output->currentItem();
                     QString str = card->text();
                     choosenCard = str.mid(str.indexOf("#")+1,str.length());
-                    //qDebug()<<choosenCard;
                 }
                 found_first=true;
-                //qDebug() << data.Title<<":"<<data.Code;
             }
         }
     }
@@ -404,7 +420,6 @@ void ScoreboardMain::on_List_Output_clicked()
     QListWidgetItem *card = ui->List_Output->currentItem();
     QString str = card->text();
     choosenCard = str.mid(str.indexOf("#")+1,str.length());
-    //qDebug()<<choosenCard;
 }
 
 void ScoreboardMain::on_Show_right_clicked()
@@ -453,29 +468,29 @@ void ScoreboardMain::on_addCardToDeck_clicked()
 {
     bool found = false ;
     int inc = 1 ;
-    //QBrush endBrush ;
     QColor endColor ;
     QListWidgetItem *card = ui->List_Output->currentItem();
     foreach(FactionColorCode faction, FactionColorCodes)
     {
         if (card->background() == faction.FactionGradient)
         {
-            //qDebug() << "found color" << faction.Faction;
             endColor.setNamedColor(faction.EndColor);
         }
     }
-    QString text = card->text();
+    QString textLong = card->text();
+    QString text = textLong.mid(0,textLong.indexOf("#")-1);
+    QString cardNumber = textLong.mid(textLong.indexOf("#")+1,textLong.length());
     for (int r = 0 ; r < ui->tableDeck->rowCount() ; ++r)
     {
         if (ui->tableDeck->item(r,0))
         {
-            //qDebug() << "cell set" ;
             if (text == ui->tableDeck->item(r, 0)->text())
             {
                 inc =  ui->tableDeck->item(r,1)->text().toInt() + 1 ;
                 QString incString = QString::number(inc);
                 QTableWidgetItem *widgetItemPlus = new QTableWidgetItem(incString);
-                widgetItemPlus->setBackground(QBrush(endColor));
+                if (ui->checkUseGradientsDecklists->isChecked())
+                    widgetItemPlus->setBackground(QBrush(endColor));
                 found = true ;
 
                 if (ui->tableDeck->item(r,1)->text().toInt() < 3)
@@ -489,24 +504,20 @@ void ScoreboardMain::on_addCardToDeck_clicked()
         QBrush gradient = card->background() ;
         QTableWidgetItem *widgetItem = new QTableWidgetItem(text) ;
         QTableWidgetItem *widgetItemOne = new QTableWidgetItem("1");
-        widgetItem->setBackground(gradient);
-        widgetItemOne->setBackground(QBrush(endColor));
+        if (ui->checkUseGradientsDecklists->isChecked())
+        {
+            widgetItem->setBackground(gradient);
+            widgetItemOne->setBackground(QBrush(endColor));
+        }
         ui->tableDeck->setItem(row, 0, widgetItem);
         ui->tableDeck->setItem(row,1,widgetItemOne);
         row++;
 
         int rowTotalHeight=0;
-        // Rows height
         int count=ui->tableDeck->verticalHeader()->count();
-        for (int i = 0; i < count; ++i) {
-            // 2018-03 edit: only account for row if it is visible
-            //if (!ui->tableDeck->verticalHeader()->isSectionHidden(i)) {
+        for (int i = 0; i < count; ++i)
                 rowTotalHeight+=ui->tableDeck->verticalHeader()->sectionSize(i);
-            //}
-        }
-        //rowTotalHeight+=ui->tableDeck->verticalHeader()->sectionSize(0);
-        rowTotalHeight+=2;
-        qDebug() << "Row heighs:" << rowTotalHeight ;
+        rowTotalHeight+=2; // For lines around tablewidget
         ui->tableDeck->setMinimumHeight(rowTotalHeight);
         ui->tableDeck->setMaximumHeight(rowTotalHeight);
     }
@@ -517,7 +528,6 @@ void ScoreboardMain::on_removeCardFromDeck_clicked()
     QList<QTableWidgetItem *> list = ui->tableDeck->selectedItems();
     foreach(QTableWidgetItem *item, list)
     {
-        //QTableWidgetItem *item = list.at(i);
         qDebug() << item->text();
         ui->tableDeck->removeRow(item->row());
         row--;
@@ -526,14 +536,13 @@ void ScoreboardMain::on_removeCardFromDeck_clicked()
 
 void ScoreboardMain::on_saveToDeck_clicked()
 {
-    QString name = "Deck"+ui->lineTournamentName->text()+" "+ui->lineSaveDeck->text();
+    QString name = "Deck-"+ui->lineTournamentName->text()+" "+ui->lineSaveDeck->text();
     ui->tableDeck->grab().save(saveLocation+"/Output/"+name+".png");
     ui->comboPlayer1Deck->addItem(name);
     ui->comboPlayer2Deck->addItem(name);
     DeckList.append(name);
 
     QFile file(saveLocation+"/Output/Decks.bin");
-    //qDebug() << saveLocation ;
     if (!file.open(QIODevice::WriteOnly))
         qDebug() << "Cannot open file Decks.bin for write/append";
     QDataStream stream(&file);
@@ -544,7 +553,6 @@ void ScoreboardMain::on_saveToDeck_clicked()
 void ScoreboardMain::loadDecks()
 {
     QFile file(saveLocation+"/Output/Decks.bin");
-    //qDebug() << saveLocation ;
     if (!file.open(QIODevice::ReadOnly))
         qDebug() << "Cannot open file Decks.bin for read";
     else
@@ -564,6 +572,140 @@ void ScoreboardMain::on_pushClearDeck_clicked()
 {
     ui->tableDeck->clear();
     row=0;
+}
+
+void ScoreboardMain::on_pushImportDeck_clicked()
+{
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    QString originalText = clipboard->text();
+    if (originalText.mid(0,3)== "<b>") // bbCode
+    {
+        qDebug() << "bbCode";
+    }
+    if (originalText.mid(0,2)== "##") // Markdown (reddit)
+    {
+        qDebug() << "Markdown";
+
+    }
+    if (originalText.mid(0,4)== "http") // Decklist from Netrunnerdb.com
+    {
+        qDebug() << "Netrunnerdb.com decklist";
+        int decklistStartURL = originalText.indexOf("list/", 0)+5 ;
+        int decklistEndURL = originalText.indexOf("/", decklistStartURL) ;
+        QString CardNumber = originalText.mid(decklistStartURL, decklistEndURL-decklistStartURL);
+        //qDebug() << CardNumber ;
+        QString CardURL= CardDB_DecklistURL+CardNumber;
+        connect(managerThree,SIGNAL(finished(QNetworkReply*)),this,SLOT(getDeckResult(QNetworkReply*)));
+        managerThree->get(QNetworkRequest(QUrl(CardURL)));
+    }
+    else
+    {
+        QRegExp letter("[a-zA-Z]");  // a letter
+        if (letter.exactMatch(originalText.mid(0,1))) // Plaintext
+        {
+            qDebug() << "Plaintext";
+
+        }
+
+        QRegExp digit("\\d");  // a digit (\d)
+        if (digit.exactMatch(originalText.mid(0,1))) // Jinteki.net
+        {
+            qDebug() << "Jinteki.net";
+            int iterate = 0;
+            //qDebug() << originalText << " Length:" << originalText.length();
+            QString foundLine, foundNumber, foundCard ;
+            int foundSpace, endOfLine ;
+            QColor endColor ;
+            do
+            {
+                //qDebug() << "Iterate:" << iterate ;
+                endOfLine = originalText.indexOf("\n",iterate);
+                QString foundLine = originalText.mid(iterate,(endOfLine-iterate));
+                //qDebug() << "FoundLine:" <<foundLine ;
+                foundSpace = foundLine.indexOf(" ", 0) ;
+                //qDebug() << "Space:" << foundSpace ;
+                foundNumber = foundLine.mid(0, foundSpace);
+                foundCard = foundLine.mid(foundSpace+1, foundLine.length()-foundSpace);
+                //qDebug() << "Number" << foundNumber << ":" << foundCard ;
+
+                iterate=endOfLine+1;
+                //qDebug() << "NewIterate:" << iterate;
+
+                ui->tableDeck->setRowCount(row+1);
+                QTableWidgetItem *widgetCard = new QTableWidgetItem(foundCard) ;
+                QTableWidgetItem *widgetNumber = new QTableWidgetItem(foundNumber);
+                QString Faction = getFactionFromCardtext(foundCard);
+                if (Faction == "Error")
+                    qDebug() << "Problem finding card";
+                if (Faction != "" && ui->checkUseGradientsDecklists->isChecked())
+                {
+                        foreach(FactionColorCode faction, FactionColorCodes)
+                        {
+                            if (faction.Faction.toLower() == Faction)
+                            {
+                                widgetCard->setBackground(QBrush(faction.FactionGradient));
+                                endColor.setNamedColor(faction.EndColor);
+                                widgetNumber->setBackground(QBrush(endColor));
+                            }
+                        }
+
+                }
+                ui->tableDeck->setItem(row,0,widgetCard);
+                ui->tableDeck->setItem(row,1,widgetNumber);
+                row++;
+
+            }
+            while (iterate>0); // Reaching EoL = 0
+
+            int rowTotalHeight=0;
+            int count=ui->tableDeck->verticalHeader()->count();
+            for (int i = 0; i < count; ++i)
+                    rowTotalHeight+=ui->tableDeck->verticalHeader()->sectionSize(i);
+            rowTotalHeight+=2; // For lines around tablewidget
+            ui->tableDeck->setMinimumHeight(rowTotalHeight);
+            ui->tableDeck->setMaximumHeight(rowTotalHeight);
+
+        }
+    }
+}
+
+QString ScoreboardMain::getCardnumberFromCardtext(QString Card)
+{
+    foreach(Card_info data, Card_infoList)
+    {
+        if (data.Title.toLower().contains(Card.toLower()))
+        {
+            return data.Code ;
+        }
+    }
+    return "Error";
+}
+
+QString ScoreboardMain::getFactionFromCardtext(QString Card)
+{
+    foreach(Card_info data, Card_infoList)
+    {
+        //qDebug() << data.Title ;
+        if (data.Title.toLower().contains(Card.toLower()))
+        {
+            return data.Faction ;
+        }
+    }
+    return "Error" ;
+}
+
+QString ScoreboardMain::getCardtextFromCardnumber(QString Card)
+{
+    foreach(Card_info data, Card_infoList)
+    {
+        //qDebug() << data.Title ;
+        if (data.Code.toInt() == Card.toInt())
+        {
+            return data.Title ;
+        }
+    }
+    return "Error" ;
+
 }
 
 void ScoreboardMain::on_pushShowPlayer1Deck_clicked()
@@ -611,46 +753,39 @@ void ScoreboardMain::on_pushShowPlayer2Deck_clicked()
 
 void ScoreboardMain::getCardsResult()
 {
-    //if (!QFile::exists(sLocation+"/CardDB/Cards.bin"))
-    //{
-        // Connect networkManager response to the handler
-        connect(managerTwo, SIGNAL(finished(QNetworkReply*)), this, SLOT(getCardResult(QNetworkReply*)));
-        // We get the data, namely JSON file from a site on a particular url
-        //request.setHeader(QNetworkRequest::ContentTypeHeader, “application/json”);
-        Pack_info pack_info;
-        Pack_infoList.clear();
-        Card_infoList.clear();
-        pack_info = {1,113}; Pack_infoList.append(pack_info); // Core
-        pack_info = {2,120}; Pack_infoList.append(pack_info); // Genesis
-        pack_info = {3,55}; Pack_infoList.append(pack_info); // Creation&Control
-        pack_info = {4,120}; Pack_infoList.append(pack_info); // Spin
-        pack_info = {5,55}; Pack_infoList.append(pack_info); // Honor&Profit
-        pack_info = {6,120}; Pack_infoList.append(pack_info); // Lunar
-        pack_info = {7,55}; Pack_infoList.append(pack_info); // Order&Chaos
-        pack_info = {8,120}; Pack_infoList.append(pack_info); // SanSan
-        pack_info = {9,55}; Pack_infoList.append(pack_info); // Data&Destiny
-        pack_info = {10,114}; Pack_infoList.append(pack_info); // Mumbad
-        pack_info = {11,120}; Pack_infoList.append(pack_info); // Flashpoint
-        pack_info = {12,120}; Pack_infoList.append(pack_info); // Red Sand
-        pack_info = {13,57}; Pack_infoList.append(pack_info); // Terminal Directive
-        pack_info = {20,132}; Pack_infoList.append(pack_info); // Revised Core
-        pack_info = {21,120}; Pack_infoList.append(pack_info); // Kitara
-        pack_info = {22,57}; Pack_infoList.append(pack_info); // Reign and Reverie
-        QList<Pack_info>::iterator p;
-        for (p=Pack_infoList.begin(); p != Pack_infoList.end(); p++)
-        {
-            //qDebug() <<(*p).Total_cards;
-
-            QString Cardnumber ;
-            for (int j=1; j<=(*p).Total_cards;j++)
-            {
-                QString Cardnumber = QString("%1").arg((*p).Pack_code,2,10,QChar('0'))+ QString("%1").arg(j,3,10,QChar('0')) ;
-                //qDebug() << Cardnumber;
-                QString CardURL = QCardDB_URL+Cardnumber;
-                managerTwo->get(QNetworkRequest(QUrl(CardURL)));
-            }
-        }
-    //}
+     // Connect networkManager response to the handler
+     connect(managerTwo, SIGNAL(finished(QNetworkReply*)), this, SLOT(getCardResult(QNetworkReply*)));
+     // We get the data, namely JSON file from a site on a particular url
+     Pack_info pack_info;
+     Pack_infoList.clear();
+     Card_infoList.clear();
+     pack_info = {1,113}; Pack_infoList.append(pack_info); // Core
+     pack_info = {2,120}; Pack_infoList.append(pack_info); // Genesis
+     pack_info = {3,55}; Pack_infoList.append(pack_info); // Creation&Control
+     pack_info = {4,120}; Pack_infoList.append(pack_info); // Spin
+     pack_info = {5,55}; Pack_infoList.append(pack_info); // Honor&Profit
+     pack_info = {6,120}; Pack_infoList.append(pack_info); // Lunar
+     pack_info = {7,55}; Pack_infoList.append(pack_info); // Order&Chaos
+     pack_info = {8,120}; Pack_infoList.append(pack_info); // SanSan
+     pack_info = {9,55}; Pack_infoList.append(pack_info); // Data&Destiny
+     pack_info = {10,114}; Pack_infoList.append(pack_info); // Mumbad
+     pack_info = {11,120}; Pack_infoList.append(pack_info); // Flashpoint
+     pack_info = {12,120}; Pack_infoList.append(pack_info); // Red Sand
+     pack_info = {13,57}; Pack_infoList.append(pack_info); // Terminal Directive
+     pack_info = {20,132}; Pack_infoList.append(pack_info); // Revised Core
+     pack_info = {21,120}; Pack_infoList.append(pack_info); // Kitara
+     pack_info = {22,57}; Pack_infoList.append(pack_info); // Reign and Reverie
+     QList<Pack_info>::iterator p;
+     for (p=Pack_infoList.begin(); p != Pack_infoList.end(); p++)
+     {
+         QString Cardnumber ;
+         for (int j=1; j<=(*p).Total_cards;j++)
+         {
+             QString Cardnumber = QString("%1").arg((*p).Pack_code,2,10,QChar('0'))+ QString("%1").arg(j,3,10,QChar('0')) ;
+             QString CardURL = QCardDB_URL+Cardnumber;
+             managerTwo->get(QNetworkRequest(QUrl(CardURL)));
+         }
+     }
 }
 
 void ScoreboardMain::on_saveCards_Button_clicked()
@@ -659,15 +794,12 @@ void ScoreboardMain::on_saveCards_Button_clicked()
     {
         ui->saveCards_Label->setText("Saving Cards");
         QFile file(saveLocation+"/CardDB/Cards.bin");
-        //qDebug() << saveLocation ;
         if (!file.open(QIODevice::WriteOnly))
             qDebug() << "Cannot open file for write";
         QDataStream stream(&file);
         stream << Card_infoList ;
         file.close();
         ui->saveCards_Label->setText("Cards saved");
-
-        //qDebug() << "Cards saved to Cards.bin";
     }
 
     connect(managerTwo, SIGNAL(finished(QNetworkReply*)), this, SLOT(getCardURLResult(QNetworkReply*)));
@@ -676,7 +808,6 @@ void ScoreboardMain::on_saveCards_Button_clicked()
         QString CardURL = data.Image_url;
         QString code = data.Code;
         QString faction = data.Faction ;
-        //qDebug()<< "Card URL:" << CardURL << "Card: "<<code << "Faction: " << faction;
         QNetworkReply* reply = managerTwo->get(QNetworkRequest(QUrl(CardURL)));
         reply->setProperty("code",code);
     }
@@ -689,7 +820,6 @@ void ScoreboardMain::getCardURLResult(QNetworkReply *replyCard)
     if (!file.open(QIODevice::ReadWrite))
         qDebug() << "Cannot open file "<<code;
     QByteArray data=replyCard->readAll();
-    //qDebug() << code <<" recieved data of size: " << data.size();
     file.write(data);
     file.close();
     ui->saveCards_Label->setText("Saving card "+code);
@@ -714,7 +844,6 @@ QDataStream &operator>>(QDataStream &stream, Card_info &data)
 
 void ScoreboardMain::getCardResult(QNetworkReply *replyCard)
 {
-    //qDebug() << "Getting Card results";
     QJsonParseError jsonError;
     QString Carddata = replyCard->readAll();
     QJsonDocument CardJson = QJsonDocument::fromJson(Carddata.toUtf8(),&jsonError);
@@ -731,17 +860,69 @@ void ScoreboardMain::getCardResult(QNetworkReply *replyCard)
         temp_Card_info.Faction = v.toObject().value("faction_code").toString();
         if (temp_Card_info.Image_url == "")
             temp_Card_info.Image_url = BaseCardURL+temp_Card_info.Code+".png";
-        //qDebug() << temp_Card_info.Title << ":" <<temp_Card_info.Code<<":"<<temp_Card_info.Image_url<<":"<<temp_Card_info.Faction;
         Card_infoList.append(temp_Card_info);
         ui->downloadCards_Label->setText("Downloading data: "+temp_Card_info.Code);
     }
     replyCard->deleteLater();
 }
 
+void ScoreboardMain::getDeckResult(QNetworkReply *replyCard)
+{
+    QJsonParseError jsonError;
+    QColor endColor;
+    QString Deckdata = replyCard->readAll();
+    QJsonDocument DeckJson = QJsonDocument::fromJson(Deckdata.toUtf8(),&jsonError);
+    if (jsonError.error != QJsonParseError::NoError){
+      qDebug() << jsonError.errorString();
+    }
+    QJsonArray DeckdataArray = DeckJson.object().value("data").toArray();
+    foreach (const QJsonValue & v, DeckdataArray)
+    {
+        QVariantMap DeckcardMap = v.toObject().value("cards").toObject().toVariantMap();
+        for(QVariantMap::const_iterator iter = DeckcardMap.begin(); iter != DeckcardMap.end(); ++iter) {
+
+            qDebug() << iter.key() << iter.value();
+            QString foundCard = getCardtextFromCardnumber(iter.key());
+            QString foundNumber = iter.value().toString();
+
+            ui->tableDeck->setRowCount(row+1);
+            QTableWidgetItem *widgetCard = new QTableWidgetItem(foundCard) ;
+            QTableWidgetItem *widgetNumber = new QTableWidgetItem(foundNumber);
+            QString Faction = getFactionFromCardtext(foundCard);
+            if (Faction == "Error")
+                qDebug() << "Problem finding card";
+            if (Faction != "" && ui->checkUseGradientsDecklists->isChecked())
+            {
+                foreach(FactionColorCode faction, FactionColorCodes)
+                {
+                    if (faction.Faction.toLower() == Faction)
+                    {
+                        widgetCard->setBackground(QBrush(faction.FactionGradient));
+                        endColor.setNamedColor(faction.EndColor);
+                        widgetNumber->setBackground(QBrush(endColor));
+                    }
+                }
+
+            }
+            ui->tableDeck->setItem(row,0,widgetCard);
+            ui->tableDeck->setItem(row,1,widgetNumber);
+            row++;
+
+        }
+
+        int rowTotalHeight=0;
+        int count=ui->tableDeck->verticalHeader()->count();
+        for (int i = 0; i < count; ++i)
+                rowTotalHeight+=ui->tableDeck->verticalHeader()->sectionSize(i);
+         rowTotalHeight+=2; // For lines around tablewidget
+         ui->tableDeck->setMinimumHeight(rowTotalHeight);
+         ui->tableDeck->setMaximumHeight(rowTotalHeight);
+    }
+    replyCard->deleteLater();
+}
 
 void ScoreboardMain::replyFinished(QNetworkReply *reply)
 {
-    //qDebug() << "Update";
     string getstring = "";
     size_t str;
     uint a = 0;
@@ -800,7 +981,6 @@ void ScoreboardMain::WarningBox()
        HTMLcode_Update.append("/releases");
        HTMLcode_Update.append(">Update Download</a>&nbsp;&nbsp;&nbsp;") ;
        HTMLcode_Update.toHtmlEscaped();
-       //qDebug()<<qPrintable(HTMLcode_Update);
        QMessageBox::warning(this,"New Update Found", HTMLcode_Update);
        stopreply = 1;
     }
@@ -946,10 +1126,10 @@ void ScoreboardMain::on_Update_Team_Button_clicked() //Update Team Name Button
 {
     QString Player1N = ui->Player1Name_Input->text(), Player2N = ui->Player2Name_Input->text();
     QString Player1I = ui->Player1Id_Input->currentText(), Player2I = ui->Player2Id_Input->currentText();
-    QString RoundI = ui->Round_Input->text();
+    QString RoundI = ui->Round_Input->text(); QString CustomI = ui->Custom_Input->text();
     Player1_Name = Player1N.toUtf8().constData(), Player2_Name = Player2N.toUtf8().constData();
     Player1_Id = Player1I.toUtf8().constData(), Player2_Id = Player2I.toUtf8().constData();
-    Round= RoundI.toUtf8().constData();
+    Round= RoundI.toUtf8().constData(); Custom = CustomI.toUtf8().constData();
     if(ui->checkBox->isChecked())
     {
         writexml();
@@ -964,17 +1144,27 @@ void ScoreboardMain::on_Update_Team_Button_clicked() //Update Team Name Button
         Player2_Name_Output << Player2_Name;
         Player1_Id_Output.open(sLocation+"/Output/Player1_Id.txt");
         Player2_Id_Output.open(sLocation+"/Output/Player2_Id.txt");
-        Round_Output << Round ;
+        QFile Player1_Id_HTML(saveLocation+"/Output/Player1_Id_HTML.html");
+        Player1_Id_HTML.open(QFile::WriteOnly);
+        QFile Player2_Id_HTML(saveLocation+"/Output/Player2_Id_HTML.html");
+        Player2_Id_HTML.open(QFile::WriteOnly);
+        QFile Player1_FactionId(saveLocation+"/Output/Player1_FactionId.txt");
+        Player1_FactionId.open(QFile::WriteOnly);
+        QFile Player2_FactionId(saveLocation+"/Output/Player2_FactionId.txt");
+        Player2_FactionId.open(QFile::WriteOnly);
+
 
         if(ui->Swiss_Radio->isChecked())
         {
             Round_info_Output << "Swiss Round " << Round;
+            Round_Output << Round ;
             PresetRadio=3;
             on_Reset_Button_clicked();
         }
         if(ui->Top_cut_Radio->isChecked())
         {
             Round_info_Output << "Top cut Round " << Round;
+            Round_Output << Round ;
             PresetRadio=1;
             on_Reset_Button_clicked();
         }
@@ -988,6 +1178,12 @@ void ScoreboardMain::on_Update_Team_Button_clicked() //Update Team Name Button
         {
             Round_info_Output << "Casual";
             PresetRadio=4;
+            on_Reset_Button_clicked();
+        }
+        if(ui->Custom_Radio->isChecked())
+        {
+            Round_info_Output << Custom;
+            PresetRadio=2;
             on_Reset_Button_clicked();
         }
 
@@ -1020,24 +1216,56 @@ void ScoreboardMain::on_Update_Team_Button_clicked() //Update Team Name Button
         }
         else
         {
-            Player1_Id_Output << Player1_Id;
-            Player2_Id_Output << Player2_Id;
+            QString out1Id = ui->Player1Id_Input->currentText().mid(1,ui->Player1Id_Input->currentText().length()-1) ;
+            Player1_Id_Output << out1Id.toStdString() ;
+            QString out2Id = ui->Player2Id_Input->currentText().mid(1,ui->Player2Id_Input->currentText().length()-1) ;
+            Player2_Id_Output << out2Id.toStdString() ;
 
             if (QFile::exists(saveLocation+"/Output/Player1_Id.png"))
             {
                 QFile::remove(saveLocation+"/Output/Player1_Id.png");
             }
-            QString p1_id=QString::fromStdString(Player1_Id.substr(0,2));
+            QString p1Faction = ui->Player1Id_Input->currentText().mid(0,1);
+            QString p1FactionId, p1FactionHTML;
+            p1FactionHTML.append("<!DOCTYPE html><html lang=\"en\" dir=\"ltr\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /><title> </title></head><body><p style=\"font-family:netrunner\">");
+            p1FactionHTML.append(p1Faction);
+            p1FactionHTML.append("</p></body></html>");
+            p1FactionId.append(p1Faction);
+            //qDebug() <<p1Faction ;
+
+            QTextStream out1HTML(&Player1_Id_HTML);
+            out1HTML.setCodec("UTF-8");
+            out1HTML << p1FactionHTML ;
+            QTextStream out1(&Player1_FactionId);
+            out1.setCodec("UTF-8");
+            out1 << p1FactionId ;
+
+            QString p1_id= ui->Player1Id_Input->currentText().mid(1,2); // First char is a Netrunner.ttf factionchar
             QString p1_idfile=saveLocation+"/ID_Pictures/" ;
             p1_idfile.append(p1_id);
+            //qDebug() << "Id:" << p1_id ;
             p1_idfile.append(".png");
             QFile::copy(p1_idfile,saveLocation+"/Output/Player1_Id.png");
+
+            QString p2Faction = ui->Player2Id_Input->currentText().mid(0,1);
+            QString p2FactionId, p2FactionHTML ;
+            p2FactionHTML.append("<!DOCTYPE html><html lang=\"en\" dir=\"ltr\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /><title> </title></head><body><p style=\"font-family:netrunner\">");
+            p2FactionHTML.append(p2Faction);
+            p2FactionHTML.append("</p></body></html>");
+            p2FactionId.append(p2Faction);
+
+            QTextStream out2HTML(&Player2_Id_HTML);
+            out2HTML.setCodec("UTF-8");
+            out2HTML << p2FactionHTML ;
+            QTextStream out2(&Player2_FactionId);
+            out2.setCodec("UTF-8");
+            out2 << p2FactionId ;
 
             if (QFile::exists(saveLocation+"/Output/Player2_Id.png"))
             {
                 QFile::remove(saveLocation+"/Output/Player2_Id.png");
             }
-            QString p2_id=QString::fromStdString(Player2_Id.substr(0,2));
+            QString p2_id= ui->Player2Id_Input->currentText().mid(1,2); // First char is a Netrunner.ttf factionchar
             QString p2_idfile=saveLocation+"/ID_pictures/" ;
             p2_idfile.append(p2_id);
             p2_idfile.append(".png");
@@ -1050,6 +1278,10 @@ void ScoreboardMain::on_Update_Team_Button_clicked() //Update Team Name Button
         Player2_Name_Output.close();
         Player1_Id_Output.close();
         Player2_Id_Output.close();
+        Player1_Id_HTML.close();
+        Player2_Id_HTML.close();
+        Player1_FactionId.close();
+        Player2_FactionId.close();
         Round_Output.close();
         Round_info_Output.close();
     }

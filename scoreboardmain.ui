@@ -100,7 +100,7 @@
        <rect>
         <x>680</x>
         <y>10</y>
-        <width>181</width>
+        <width>211</width>
         <height>31</height>
        </rect>
       </property>
@@ -155,7 +155,7 @@
       <property name="geometry">
        <rect>
         <x>248</x>
-        <y>620</y>
+        <y>590</y>
         <width>121</width>
         <height>61</height>
        </rect>
@@ -198,7 +198,7 @@ Score and Timer</string>
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>181</width>
+        <width>211</width>
         <height>31</height>
        </rect>
       </property>
@@ -437,9 +437,14 @@ Score and Timer</string>
        <rect>
         <x>10</x>
         <y>50</y>
-        <width>181</width>
+        <width>211</width>
         <height>22</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
       </property>
       <property name="toolTip">
        <string>Fraction for Player 1</string>
@@ -450,9 +455,14 @@ Score and Timer</string>
        <rect>
         <x>680</x>
         <y>50</y>
-        <width>181</width>
+        <width>211</width>
         <height>22</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
       </property>
       <property name="toolTip">
        <string>Fraction for Player 2</string>
@@ -462,7 +472,7 @@ Score and Timer</string>
       <property name="geometry">
        <rect>
         <x>438</x>
-        <y>750</y>
+        <y>720</y>
         <width>101</width>
         <height>41</height>
        </rect>
@@ -475,7 +485,7 @@ Score and Timer</string>
       <property name="geometry">
        <rect>
         <x>320</x>
-        <y>734</y>
+        <y>704</y>
         <width>61</width>
         <height>30</height>
        </rect>
@@ -496,7 +506,7 @@ Score and Timer</string>
       <property name="geometry">
        <rect>
         <x>438</x>
-        <y>780</y>
+        <y>750</y>
         <width>131</width>
         <height>31</height>
        </rect>
@@ -517,7 +527,7 @@ Score and Timer</string>
       <property name="geometry">
        <rect>
         <x>218</x>
-        <y>700</y>
+        <y>670</y>
         <width>251</width>
         <height>17</height>
        </rect>
@@ -533,7 +543,7 @@ Score and Timer</string>
       <property name="geometry">
        <rect>
         <x>218</x>
-        <y>730</y>
+        <y>700</y>
         <width>101</width>
         <height>17</height>
        </rect>
@@ -542,14 +552,14 @@ Score and Timer</string>
        <string>Swiss round</string>
       </property>
       <property name="checked">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
      </widget>
      <widget class="QRadioButton" name="Top_cut_Radio">
       <property name="geometry">
        <rect>
         <x>218</x>
-        <y>750</y>
+        <y>720</y>
         <width>111</width>
         <height>17</height>
        </rect>
@@ -562,7 +572,7 @@ Score and Timer</string>
       <property name="geometry">
        <rect>
         <x>218</x>
-        <y>770</y>
+        <y>740</y>
         <width>101</width>
         <height>17</height>
        </rect>
@@ -575,7 +585,7 @@ Score and Timer</string>
       <property name="geometry">
        <rect>
         <x>438</x>
-        <y>690</y>
+        <y>660</y>
         <width>71</width>
         <height>41</height>
        </rect>
@@ -588,7 +598,7 @@ Score and Timer</string>
       <property name="geometry">
        <rect>
         <x>438</x>
-        <y>720</y>
+        <y>690</y>
         <width>131</width>
         <height>31</height>
        </rect>
@@ -609,7 +619,7 @@ Score and Timer</string>
       <property name="geometry">
        <rect>
         <x>50</x>
-        <y>590</y>
+        <y>550</y>
         <width>101</width>
         <height>41</height>
        </rect>
@@ -625,7 +635,7 @@ Score and Timer</string>
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>640</y>
+        <y>610</y>
         <width>901</width>
         <height>20</height>
        </rect>
@@ -638,9 +648,9 @@ Score and Timer</string>
       <property name="geometry">
        <rect>
         <x>658</x>
-        <y>650</y>
+        <y>620</y>
         <width>20</width>
-        <height>171</height>
+        <height>201</height>
        </rect>
       </property>
       <property name="orientation">
@@ -651,7 +661,7 @@ Score and Timer</string>
       <property name="geometry">
        <rect>
         <x>218</x>
-        <y>790</y>
+        <y>760</y>
         <width>91</width>
         <height>17</height>
        </rect>
@@ -664,7 +674,7 @@ Score and Timer</string>
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>510</y>
+        <y>490</y>
         <width>141</width>
         <height>41</height>
        </rect>
@@ -680,7 +690,7 @@ Score and Timer</string>
       <property name="geometry">
        <rect>
         <x>478</x>
-        <y>630</y>
+        <y>600</y>
         <width>151</width>
         <height>41</height>
        </rect>
@@ -696,9 +706,9 @@ Score and Timer</string>
       <property name="geometry">
        <rect>
         <x>418</x>
-        <y>650</y>
+        <y>620</y>
         <width>20</width>
-        <height>171</height>
+        <height>201</height>
        </rect>
       </property>
       <property name="orientation">
@@ -767,7 +777,7 @@ Score and Timer</string>
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>690</y>
+        <y>660</y>
         <width>141</width>
         <height>23</height>
        </rect>
@@ -783,7 +793,7 @@ Score and Timer</string>
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>740</y>
+        <y>710</y>
         <width>141</width>
         <height>23</height>
        </rect>
@@ -799,7 +809,7 @@ Score and Timer</string>
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>720</y>
+        <y>690</y>
         <width>171</width>
         <height>16</height>
        </rect>
@@ -812,7 +822,7 @@ Score and Timer</string>
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>770</y>
+        <y>740</y>
         <width>161</width>
         <height>16</height>
        </rect>
@@ -838,9 +848,9 @@ Score and Timer</string>
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>40</y>
+        <y>0</y>
         <width>1151</width>
-        <height>811</height>
+        <height>851</height>
        </rect>
       </property>
       <property name="text">
@@ -939,9 +949,9 @@ Score and Timer</string>
       <property name="geometry">
        <rect>
         <x>890</x>
-        <y>650</y>
+        <y>620</y>
         <width>20</width>
-        <height>171</height>
+        <height>201</height>
        </rect>
       </property>
       <property name="orientation">
@@ -953,7 +963,7 @@ Score and Timer</string>
        <rect>
         <x>10</x>
         <y>80</y>
-        <width>181</width>
+        <width>211</width>
         <height>22</height>
        </rect>
       </property>
@@ -963,7 +973,7 @@ Score and Timer</string>
        <rect>
         <x>680</x>
         <y>80</y>
-        <width>181</width>
+        <width>211</width>
         <height>22</height>
        </rect>
       </property>
@@ -972,7 +982,7 @@ Score and Timer</string>
       <property name="geometry">
        <rect>
         <x>678</x>
-        <y>720</y>
+        <y>690</y>
         <width>211</width>
         <height>31</height>
        </rect>
@@ -982,7 +992,7 @@ Score and Timer</string>
       <property name="geometry">
        <rect>
         <x>678</x>
-        <y>700</y>
+        <y>670</y>
         <width>101</width>
         <height>16</height>
        </rect>
@@ -1008,9 +1018,9 @@ Score and Timer</string>
       <property name="geometry">
        <rect>
         <x>200</x>
-        <y>650</y>
+        <y>620</y>
         <width>20</width>
-        <height>171</height>
+        <height>201</height>
        </rect>
       </property>
       <property name="orientation">
@@ -1054,6 +1064,53 @@ Score and Timer</string>
       </property>
       <property name="text">
        <string>Clear Deck -&gt;</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushImportDeck">
+      <property name="geometry">
+       <rect>
+        <x>730</x>
+        <y>510</y>
+        <width>171</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Import Deck from Clipboard -&gt;</string>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="Custom_Radio">
+      <property name="geometry">
+       <rect>
+        <x>218</x>
+        <y>781</y>
+        <width>91</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="Custom_Input">
+      <property name="geometry">
+       <rect>
+        <x>240</x>
+        <y>780</y>
+        <width>141</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string>Input valid for Swiss and Top cut</string>
+      </property>
+      <property name="text">
+       <string/>
       </property>
      </widget>
      <zorder>LabelFactionColor</zorder>
@@ -1117,6 +1174,9 @@ Score and Timer</string>
      <zorder>pushShowPlayer1Deck</zorder>
      <zorder>pushShowPlayer2Deck</zorder>
      <zorder>pushClearDeck</zorder>
+     <zorder>pushImportDeck</zorder>
+     <zorder>Custom_Radio</zorder>
+     <zorder>Custom_Input</zorder>
     </widget>
     <widget class="QWidget" name="S">
      <attribute name="title">
@@ -1563,7 +1623,7 @@ Score and Timer</string>
      <widget class="QComboBox" name="comboFactionColor">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>20</x>
         <y>420</y>
         <width>101</width>
         <height>22</height>
@@ -1573,7 +1633,7 @@ Score and Timer</string>
      <widget class="QLabel" name="label_4">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>20</x>
         <y>400</y>
         <width>121</width>
         <height>16</height>
@@ -1594,6 +1654,38 @@ Score and Timer</string>
       </property>
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="checkUseGradientsDecklists">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>400</y>
+        <width>161</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Use Gradients for Decklists</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="checkUseImageDecklists">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>430</y>
+        <width>191</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Use Imagebackground for Decklists</string>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
       </property>
      </widget>
     </widget>

@@ -28,3 +28,6 @@ HEADERS  += scoreboardmain.h \
 
 FORMS    += scoreboardmain.ui \
     dialog.ui
+
+RESOURCES += \
+    resources.qrc

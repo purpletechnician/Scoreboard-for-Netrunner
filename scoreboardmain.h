@@ -50,7 +50,17 @@ private slots:
 
     void loadDecks();
 
+    void getDeckResult(QNetworkReply *replyCard);
+
+    QString getCardnumberFromCardtext(QString Card);
+
+    QString getFactionFromCardtext(QString Card);
+
+    QString getCardtextFromCardnumber(QString Card);
+
     void on_pushClearDeck_clicked();
+
+    void on_pushImportDeck_clicked();
 
     void on_pushShowPlayer1Deck_clicked();
 
@@ -191,7 +201,7 @@ private:
     QTimer *hotkey;
     QTcpServer server;
     QTcpSocket* client;
-    QNetworkAccessManager *managerOne, *managerTwo;
+    QNetworkAccessManager *managerOne, *managerTwo, *managerThree;
     QMediaPlayer *player;
 };
 

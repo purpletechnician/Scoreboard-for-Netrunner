@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/fonts">
+        <file>Monkirta Pursuit NC.ttf</file>
+        <file>netrunner.ttf</file>
+    </qresource>
+</RCC>
