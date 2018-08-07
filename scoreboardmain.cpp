@@ -292,8 +292,10 @@ void ScoreboardMain::Opened() //Resets all
      //ui->tableDeck->setRowCount(2);
      //ui->tableDeck->setColumnCount(2);
      //ui->tableDeck->horizontalHeader()->setVisible(false);
-     //ui->tableDeck->verticalHeader()->setVisible(false);
-     ui->tableDeck->horizontalHeader()->resizeSection(0, 188);
+     ui->tableDeck->verticalHeader()->setVisible(true);
+     ui->tableDeck->verticalHeader()->setSectionsMovable(true);
+     //ui->tableDeck->horizontalHeader()->resizeSection(0, 188);
+     ui->tableDeck->horizontalHeader()->resizeSection(0, 168);
      ui->tableDeck->horizontalHeader()->resizeSection(1, 20);
      ui->tableDeck->verticalHeader()->setDefaultSectionSize(20);
 
@@ -302,11 +304,19 @@ void ScoreboardMain::Opened() //Resets all
 
      QFont fontNetrunner = QFont("netrunner",12,1);
      QFont fontMonkirta = QFont("Monkirta Pursuit NC",10, 1);
-     ui->tableDeck->setFont(fontMonkirta);
+     //ui->tableDeck->setFont(fontMonkirta);
      ui->Player1Id_Input->setFont(fontNetrunner);
      ui->Player2Id_Input->setFont(fontNetrunner);
+     qDebug() << ui->fontComboBoxDecklist->currentFont() ;
+     connect(ui->fontComboBoxDecklist, SIGNAL(currentFontChanged(QFont)),SLOT(fontComboBoxDecklist_currentChanged()));
 
      ui->pushImportDeck->setToolTip("Imports deck from these NetrunnerDb-sources:\n* bbCode (not yet implemented)\n* Markdown (not yet implemented)\n* Plaintext (not yet implemented)\n* Jinteki.net (implemented)\n* NetrunnerDb-URL (implemented)\n");
+}
+
+void ScoreboardMain::fontComboBoxDecklist_currentChanged()
+{
+    ui->tableDeck->setFont(ui->fontComboBoxDecklist->currentFont());
+    //qDebug() << ui->fontComboBoxDecklist->currentFont() ;
 }
 
 void ScoreboardMain::createColors()
@@ -537,6 +547,9 @@ void ScoreboardMain::on_removeCardFromDeck_clicked()
 void ScoreboardMain::on_saveToDeck_clicked()
 {
     QString name = "Deck-"+ui->lineTournamentName->text()+" "+ui->lineSaveDeck->text();
+    ui->tableDeck->clearSelection();
+    ui->tableDeck->horizontalHeader()->resizeSection(0, 188);
+    ui->tableDeck->verticalHeader()->setVisible(false);
     ui->tableDeck->grab().save(saveLocation+"/Output/"+name+".png");
     ui->comboPlayer1Deck->addItem(name);
     ui->comboPlayer2Deck->addItem(name);
@@ -548,6 +561,8 @@ void ScoreboardMain::on_saveToDeck_clicked()
     QDataStream stream(&file);
     stream << DeckList ;
     file.close();
+    ui->tableDeck->horizontalHeader()->resizeSection(0, 168);
+    ui->tableDeck->verticalHeader()->setVisible(true);
 }
 
 void ScoreboardMain::loadDecks()

@@ -45,7 +45,7 @@
      <enum>QTabWidget::Rounded</enum>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <property name="documentMode">
      <bool>false</bool>
@@ -1683,6 +1683,9 @@ Score and Timer</string>
         <width>191</width>
         <height>17</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Not yet implemented</string>
       </property>
       <property name="text">
        <string>Use Imagebackground for Decklists</string>

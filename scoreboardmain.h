@@ -34,6 +34,8 @@ private slots:
 
     void comboFactionColor_currentIndexChanged(int index);
 
+    void fontComboBoxDecklist_currentChanged();
+
     void searchChanged(const QString &newvalue);
 
     void on_List_Output_clicked();
