@@ -76,7 +76,7 @@
      <widget class="QLabel" name="Player2Score_Label">
       <property name="geometry">
        <rect>
-        <x>700</x>
+        <x>660</x>
         <y>160</y>
         <width>121</width>
         <height>51</height>
@@ -98,7 +98,7 @@
      <widget class="QLineEdit" name="Player2Name_Input">
       <property name="geometry">
        <rect>
-        <x>680</x>
+        <x>640</x>
         <y>10</y>
         <width>211</width>
         <height>31</height>
@@ -180,7 +180,7 @@ Score and Timer</string>
      <widget class="QPushButton" name="Player2UP_Button">
       <property name="geometry">
        <rect>
-        <x>680</x>
+        <x>640</x>
         <y>120</y>
         <width>71</width>
         <height>31</height>
@@ -236,7 +236,7 @@ Score and Timer</string>
      <widget class="QPushButton" name="Player2DOWN_Button">
       <property name="geometry">
        <rect>
-        <x>680</x>
+        <x>640</x>
         <y>220</y>
         <width>71</width>
         <height>31</height>
@@ -453,7 +453,7 @@ Score and Timer</string>
      <widget class="QComboBox" name="Player2Id_Input">
       <property name="geometry">
        <rect>
-        <x>680</x>
+        <x>640</x>
         <y>50</y>
         <width>211</width>
         <height>22</height>
@@ -867,7 +867,7 @@ Score and Timer</string>
        </rect>
       </property>
       <property name="toolTip">
-       <string>Ex: Håkan_Corp</string>
+       <string>Ex: HåkanC or HåkanC_corp</string>
       </property>
      </widget>
      <widget class="QPushButton" name="addCardToDeck">
@@ -887,16 +887,16 @@ Score and Timer</string>
       <property name="geometry">
        <rect>
         <x>940</x>
-        <y>760</y>
+        <y>740</y>
         <width>171</width>
         <height>23</height>
        </rect>
       </property>
       <property name="toolTip">
-       <string>Ex: Håkan_Corp</string>
+       <string>Ex: HåkanC or HåkanC_corp</string>
       </property>
       <property name="text">
-       <string>Save to Deck (player_side)</string>
+       <string>Save to Deck</string>
       </property>
      </widget>
      <widget class="QTableWidget" name="tableDeck">
@@ -905,7 +905,7 @@ Score and Timer</string>
         <x>920</x>
         <y>10</y>
         <width>211</width>
-        <height>741</height>
+        <height>721</height>
        </rect>
       </property>
       <property name="font">
@@ -965,7 +965,7 @@ Score and Timer</string>
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>80</y>
+        <y>90</y>
         <width>211</width>
         <height>22</height>
        </rect>
@@ -974,8 +974,8 @@ Score and Timer</string>
      <widget class="QComboBox" name="comboPlayer2Deck">
       <property name="geometry">
        <rect>
-        <x>680</x>
-        <y>80</y>
+        <x>640</x>
+        <y>90</y>
         <width>211</width>
         <height>22</height>
        </rect>
@@ -1046,7 +1046,7 @@ Score and Timer</string>
      <widget class="QPushButton" name="pushShowPlayer2Deck">
       <property name="geometry">
        <rect>
-        <x>780</x>
+        <x>740</x>
         <y>120</y>
         <width>75</width>
         <height>23</height>
@@ -1113,10 +1113,227 @@ Score and Timer</string>
        <string>Input valid for Swiss and Top cut</string>
       </property>
       <property name="text">
-       <string/>
+       <string>Winners Final</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_6">
+      <property name="geometry">
+       <rect>
+        <x>1000</x>
+        <y>770</y>
+        <width>51</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Deckname</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelTest">
+      <property name="geometry">
+       <rect>
+        <x>620</x>
+        <y>270</y>
+        <width>281</width>
+        <height>121</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>TestLabelforImage</string>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="spinBox1P1">
+      <property name="geometry">
+       <rect>
+        <x>240</x>
+        <y>50</y>
+        <width>42</width>
+        <height>22</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="Player1Id2_input">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>80</y>
+        <width>211</width>
+        <height>22</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="Player1Id3_input">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>110</y>
+        <width>211</width>
+        <height>22</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="Player1Id4_input">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>140</y>
+        <width>211</width>
+        <height>21</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="Player1Id5_input">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>170</y>
+        <width>211</width>
+        <height>22</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="spinBox2P1">
+      <property name="geometry">
+       <rect>
+        <x>240</x>
+        <y>80</y>
+        <width>42</width>
+        <height>22</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="spinBox3P1">
+      <property name="geometry">
+       <rect>
+        <x>240</x>
+        <y>110</y>
+        <width>42</width>
+        <height>22</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="spinBox4P1">
+      <property name="geometry">
+       <rect>
+        <x>240</x>
+        <y>140</y>
+        <width>42</width>
+        <height>22</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="spinBox5P1">
+      <property name="geometry">
+       <rect>
+        <x>240</x>
+        <y>170</y>
+        <width>42</width>
+        <height>22</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="spinBox1P2">
+      <property name="geometry">
+       <rect>
+        <x>870</x>
+        <y>50</y>
+        <width>42</width>
+        <height>22</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="spinBox2P2">
+      <property name="geometry">
+       <rect>
+        <x>870</x>
+        <y>80</y>
+        <width>42</width>
+        <height>22</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="spinBox3P2">
+      <property name="geometry">
+       <rect>
+        <x>870</x>
+        <y>110</y>
+        <width>42</width>
+        <height>22</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="spinBox4P2">
+      <property name="geometry">
+       <rect>
+        <x>870</x>
+        <y>140</y>
+        <width>42</width>
+        <height>22</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="spinBox5P2">
+      <property name="geometry">
+       <rect>
+        <x>870</x>
+        <y>170</y>
+        <width>42</width>
+        <height>22</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="Player2Id2_input">
+      <property name="geometry">
+       <rect>
+        <x>640</x>
+        <y>80</y>
+        <width>211</width>
+        <height>22</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="Player2Id3_input">
+      <property name="geometry">
+       <rect>
+        <x>640</x>
+        <y>110</y>
+        <width>211</width>
+        <height>22</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="Player2Id4_input">
+      <property name="geometry">
+       <rect>
+        <x>640</x>
+        <y>140</y>
+        <width>211</width>
+        <height>22</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="Player2Id5_input">
+      <property name="geometry">
+       <rect>
+        <x>640</x>
+        <y>170</y>
+        <width>211</width>
+        <height>22</height>
+       </rect>
       </property>
      </widget>
      <zorder>LabelFactionColor</zorder>
+     <zorder>Player2Id4_input</zorder>
+     <zorder>Player2Id2_input</zorder>
+     <zorder>Player2Id3_input</zorder>
+     <zorder>Player2Id5_input</zorder>
+     <zorder>Player1Id5_input</zorder>
+     <zorder>Player1Id4_input</zorder>
+     <zorder>Player1Id3_input</zorder>
+     <zorder>Player1Id2_input</zorder>
      <zorder>Minutes_To_In</zorder>
      <zorder>Player2Score_Label</zorder>
      <zorder>Player2Name_Input</zorder>
@@ -1180,6 +1397,18 @@ Score and Timer</string>
      <zorder>pushImportDeck</zorder>
      <zorder>Custom_Radio</zorder>
      <zorder>Custom_Input</zorder>
+     <zorder>label_6</zorder>
+     <zorder>labelTest</zorder>
+     <zorder>spinBox1P1</zorder>
+     <zorder>spinBox2P1</zorder>
+     <zorder>spinBox3P1</zorder>
+     <zorder>spinBox4P1</zorder>
+     <zorder>spinBox5P1</zorder>
+     <zorder>spinBox1P2</zorder>
+     <zorder>spinBox2P2</zorder>
+     <zorder>spinBox3P2</zorder>
+     <zorder>spinBox4P2</zorder>
+     <zorder>spinBox5P2</zorder>
     </widget>
     <widget class="QWidget" name="S">
      <attribute name="title">
@@ -1333,7 +1562,7 @@ Score and Timer</string>
        <rect>
         <x>0</x>
         <y>100</y>
-        <width>581</width>
+        <width>591</width>
         <height>21</height>
        </rect>
       </property>
@@ -1383,7 +1612,7 @@ Score and Timer</string>
      <widget class="Line" name="line_8">
       <property name="geometry">
        <rect>
-        <x>570</x>
+        <x>580</x>
         <y>0</y>
         <width>20</width>
         <height>461</height>
@@ -1398,7 +1627,7 @@ Score and Timer</string>
        <rect>
         <x>0</x>
         <y>170</y>
-        <width>581</width>
+        <width>591</width>
         <height>16</height>
        </rect>
       </property>
@@ -1415,11 +1644,17 @@ Score and Timer</string>
         <height>31</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Time in millisecond to represent 1 second</string>
+      </property>
       <property name="minimum">
        <number>700</number>
       </property>
       <property name="maximum">
        <number>3000</number>
+      </property>
+      <property name="value">
+       <number>997</number>
       </property>
      </widget>
      <widget class="QCheckBox" name="Speed_CheckBox">
@@ -1433,6 +1668,9 @@ Score and Timer</string>
       </property>
       <property name="text">
        <string>Speed:</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
       </property>
      </widget>
      <widget class="QPushButton" name="SpeedHelp_Button">
@@ -1467,7 +1705,7 @@ Score and Timer</string>
      <widget class="QRadioButton" name="Forty_Radio">
       <property name="geometry">
        <rect>
-        <x>80</x>
+        <x>40</x>
         <y>220</y>
         <width>82</width>
         <height>17</height>
@@ -1480,7 +1718,7 @@ Score and Timer</string>
      <widget class="QRadioButton" name="Sixtyfive_Radio">
       <property name="geometry">
        <rect>
-        <x>250</x>
+        <x>190</x>
         <y>220</y>
         <width>82</width>
         <height>17</height>
@@ -1496,7 +1734,7 @@ Score and Timer</string>
      <widget class="QRadioButton" name="Seventy_Radio">
       <property name="geometry">
        <rect>
-        <x>340</x>
+        <x>270</x>
         <y>220</y>
         <width>82</width>
         <height>17</height>
@@ -1524,7 +1762,7 @@ Score and Timer</string>
        <rect>
         <x>0</x>
         <y>250</y>
-        <width>581</width>
+        <width>591</width>
         <height>16</height>
        </rect>
       </property>
@@ -1574,7 +1812,7 @@ Score and Timer</string>
      <widget class="QRadioButton" name="Sixty_Radio">
       <property name="geometry">
        <rect>
-        <x>160</x>
+        <x>110</x>
         <y>220</y>
         <width>82</width>
         <height>17</height>
@@ -1593,6 +1831,9 @@ Score and Timer</string>
         <height>20</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Shows error-information from the software</string>
+      </property>
       <property name="text">
        <string>Error Output:</string>
       </property>
@@ -1602,7 +1843,7 @@ Score and Timer</string>
        <rect>
         <x>0</x>
         <y>380</y>
-        <width>581</width>
+        <width>591</width>
         <height>16</height>
        </rect>
       </property>
@@ -1615,7 +1856,7 @@ Score and Timer</string>
        <rect>
         <x>0</x>
         <y>330</y>
-        <width>581</width>
+        <width>591</width>
         <height>16</height>
        </rect>
       </property>
@@ -1631,6 +1872,9 @@ Score and Timer</string>
         <width>101</width>
         <height>22</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Changes backgroundcolor on main screen to choosen faction</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_4">
@@ -1651,7 +1895,7 @@ Score and Timer</string>
        <rect>
         <x>0</x>
         <y>450</y>
-        <width>581</width>
+        <width>591</width>
         <height>16</height>
        </rect>
       </property>
@@ -1662,14 +1906,17 @@ Score and Timer</string>
      <widget class="QCheckBox" name="checkUseGradientsDecklists">
       <property name="geometry">
        <rect>
-        <x>380</x>
+        <x>360</x>
         <y>400</y>
-        <width>161</width>
+        <width>191</width>
         <height>17</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Show gradientcolor of faction on cards and decklists</string>
+      </property>
       <property name="text">
-       <string>Use Gradients for Decklists</string>
+       <string>Use Gradients for Cards/Decklists</string>
       </property>
       <property name="checked">
        <bool>true</bool>
@@ -1678,14 +1925,17 @@ Score and Timer</string>
      <widget class="QCheckBox" name="checkUseImageDecklists">
       <property name="geometry">
        <rect>
-        <x>380</x>
+        <x>360</x>
         <y>430</y>
-        <width>191</width>
+        <width>231</width>
         <height>17</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Not yet implemented</string>
+      </property>
       <property name="text">
-       <string>Use Imagebackground for Decklists</string>
+       <string>Use Imagebackground for Cards/Decklists</string>
       </property>
       <property name="checked">
        <bool>false</bool>
@@ -1712,6 +1962,35 @@ Score and Timer</string>
         <width>188</width>
         <height>22</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Font shown on decklistwidget</string>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="Thirtyfive_Radio">
+      <property name="geometry">
+       <rect>
+        <x>350</x>
+        <y>220</y>
+        <width>82</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>35:00</string>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="Ninty_Radio">
+      <property name="geometry">
+       <rect>
+        <x>430</x>
+        <y>220</y>
+        <width>82</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>90:00</string>
       </property>
      </widget>
     </widget>
@@ -2030,9 +2309,28 @@ Score and Timer</string>
     </property>
     <addaction name="actionDonate"/>
    </widget>
+   <widget class="QMenu" name="menuGame">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>516</x>
+      <y>99</y>
+      <width>135</width>
+      <height>94</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Game</string>
+    </property>
+    <addaction name="actionNetrunner"/>
+    <addaction name="actionSWDestiny"/>
+   </widget>
    <addaction name="menuAbout"/>
    <addaction name="menuContributers"/>
    <addaction name="menuDonate"/>
+   <addaction name="menuGame"/>
   </widget>
   <action name="About_ActionBar">
    <property name="enabled">
@@ -2070,6 +2368,16 @@ Score and Timer</string>
     <font>
      <pointsize>8</pointsize>
     </font>
+   </property>
+  </action>
+  <action name="actionNetrunner">
+   <property name="text">
+    <string>Netrunner</string>
+   </property>
+  </action>
+  <action name="actionSWDestiny">
+   <property name="text">
+    <string>SW:Destiny</string>
    </property>
   </action>
  </widget>

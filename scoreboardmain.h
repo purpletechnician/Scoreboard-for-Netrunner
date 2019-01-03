@@ -32,7 +32,7 @@ private slots:
 
     void createColors();
 
-    void comboFactionColor_currentIndexChanged(int index);
+    void comboFactionColor_currentIndexChanged();
 
     void fontComboBoxDecklist_currentChanged();
 
@@ -180,6 +180,10 @@ private slots:
 
     void on_Seventy_Radio_clicked();
 
+    void on_Thirtyfive_Radio_clicked();
+
+    void on_Ninty_Radio_clicked();
+
     void xml();
 
     void on_checkBox_clicked(bool checked20);
@@ -187,6 +191,10 @@ private slots:
     void writexml();
 
     void replyFinished(QNetworkReply *reply);
+
+    void on_actionNetrunner_triggered();
+
+    void on_actionSWDestiny_triggered();
 
     void on_actionDonate_triggered();
 
