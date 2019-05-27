@@ -278,18 +278,22 @@ void ScoreboardMain::Opened() //Resets all
     IdList.append("Criminal: Iain Stirling"); IdList.append("Criminal: Ken Express Tenma"); IdList.append("Criminal: Silouette"); IdList.append("Criminal: Leela Patel");
     IdList.append("Criminal: Armand Geist Walker"); IdList.append("Criminal: Laramy Fisk");IdList.append("Criminal: Nero Severn");IdList.append("Criminal: Khan");
     IdList.append("Criminal: Los"); IdList.append("Criminal: Steve Cambridge"); IdList.append("Criminal: Gabriel Santiago"); IdList.append("Criminal: 419"); IdList.append("Criminal: Liza Talking Thunder");
+    IdList.append("Criminal: Az McCaffrey");
     IdList.append("Shaper: Rielle Kit Peddler"); IdList.append("Shaper: The Professor"); IdList.append("Shaper: Exile"); IdList.append("Shaper: Nasir Meidan");
     IdList.append("Shaper: Hayley Kaplan") ;IdList.append("Shaper: Jesminder Sareen"); IdList.append("Shaper: Ele Smoke Scovak"); IdList.append("Shaper: Ayla Bios Rahim");
     IdList.append("Shaper: Chaos Theory"); IdList.append("Shaper: Kabonesa Wu"); IdList.append("Shaper:Akiko Nisei");
+    IdList.append("Shaper: Lat");
     IdList.append(" Adam"); IdList.append(" Apex"); IdList.append(" Sunny Lebeau");
 
     IdList.append("HB: Cerebral Imaging"); IdList.append("HB: Custom Biotics"); IdList.append("HB: NEXT Design"); IdList.append("HB: The Foundry"); IdList.append("HB: Cybernetics Division");
     IdList.append("HB: Architects of Tomorrow"); IdList.append("HB: Seidr Laboratiries");  IdList.append("HB: Stronger Together"); IdList.append("HB: Asa Group"); IdList.append("HB: Sportsmetal");
+    IdList.append("HB: Mirrormorph");
     IdList.append("NBN: Near-Earth Hub"); IdList.append("NBN: Haarpsichord Studios"); IdList.append("NBN: SYNC"); IdList.append("NBN: New Angeles Sol"); IdList.append("NBN: Spark Agency");
     IdList.append("NBN: Harishchandra Ent."); IdList.append("NBN: Controlling the Message"); IdList.append("NBN: Making News"); IdList.append("NBN: Azmari EdTech"); IdList.append("NBN: Acme Consulting");
     IdList.append("Jinteki: Harmony Medtech"); IdList.append("Jinteki: Nisei Division"); IdList.append("Jinteki: Tennin Institute"); IdList.append("Jinteki: Industrial Genomics");
     IdList.append("Jinteki: Jinteki Biotech"); IdList.append("Jinteki: Chronos Protocol"); IdList.append("Jinteki: Palana Foods"); IdList.append("Jinteki: Potential Unleashed");
     IdList.append("Jinteki: Aginfusion"); IdList.append("Jinteki: Personal Evolution"); IdList.append("Jinteki: Mti Mwekundu"); IdList.append("Jinteki: Saraswati Mnemonics");
+    IdList.append("Jinteki: Hyoubu Institute");
     IdList.append("Weyland: Blue Sun"); IdList.append("Weyland: Argus Security"); IdList.append("Weyland: Gagarin Deep Space"); IdList.append("Weyland: Titan Transnational");
     IdList.append("Weyland: Builder of Nations"); IdList.append("Weyland: Jemison Astronautics"); IdList.append("Weyland: Skorpios Defence Systems"); IdList.append("Weyland: Building a Better World");
     IdList.append("Weyland: SSO Industries"); IdList.append("Weyland: The Outfit");
@@ -934,7 +938,7 @@ void ScoreboardMain::getCardsResult()
         set_info = {5,180}; Set_infoList.append(set_info); // Legacies
         set_info = {6,20}; Set_infoList.append(set_info); // Rivals
         set_info = {7,160}; Set_infoList.append(set_info); // Way of the Force
-        set_info = {8,16}; Set_infoList.append(set_info); // Across the Galaxy
+        set_info = {8,160}; Set_infoList.append(set_info); // Across the Galaxy
         QList<Set_info>::iterator p;
         for (p=Set_infoList.begin(); p != Set_infoList.end(); p++)
         {
@@ -943,9 +947,11 @@ void ScoreboardMain::getCardsResult()
             {
                 QString Cardnumber = QString("%1").arg((*p).Set_code,2,10,QChar('0'))+ QString("%1").arg(j,3,10,QChar('0')) ;
                 QString CardURL = QCardDB_URL+Cardnumber;
+                qDebug() << "CardURL" << CardURL;
                 managerTwo->get(QNetworkRequest(QUrl(CardURL)));
             }
         }
+        //qDebug()<<Set_infoList;
 
     }
 }
@@ -970,28 +976,50 @@ void ScoreboardMain::on_saveCards_Button_clicked()
     {
         // TBD
     }
+
     connect(managerTwo, SIGNAL(finished(QNetworkReply*)), this, SLOT(getCardURLResult(QNetworkReply*)));
-    foreach (Card_info data, Card_infoList)
+    if (Game == Game_ANR)
     {
-        QString CardURL = data.Image_url;
-        QString code = data.Code;
-        QString faction = data.Faction ;
-        QNetworkReply* reply = managerTwo->get(QNetworkRequest(QUrl(CardURL)));
-        reply->setProperty("code",code);
+        foreach (Card_info data, Card_infoList)
+        {
+            QString CardURL = data.Image_url;
+            QString code = data.Code;
+            QString faction = data.Faction ;
+            QNetworkReply* reply = managerTwo->get(QNetworkRequest(QUrl(CardURL)));
+            reply->setProperty("code",code);
+        }
+    }
+    if (Game == Game_SWD)
+    {
+        //TBD
     }
 }
 
 void ScoreboardMain::getCardURLResult(QNetworkReply *replyCard)
 {
-    QString code = replyCard->property("code").toString();
-    QFile file(saveLocation+"/CardDB/"+code+".png");
-    if (!file.open(QIODevice::ReadWrite))
-        qDebug() << "Cannot open file "<<code;
-    QByteArray data=replyCard->readAll();
-    file.write(data);
-    file.close();
-    ui->saveCards_Label->setText("Saving card "+code);
+    if (Game == Game_ANR)
+    {
+        QString code = replyCard->property("code").toString();
+        QFile file(saveLocation+"/CardDB/"+code+".png");
+        if (!file.open(QIODevice::ReadWrite))
+            qDebug() << "Cannot open file "<<code;
+        QByteArray data=replyCard->readAll();
+        file.write(data);
+        file.close();
+        ui->saveCards_Label->setText("Saving card "+code);
+    }
+    else if (Game == Game_SWD)
+    {
+        QString code = replyCard->property("code").toString();
+        QFile file(saveLocation+"/CardDB/"+code+".png");
+        if (!file.open(QIODevice::ReadWrite))
+            qDebug() << "Cannot open file "<<code;
+        QByteArray data=replyCard->readAll();
+        file.write(data);
+        file.close();
+        ui->saveCards_Label->setText("Saving card "+code);
 
+    }
     replyCard->deleteLater();
 }
 
@@ -1014,6 +1042,7 @@ void ScoreboardMain::getCardResult(QNetworkReply *replyCard)
 {
     if (Game == Game_ANR)
     {
+        qDebug()<<"getCardResult ANR";
         QJsonParseError jsonError;
         QString Carddata = replyCard->readAll();
         QJsonDocument CardJson = QJsonDocument::fromJson(Carddata.toUtf8(),&jsonError);
@@ -1037,26 +1066,30 @@ void ScoreboardMain::getCardResult(QNetworkReply *replyCard)
     }
     if (Game == Game_SWD)
     {
-        // TBD
+        qDebug()<<"SWD getCardResults"; // TBD
         QJsonParseError jsonError;
         QString Carddata = replyCard->readAll();
+        qDebug()<<Carddata;
         QJsonDocument CardJson = QJsonDocument::fromJson(Carddata.toUtf8(),&jsonError);
-        if (jsonError.error != QJsonParseError::NoError){
+        /*if (jsonError.error != QJsonParseError::NoError){
             qDebug() << jsonError.errorString();
-        }
-        QJsonArray CarddataArray = CardJson.array() ;
-        foreach (const QJsonValue & v, CarddataArray)
-        {
+        }*/
+        QJsonObject CarddataObject = CardJson.object() ;
+        //foreach (const QJsonValue & v, CarddataArray)
+        //{
+            //qDebug()<<"!";
             CardSWD_info temp_Card_info;
-            temp_Card_info.Name = v.toObject().value("name").toString();
-            temp_Card_info.Code = v.toObject().value("code").toString();
-            temp_Card_info.Image_src = v.toObject().value("image_src").toString();
-            temp_Card_info.Health = v.toObject().value("health").toString();
+            temp_Card_info.Name = CarddataObject.value("name").toString();
+            //qDebug()<<"Name:"<<temp_Card_info.Name;
+            temp_Card_info.Code = CarddataObject.value("code").toString();
+            temp_Card_info.Image_src = CarddataObject.value("image_src").toString();
+            //qDebug() << temp_Card_info.Image_src;
+            temp_Card_info.Health = CarddataObject.value("health").toString();
             if (temp_Card_info.Image_src == "")
                 temp_Card_info.Image_src = BaseCardURL+temp_Card_info.Code+".png";
             CardSWD_infoList.append(temp_Card_info);
             ui->downloadCards_Label->setText("Downloading data: "+temp_Card_info.Code);
-        }
+        //}
         replyCard->deleteLater();
 
     }
@@ -2686,6 +2719,7 @@ void ScoreboardMain::on_actionNetrunner_triggered()
 
     Game = Game_ANR;
     CardDB_URL = CardDB_URL_ANR ;
+    QCardDB_URL = QString::fromStdString(CardDB_URL);
     CardDB_DecklistURL = CardDB_DecklistURL_ANR ;
     BaseCardURL = BaseCardURL_ANR ;
 
@@ -2730,6 +2764,7 @@ void ScoreboardMain::on_actionSWDestiny_triggered()
 
     Game = Game_SWD;
     CardDB_URL = CardDB_URL_SWD ;
+    QCardDB_URL = QString::fromStdString(CardDB_URL);
     CardDB_DecklistURL = CardDB_DecklistURL_SWD ;
     BaseCardURL = BaseCardURL_SWD ;
 
