@@ -29,7 +29,7 @@
 
 using namespace std;
 
-string version_info = "1.01"; //Please Change this after a update!
+string version_info = "1.02"; //Please Change this after a update!
 
 string Update_URL = "https://github.com/purpletechnician/Scoreboard-for-Netrunner";
 string CardDB_URL_ANR = "http://www.netrunnerdb.com/api/2.0/public/card/" ;
