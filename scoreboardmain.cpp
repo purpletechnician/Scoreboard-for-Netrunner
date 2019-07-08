@@ -71,6 +71,7 @@ bool testplayer = false; //Test player button
 bool to_switch; //On/Off for To_input
 bool Milliseconds = false, Minute_Zero = false, Hotkey = false, Stopwatch_input = false; //On/Off for Milliseconds, Add zero to minute, Hotkey, Stopwatch
 bool presetbool = true; //Preset timer
+bool updateyes = false; // For new version of Scoreboard
 
 string minutes_zero = "", seconds_zero = ""; //For 9 <-> 0 | Example: 09 05
 string Player1_Name = "", Player2_Name = ""; //Name for Player1, Player2
@@ -1152,10 +1153,11 @@ void ScoreboardMain::getDeckResult(QNetworkReply *replyCard)
 
 void ScoreboardMain::replyFinished(QNetworkReply *reply)
 {
+    //int stopreply = 0;
     string getstring = "";
     size_t str;
     uint a = 0;
-    bool updateyes = false;
+    //bool updateyes = false;
     //Check if there is a error
     if(reply->error())
     {
@@ -1182,9 +1184,9 @@ void ScoreboardMain::replyFinished(QNetworkReply *reply)
                 if(str!=string::npos)
                 {
                     ui->Testing->setText("Status: No Update");
-                    return;
-                    break;
                     updateyes = true;
+                    return;
+                    //break;
                 }
                 a++;
             }
@@ -1199,19 +1201,19 @@ void ScoreboardMain::replyFinished(QNetworkReply *reply)
     }
     reply->deleteLater();
 }
-int stopreply = 0;
+//
 
 void ScoreboardMain::WarningBox()
 {
-    if(stopreply == 0)
+    if(updateyes == false)
     {
        QString HTMLcode_Update = "&nbsp;&nbsp;&nbsp;<a href=";
        HTMLcode_Update.append(QUpdate_URL);
        HTMLcode_Update.append("/releases");
-       HTMLcode_Update.append(">Update Download</a>&nbsp;&nbsp;&nbsp;") ;
-       HTMLcode_Update.toHtmlEscaped();
+       HTMLcode_Update.append(">Download Update</a>&nbsp;&nbsp;&nbsp;") ;
+       HTMLcode_Update=HTMLcode_Update.toHtmlEscaped();
        QMessageBox::warning(this,"New Update Found", HTMLcode_Update);
-       stopreply = 1;
+       //stopreply = 1;
     }
 }
 
@@ -1356,9 +1358,12 @@ void ScoreboardMain::on_Update_Team_Button_clicked() //Update Team Name Button
     QString Player1N = ui->Player1Name_Input->text(), Player2N = ui->Player2Name_Input->text();
     QString Player1I = ui->Player1Id_Input->currentText(), Player2I = ui->Player2Id_Input->currentText();
     QString RoundI = ui->Round_Input->text(); QString CustomI = ui->Custom_Input->text();
-    Player1_Name = Player1N.toUtf8().constData(), Player2_Name = Player2N.toUtf8().constData();
-    Player1_Id = Player1I.toUtf8().constData(), Player2_Id = Player2I.toUtf8().constData();
-    Round= RoundI.toUtf8().constData(); Custom = CustomI.toUtf8().constData();
+    Player1_Name = Player1N.toUtf8().constData();
+    Player2_Name = Player2N.toUtf8().constData();
+    Player1_Id = Player1I.toUtf8().constData();
+    Player2_Id = Player2I.toUtf8().constData();
+    Round= RoundI.toUtf8().constData();
+    Custom = CustomI.toUtf8().constData();
     if(ui->checkBox->isChecked())
     {
         writexml();
@@ -1940,7 +1945,8 @@ void ScoreboardMain::on_Reset_Button_clicked() //Reset Clock button
     }
     else
     {
-    Clock_button = 0,many = 0;
+    Clock_button = 0;
+    many = 0;
     if(presetbool == true && PresetRadio == 1 && Stopwatch_input == false)
     {
         ui->Clock_Label->setText("  40:00");
