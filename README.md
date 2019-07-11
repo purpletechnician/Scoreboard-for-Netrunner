@@ -1,4 +1,8 @@
-# Scoreboard-for-Netrunner 0.99<br/>
+# Scoreboard-for-Netrunner 1.02<br/>
+1,03 Bugfixing SSL-libraries<br/>
+1,02 Adding Magnum Opus, System Core 2019, Downfall. Bugfixing and adaptation to newest QT-environment<br/>
+1,01 Bugfixing<br/>
+1,00 Bugfixing<br/>
 0,99 Bugfixing<br/>
 0,98 UI-improvements and bugfixing<br/>
 0,97 Added possibility to search for cards and "show" them to the left or right<br/>
@@ -8,7 +12,7 @@
 0,93 Added the possibility to show "up-next"-screen between rounds<br/>
 0,92 Fixing bugs<br/>
 <br/>
-Requires SSL-libraries installed (necessary dll:s are shipped in binary zip-file but whole package can be downloaded at https://sourceforge.net/projects/openssl/ or https://sourceforge.net/projects/gnuwin32/files/openssl/0.9.8h-1/openssl-0.9.8h-1-setup.exe)<br/>
+Requires SSL-libraries installed (necessary dll:s for 32/64bit are shipped in binary zip-file but whole package can be downloaded at https://slproweb.com/products/Win32OpenSSL.html)<br/>
 <br/>
 The software has the following features:<br/>
 • Output the below information to separate text- or image-files<br/>
