@@ -31,3 +31,5 @@ FORMS    += scoreboardmain.ui \
 
 RESOURCES += \
     resources.qrc
+
+INCLUDEPATH += C:\Program Files\OpenSSL-Win64

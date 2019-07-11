@@ -811,7 +811,7 @@ Score and Timer</string>
        <rect>
         <x>20</x>
         <y>690</y>
-        <width>171</width>
+        <width>181</width>
         <height>16</height>
        </rect>
       </property>
@@ -824,7 +824,7 @@ Score and Timer</string>
        <rect>
         <x>20</x>
         <y>740</y>
-        <width>161</width>
+        <width>181</width>
         <height>16</height>
        </rect>
       </property>
@@ -874,9 +874,9 @@ Score and Timer</string>
      <widget class="QPushButton" name="addCardToDeck">
       <property name="geometry">
        <rect>
-        <x>730</x>
+        <x>710</x>
         <y>420</y>
-        <width>171</width>
+        <width>191</width>
         <height>23</height>
        </rect>
       </property>
@@ -1008,9 +1008,9 @@ Score and Timer</string>
      <widget class="QPushButton" name="removeCardFromDeck">
       <property name="geometry">
        <rect>
-        <x>730</x>
+        <x>710</x>
         <y>450</y>
-        <width>171</width>
+        <width>191</width>
         <height>23</height>
        </rect>
       </property>
@@ -1060,9 +1060,9 @@ Score and Timer</string>
      <widget class="QPushButton" name="pushClearDeck">
       <property name="geometry">
        <rect>
-        <x>730</x>
+        <x>710</x>
         <y>480</y>
-        <width>171</width>
+        <width>191</width>
         <height>23</height>
        </rect>
       </property>
@@ -1073,9 +1073,9 @@ Score and Timer</string>
      <widget class="QPushButton" name="pushImportDeck">
       <property name="geometry">
        <rect>
-        <x>730</x>
+        <x>710</x>
         <y>510</y>
-        <width>171</width>
+        <width>191</width>
         <height>23</height>
        </rect>
       </property>
@@ -1122,25 +1122,12 @@ Score and Timer</string>
        <rect>
         <x>1000</x>
         <y>770</y>
-        <width>51</width>
+        <width>81</width>
         <height>16</height>
        </rect>
       </property>
       <property name="text">
        <string>Deckname</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="labelTest">
-      <property name="geometry">
-       <rect>
-        <x>620</x>
-        <y>270</y>
-        <width>281</width>
-        <height>121</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>TestLabelforImage</string>
       </property>
      </widget>
      <widget class="QSpinBox" name="spinBox1P1">
@@ -1399,7 +1386,6 @@ Score and Timer</string>
      <zorder>Custom_Radio</zorder>
      <zorder>Custom_Input</zorder>
      <zorder>label_6</zorder>
-     <zorder>labelTest</zorder>
      <zorder>spinBox1P1</zorder>
      <zorder>spinBox2P1</zorder>
      <zorder>spinBox3P1</zorder>

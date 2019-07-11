@@ -29,59 +29,60 @@
 
 using namespace std;
 
-string version_info = "1.02"; //Please Change this after a update!
+static string version_info = "1.03"; //Please Change this after a update!
 
-string Update_URL = "https://github.com/purpletechnician/Scoreboard-for-Netrunner";
-string CardDB_URL_ANR = "http://www.netrunnerdb.com/api/2.0/public/card/" ;
-string CardDB_URL_SWD = "http://www.swdestinydb.com/api/public/card/" ;
-string CardDB_URL = CardDB_URL_ANR ;
-QString CardDB_DecklistURL_ANR = "http://www.netrunnerdb.com/api/2.0/public/decklist/" ;
-QString CardDB_DecklistURL_SWD = "http://www.swdestinydb.com/api/public/decklist/" ;
-QString CardDB_DecklistURL = CardDB_DecklistURL_ANR ;
-QString BaseCardURL_ANR = "http://www.netrunnerdb.com/card_image/";
-QString BaseCardURL_SWD = "http://www.swdestinydb.com/bundles/cards/en/"; // "01/" added for first cycle, "02/" for second and so on
-QString BaseCardURL = BaseCardURL_ANR ;
-QString Game_ANR = "ANR" ;
-QString Game_SWD = "SWD" ;
-QString Game = Game_ANR ;
-QString appName = "Scoreboard for Netrunner" ;
+static string Update_URL = "https://github.com/purpletechnician/Scoreboard-for-Netrunner";
+static string CardDB_URL_ANR = "http://www.netrunnerdb.com/api/2.0/public/card/" ;
+static string CardDB_URL_SWD = "http://www.swdestinydb.com/api/public/card/" ;
+static string CardDB_URL = CardDB_URL_ANR ;
+static QString CardDB_DecklistURL_ANR = "http://www.netrunnerdb.com/api/2.0/public/decklist/" ;
+static QString CardDB_DecklistURL_SWD = "http://www.swdestinydb.com/api/public/decklist/" ;
+static QString CardDB_DecklistURL = CardDB_DecklistURL_ANR ;
+static QString BaseCardURL_ANR = "http://www.netrunnerdb.com/card_image/";
+static QString BaseCardURL_SWD = "http://www.swdestinydb.com/bundles/cards/en/"; // "01/" added for first cycle, "02/" for second and so on
+static QString BaseCardURL = BaseCardURL_ANR ;
+static QString Game_ANR = "ANR" ;
+static QString Game_SWD = "SWD" ;
+static QString Game = Game_ANR ;
+static QString appName = "Scoreboard for Netrunner" ;
 
-QString saveLocation = QDir::currentPath() ;
-string sLocation = saveLocation.toStdString();
-QString Window_Name = appName +" "+QString::fromStdString(version_info);
-QString QUpdate_URL = QString::fromStdString(Update_URL);
-QString QCardDB_URL = QString::fromStdString(CardDB_URL);
+static QString saveLocation = QDir::currentPath() ;
+static string sLocation = saveLocation.toStdString();
+static QString Window_Name = appName +" "+QString::fromStdString(version_info);
+static QString QUpdate_URL = QString::fromStdString(Update_URL);
+static QString QCardDB_URL = QString::fromStdString(CardDB_URL);
 
-QString *cardJsonData(new QString) ;
+static QString *cardJsonData(new QString) ;
 
-int Player1_Score = 0, Player2_Score = 0; //Players Score integer
-int minu = 65, seco = 0; //Minutes and Seconds integer
-int mins = 0, secs = 0; //Used for To_input
-int saved_speed = 0, last_speed = 0; //Stored speed integer
-int speed = 1000; //Speed integer | Default = 1000 (1seconds) | Milliseconds = 1000(0.001seconds)
-int Clock_button = 0; //Start/Stop button
-int Normal_Speed = 1000, Millisecond_Speed = 93;
-int PresetRadio = 3;
+static int Player1_Score = 0, Player2_Score = 0; //Players Score integer
+static int minu = 65, seco = 0; //Minutes and Seconds integer
+static int mins = 0, secs = 0; //Used for To_input
+static int saved_speed = 0; //Stored speed integer
+// static int last_speed = 0; //Stored speed integer
+static int speed = 1000; //Speed integer | Default = 1000 (1seconds) | Milliseconds = 1000(0.001seconds)
+static int Clock_button = 0; //Start/Stop button
+static int Normal_Speed = 1000, Millisecond_Speed = 93;
+static int PresetRadio = 3;
 
-bool bol = false; //Open/Close for the serve
-bool many = false; //For milliseconds register
-bool input_stop = false; //Stop getting the number from the input
-bool getinput = false;
-bool testplayer = false; //Test player button
-bool to_switch; //On/Off for To_input
-bool Milliseconds = false, Minute_Zero = false, Hotkey = false, Stopwatch_input = false; //On/Off for Milliseconds, Add zero to minute, Hotkey, Stopwatch
-bool presetbool = true; //Preset timer
-bool updateyes = false; // For new version of Scoreboard
+static bool bol = false; //Open/Close for the serve
+static bool many = false; //For milliseconds register
+static bool input_stop = false; //Stop getting the number from the input
+static bool getinput = false;
+static bool testplayer = false; //Test player button
+static bool to_switch; //On/Off for To_input
+static bool Milliseconds = false, Minute_Zero = false, Hotkey = false, Stopwatch_input = false; //On/Off for Milliseconds, Add zero to minute, Hotkey, Stopwatch
+static bool presetbool = true; //Preset timer
+static bool updateyes = false; // For new version of Scoreboard
 
-string minutes_zero = "", seconds_zero = ""; //For 9 <-> 0 | Example: 09 05
-string Player1_Name = "", Player2_Name = ""; //Name for Player1, Player2
-string Player1_Id = "", Player2_Id = ""; //Id for Player1, Player2
-string Round = "", Round_info = "", Custom = "", NR_text="", NRS_text="";
-string clock_symbol = ":"; //Clock Symbol | Default = : | Milliseconds = .
-QString Clock_text = "65:00"; //Clock Text
-QString choosenCard;
+static string minutes_zero = "", seconds_zero = ""; //For 9 <-> 0 | Example: 09 05
+static string Player1_Name = "", Player2_Name = ""; //Name for Player1, Player2
+static string Player1_Id = "", Player2_Id = ""; //Id for Player1, Player2
+static string Round = "", Round_info = "", Custom = "", NR_text="", NRS_text="";
+static string clock_symbol = ":"; //Clock Symbol | Default = : | Milliseconds = .
+static QString Clock_text = "65:00"; //Clock Text
+static QString choosenCard;
 
-QList<QString> IdList;
+static QList<QString> IdList;
 
 struct FactionColorCode {
     QString Faction;
@@ -91,7 +92,7 @@ struct FactionColorCode {
     QLinearGradient FactionGradient ;
 };
 
-QList<FactionColorCode> FactionColorCodes;
+static QList<FactionColorCode> FactionColorCodes;
 
 struct Card_info {
     QString Title;
@@ -99,7 +100,7 @@ struct Card_info {
     QString Image_url ;
     QString Faction ;
 };
-QList<Card_info> Card_infoList ;
+static QList<Card_info> Card_infoList ;
 
 struct CardSWD_info {
     QString Name;
@@ -107,42 +108,42 @@ struct CardSWD_info {
     QString Image_src ;
     QString Health ;
 };
-QList<CardSWD_info> CardSWD_infoList ;
+static QList<CardSWD_info> CardSWD_infoList ;
 
 struct Deck_info {
     QString Card;
     QString Number;
 };
-QList<Deck_info> Deck_infoList ;
+static QList<Deck_info> Deck_infoList ;
 
 struct Pack_info { // For ANR
     int Pack_code;
     int Total_cards;
 };
-QList<Pack_info> Pack_infoList;
+static QList<Pack_info> Pack_infoList;
 
 struct Set_info { // For SWD
     int Set_code;
     int Total_cards;
 };
-QList<Set_info> Set_infoList;
+static QList<Set_info> Set_infoList;
 
-QList<QString> DeckList;
+static QList<QString> DeckList;
 
-QLinearGradient linearGrad;
+static QLinearGradient linearGrad;
 
-int row = 0 ;
-QString strFile ;
+static int row = 0 ;
+static QString strFile ;
 
 //Ofstream for outputting to .txt
-ofstream Player1_Name_Output, Player2_Name_Output, Player1_Id_Output, Player2_Id_Output, Player1_Score_Output, Player2_Score_Output ;
-ofstream Period_Output, Clock_Output;
-ofstream Round_Output, Round_info_Output, NR_Output, NRS_Output, UA_Output;
-ofstream Player1_char1Health_Output, Player1_char2Health_Output, Player1_char3Health_Output, Player1_char4Health_Output, Player1_char5Health_Output;
-ofstream Player2_char1Health_Output, Player2_char2Health_Output, Player2_char3Health_Output, Player2_char4Health_Output, Player2_char5Health_Output;
+static ofstream Player1_Name_Output, Player2_Name_Output, Player1_Id_Output, Player2_Id_Output, Player1_Score_Output, Player2_Score_Output ;
+static ofstream Period_Output, Clock_Output;
+static ofstream Round_Output, Round_info_Output, NR_Output, NRS_Output, UA_Output;
+static ofstream Player1_char1Health_Output, Player1_char2Health_Output, Player1_char3Health_Output, Player1_char4Health_Output, Player1_char5Health_Output;
+static ofstream Player2_char1Health_Output, Player2_char2Health_Output, Player2_char3Health_Output, Player2_char4Health_Output, Player2_char5Health_Output;
 //QFile Player1_Id_HTML, Player2_Id_HTML;
 
-ofstream CardDB ;
+static ofstream CardDB ;
 
 ScoreboardMain::ScoreboardMain(QWidget *parent) :
     QMainWindow(parent),
@@ -354,7 +355,7 @@ void ScoreboardMain::Opened() //Resets all
     ui->Start_Button->setStyleSheet("* { background-color: rgba(0,255,0) }");
     if (QFile::exists(saveLocation+"/CardDB/Cards_ANR.bin"))
     {
-        ui->downloadCards_Label->setText("ANRCards-file already downloaded");
+        ui->downloadCards_Label->setText("ANRCards-file downloaded");
     }
     if (QFile::exists(saveLocation+"/CardDB/01001.png"))
     {
@@ -914,6 +915,10 @@ void ScoreboardMain::getCardsResult()
         pack_info = {20,132}; Pack_infoList.append(pack_info); // Revised Core
         pack_info = {21,120}; Pack_infoList.append(pack_info); // Kitara
         pack_info = {22,57}; Pack_infoList.append(pack_info); // Reign and Reverie
+        pack_info = {23,101}; Pack_infoList.append(pack_info); // Magnum Opus, just 8 cards but they are numbered between 23001-23101
+        pack_info = {24,1}; Pack_infoList.append(pack_info); // NAPD Multiplayer
+        pack_info = {25,147}; Pack_infoList.append(pack_info); // System Core 2019
+        pack_info = {26,65}; Pack_infoList.append(pack_info); // Downfall
         QList<Pack_info>::iterator p;
         for (p=Pack_infoList.begin(); p != Pack_infoList.end(); p++)
         {
@@ -984,8 +989,10 @@ void ScoreboardMain::on_saveCards_Button_clicked()
         foreach (Card_info data, Card_infoList)
         {
             QString CardURL = data.Image_url;
+            qDebug()<<CardURL;
             QString code = data.Code;
             QString faction = data.Faction ;
+            qDebug()<<"foreach   Code: "<<code;
             QNetworkReply* reply = managerTwo->get(QNetworkRequest(QUrl(CardURL)));
             reply->setProperty("code",code);
         }
@@ -998,6 +1005,7 @@ void ScoreboardMain::on_saveCards_Button_clicked()
 
 void ScoreboardMain::getCardURLResult(QNetworkReply *replyCard)
 {
+    qDebug()<<"getCardURLResult";
     if (Game == Game_ANR)
     {
         QString code = replyCard->property("code").toString();
@@ -1008,6 +1016,7 @@ void ScoreboardMain::getCardURLResult(QNetworkReply *replyCard)
         file.write(data);
         file.close();
         ui->saveCards_Label->setText("Saving card "+code);
+        qDebug()<<"Saving card: "<<code;
     }
     else if (Game == Game_SWD)
     {
@@ -1060,14 +1069,16 @@ void ScoreboardMain::getCardResult(QNetworkReply *replyCard)
             temp_Card_info.Faction = v.toObject().value("faction_code").toString();
             if (temp_Card_info.Image_url == "")
                 temp_Card_info.Image_url = BaseCardURL+temp_Card_info.Code+".png";
+            qDebug() << temp_Card_info.Image_url;
             Card_infoList.append(temp_Card_info);
             ui->downloadCards_Label->setText("Downloading data: "+temp_Card_info.Code);
+            //qDebug()<<temp_Card_info.Code;
         }
         replyCard->deleteLater();
     }
     if (Game == Game_SWD)
     {
-        qDebug()<<"SWD getCardResults"; // TBD
+        qDebug()<<"getCardResult SWD"; // TBD
         QJsonParseError jsonError;
         QString Carddata = replyCard->readAll();
         qDebug()<<Carddata;
@@ -2179,7 +2190,7 @@ void ScoreboardMain::on_CurrentTime_Checkbox_clicked(bool current)
 
 void ScoreboardMain::timeclock()
 {
-    time_t current = time(0);
+    time_t current = time(nullptr); // 0 before
     tm *local = localtime(&current);
     if(local->tm_sec < 10)
     {
@@ -2525,7 +2536,7 @@ void ScoreboardMain::on_TestSound_Button_clicked()
     }
 }
 
-bool truefalse = false;
+static bool truefalse = false;
 
 void ScoreboardMain::on_Speed_CheckBox_clicked(bool checked11)
 {
@@ -2648,7 +2659,7 @@ void ScoreboardMain::xml()
     }
 
 }
-int a = 0;
+static int a = 0;
 
 void ScoreboardMain::writexml()
 {
