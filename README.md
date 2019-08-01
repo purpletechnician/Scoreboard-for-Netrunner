@@ -1,4 +1,5 @@
-# Scoreboard-for-Netrunner 1.02<br/>
+# Scoreboard-for-Netrunner 1.04<br/>
+1,04 Added missing ID:s, scaled images to same size, buxfixing</br>
 1,03 Bugfixing SSL-libraries<br/>
 1,02 Adding Magnum Opus, System Core 2019, Downfall. Bugfixing and adaptation to newest QT-environment<br/>
 1,01 Bugfixing<br/>
