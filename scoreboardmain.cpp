@@ -22,6 +22,8 @@
 #include <QClipboard>
 #include <QPrinter>
 #include <QPainter>
+#include <QImage>
+#include <QImageReader>
 
 #ifdef Q_OS_WIN
     #include <windows.h> //For Hotkey/Shortcut key
@@ -29,7 +31,7 @@
 
 using namespace std;
 
-static string version_info = "1.03"; //Please Change this after a update!
+static string version_info = "1.04"; //Please Change this after a update!
 
 static string Update_URL = "https://github.com/purpletechnician/Scoreboard-for-Netrunner";
 static string CardDB_URL_ANR = "http://www.netrunnerdb.com/api/2.0/public/card/" ;
@@ -45,6 +47,8 @@ static QString Game_ANR = "ANR" ;
 static QString Game_SWD = "SWD" ;
 static QString Game = Game_ANR ;
 static QString appName = "Scoreboard for Netrunner" ;
+static int cardWidth = 300;
+static int cardHeight = 418;
 
 static QString saveLocation = QDir::currentPath() ;
 static string sLocation = saveLocation.toStdString();
@@ -275,27 +279,33 @@ void ScoreboardMain::Opened() //Resets all
 
     createColors();
 
+    IdList.append("Anarch: Wyvern"); IdList.append("Anarch: Noise"); IdList.append("Anarch: Whizzard");
     IdList.append("Anarch: Quetzal"); IdList.append("Anarch: Edward Kim"); IdList.append("Anarch: MaxX"); IdList.append("Anarch: Valencia Estevez"); IdList.append("Anarch: Null");
     IdList.append("Anarch: Omar Keung"); IdList.append("Anarch: Alice Merchant"); IdList.append("Anarch: Reina Roja"); IdList.append("Anarch: Freedom Khumalo"); IdList.append("Anarch: Nathaniel Gnat Hall");
+    IdList.append("Criminal: Boris Syfr Kovac"); IdList.append("Criminal: Andomeda");
     IdList.append("Criminal: Iain Stirling"); IdList.append("Criminal: Ken Express Tenma"); IdList.append("Criminal: Silouette"); IdList.append("Criminal: Leela Patel");
     IdList.append("Criminal: Armand Geist Walker"); IdList.append("Criminal: Laramy Fisk");IdList.append("Criminal: Nero Severn");IdList.append("Criminal: Khan");
     IdList.append("Criminal: Los"); IdList.append("Criminal: Steve Cambridge"); IdList.append("Criminal: Gabriel Santiago"); IdList.append("Criminal: 419"); IdList.append("Criminal: Liza Talking Thunder");
     IdList.append("Criminal: Az McCaffrey");
+    IdList.append("Shaper: Jamie Bzzz Micken"); IdList.append("Shaper: Kate Mac McCaffrey");
     IdList.append("Shaper: Rielle Kit Peddler"); IdList.append("Shaper: The Professor"); IdList.append("Shaper: Exile"); IdList.append("Shaper: Nasir Meidan");
     IdList.append("Shaper: Hayley Kaplan") ;IdList.append("Shaper: Jesminder Sareen"); IdList.append("Shaper: Ele Smoke Scovak"); IdList.append("Shaper: Ayla Bios Rahim");
-    IdList.append("Shaper: Chaos Theory"); IdList.append("Shaper: Kabonesa Wu"); IdList.append("Shaper:Akiko Nisei");
+    IdList.append("Shaper: Chaos Theory"); IdList.append("Shaper: Kabonesa Wu"); IdList.append("Shaper: Akiko Nisei");
     IdList.append("Shaper: Lat");
     IdList.append(" Adam"); IdList.append(" Apex"); IdList.append(" Sunny Lebeau");
 
+    IdList.append("HB: Strategic Innovations"); IdList.append("HB: Engineering the Future");
     IdList.append("HB: Cerebral Imaging"); IdList.append("HB: Custom Biotics"); IdList.append("HB: NEXT Design"); IdList.append("HB: The Foundry"); IdList.append("HB: Cybernetics Division");
     IdList.append("HB: Architects of Tomorrow"); IdList.append("HB: Seidr Laboratiries");  IdList.append("HB: Stronger Together"); IdList.append("HB: Asa Group"); IdList.append("HB: Sportsmetal");
     IdList.append("HB: Mirrormorph");
+    IdList.append("NBN: Information Dynamics"); IdList.append("NBN: The World is Yours*");
     IdList.append("NBN: Near-Earth Hub"); IdList.append("NBN: Haarpsichord Studios"); IdList.append("NBN: SYNC"); IdList.append("NBN: New Angeles Sol"); IdList.append("NBN: Spark Agency");
     IdList.append("NBN: Harishchandra Ent."); IdList.append("NBN: Controlling the Message"); IdList.append("NBN: Making News"); IdList.append("NBN: Azmari EdTech"); IdList.append("NBN: Acme Consulting");
-    IdList.append("Jinteki: Harmony Medtech"); IdList.append("Jinteki: Nisei Division"); IdList.append("Jinteki: Tennin Institute"); IdList.append("Jinteki: Industrial Genomics");
+    IdList.append("Jinteki: Synthetic Systems"); IdList.append("Jinteki: Harmony Medtech"); IdList.append("Jinteki: Nisei Division"); IdList.append("Jinteki: Tennin Institute"); IdList.append("Jinteki: Industrial Genomics");
     IdList.append("Jinteki: Jinteki Biotech"); IdList.append("Jinteki: Chronos Protocol"); IdList.append("Jinteki: Palana Foods"); IdList.append("Jinteki: Potential Unleashed");
     IdList.append("Jinteki: Aginfusion"); IdList.append("Jinteki: Personal Evolution"); IdList.append("Jinteki: Mti Mwekundu"); IdList.append("Jinteki: Saraswati Mnemonics");
-    IdList.append("Jinteki: Hyoubu Institute");
+    IdList.append("Jinteki: Hyoubu Institute"); IdList.append("Jinteki: Replicating Perfection");
+    IdList.append("Weyland: Fringe Applications"); IdList.append("Weyland: Because We Built It"); IdList.append("Weyland: GRNDL");
     IdList.append("Weyland: Blue Sun"); IdList.append("Weyland: Argus Security"); IdList.append("Weyland: Gagarin Deep Space"); IdList.append("Weyland: Titan Transnational");
     IdList.append("Weyland: Builder of Nations"); IdList.append("Weyland: Jemison Astronautics"); IdList.append("Weyland: Skorpios Defence Systems"); IdList.append("Weyland: Building a Better World");
     IdList.append("Weyland: SSO Industries"); IdList.append("Weyland: The Outfit");
@@ -371,6 +381,7 @@ void ScoreboardMain::Opened() //Resets all
     managerOne = new QNetworkAccessManager(this);
     managerTwo = new QNetworkAccessManager(this);
     managerThree = new QNetworkAccessManager(this) ;
+    managerFour = new QNetworkAccessManager(this) ;
 
     //Connect to replyFinished QnetworkReply
     connect(managerOne,SIGNAL(finished(QNetworkReply*)),this,SLOT(replyFinished(QNetworkReply*)));
@@ -410,12 +421,12 @@ void ScoreboardMain::Opened() //Resets all
      QFontDatabase::addApplicationFont(":/fonts/netrunner.ttf");
      QFontDatabase::addApplicationFont(":/fonts/Monkirta Pursuit NC.ttf");
 
-     QFont fontNetrunner = QFont("netrunner",12,1);
+     QFont fontNetrunner = QFont("netrunner",7,1);
      QFont fontMonkirta = QFont("Monkirta Pursuit NC",10, 1);
      //ui->tableDeck->setFont(fontMonkirta);
      ui->Player1Id_Input->setFont(fontNetrunner);
      ui->Player2Id_Input->setFont(fontNetrunner);
-     qDebug() << ui->fontComboBoxDecklist->currentFont() ;
+     //qDebug() << ui->fontComboBoxDecklist->currentFont() ;
      connect(ui->fontComboBoxDecklist, SIGNAL(currentFontChanged(QFont)),SLOT(fontComboBoxDecklist_currentChanged()));
 
      ui->pushImportDeck->setToolTip("Imports deck from these NetrunnerDb-sources:\n* bbCode (not yet implemented)\n* Markdown (not yet implemented)\n* Plaintext (not yet implemented)\n* Jinteki.net (implemented)\n* NetrunnerDb-URL (implemented)\n");
@@ -981,9 +992,20 @@ void ScoreboardMain::on_saveCards_Button_clicked()
     if (Game == Game_SWD)
     {
         // TBD
+        if (!QFile::exists(saveLocation+"/CardDB/Cards_SWD.bin"))
+        {
+            ui->saveCards_Label->setText("Saving Cards");
+            QFile file(saveLocation+"/CardDB/Cards_SWD.bin");
+            if (!file.open(QIODevice::WriteOnly))
+                qDebug() << "Cannot open file for write";
+            QDataStream stream(&file);
+            stream << Card_infoList ;
+            file.close();
+            ui->saveCards_Label->setText("Cards saved");
+        }
     }
 
-    connect(managerTwo, SIGNAL(finished(QNetworkReply*)), this, SLOT(getCardURLResult(QNetworkReply*)));
+    connect(managerFour, SIGNAL(finished(QNetworkReply*)), this, SLOT(getCardURLResult(QNetworkReply*)));
     if (Game == Game_ANR)
     {
         foreach (Card_info data, Card_infoList)
@@ -993,7 +1015,7 @@ void ScoreboardMain::on_saveCards_Button_clicked()
             QString code = data.Code;
             QString faction = data.Faction ;
             qDebug()<<"foreach   Code: "<<code;
-            QNetworkReply* reply = managerTwo->get(QNetworkRequest(QUrl(CardURL)));
+            QNetworkReply* reply = managerFour->get(QNetworkRequest(QUrl(CardURL)));
             reply->setProperty("code",code);
         }
     }
@@ -1009,14 +1031,37 @@ void ScoreboardMain::getCardURLResult(QNetworkReply *replyCard)
     if (Game == Game_ANR)
     {
         QString code = replyCard->property("code").toString();
-        QFile file(saveLocation+"/CardDB/"+code+".png");
+        QString imageName = saveLocation+"/CardDB/"+code+".png";
+        QFile file(imageName);
         if (!file.open(QIODevice::ReadWrite))
             qDebug() << "Cannot open file "<<code;
         QByteArray data=replyCard->readAll();
         file.write(data);
         file.close();
-        ui->saveCards_Label->setText("Saving card "+code);
-        qDebug()<<"Saving card: "<<code;
+        /*QImageReader reader(imageName);
+        QSize sizeOfImage = reader.size();
+        int width = sizeOfImage.width();*/
+        QImage img;
+        img.load(imageName, "PNG");
+        QPixmap pixmap = QPixmap::fromImage(img);
+        qDebug()<<"Saving card: "<<code<<" width: "<<pixmap.width();
+        if (pixmap.width() != 300)
+        {
+            pixmap = QPixmap::fromImage(img.scaled(cardWidth,cardHeight,Qt::IgnoreAspectRatio,Qt::SmoothTransformation));
+            file.open(QIODevice::WriteOnly);
+            pixmap.save(&file,"png",100);
+            file.close();
+            qDebug() <<"Scaling: "<<code;
+            //qDebug()<<"Saving card: "<<code<<" width: "<<img.width();
+        }
+        /*else
+        {
+            file.write(data);
+            qDebug()<<"Saving card: "<<code;
+        }*/
+        //file.close();
+        ui->saveCards_Label->setText("Saving ANR-card "+code);
+        //
     }
     else if (Game == Game_SWD)
     {
@@ -1027,7 +1072,7 @@ void ScoreboardMain::getCardURLResult(QNetworkReply *replyCard)
         QByteArray data=replyCard->readAll();
         file.write(data);
         file.close();
-        ui->saveCards_Label->setText("Saving card "+code);
+        ui->saveCards_Label->setText("Saving SWD-card "+code);
 
     }
     replyCard->deleteLater();
@@ -1982,24 +2027,24 @@ void ScoreboardMain::on_Reset_Button_clicked() //Reset Clock button
     }
     else if(presetbool == true && PresetRadio == 2 && Stopwatch_input == false)
     {
-        ui->Clock_Label->setText("  60:00");
+        ui->Clock_Label->setText("  00:00");
         ui->Seconds_Input->setValue(0);
-        ui->Minutes_Input->setValue(60);
+        ui->Minutes_Input->setValue(0);
         clock_symbol = ":";
-        minu = 60;
+        minu = 00;
         seco = 0;
         Clock_Output.open(sLocation+"/Output/Clock.txt");
-        Clock_Output << "60:00";
+        Clock_Output << "00:00";
         Clock_Output.close();
         if(ui->checkBox->isChecked())
         {
-            Clock_text = "60:00";
+            Clock_text = "00:00";
             writexml();
         }
-        ui->Clock_Label->setText("  60:00");
+        ui->Clock_Label->setText("  00:00");
         if(ui->pushButton->text() == "Disable")
         {
-            client->write(QString("Clock:  60:00").toUtf8());
+            client->write(QString("Clock:  00:00").toUtf8());
         }
     }
     else if(presetbool == true && PresetRadio == 3 && Stopwatch_input == false)

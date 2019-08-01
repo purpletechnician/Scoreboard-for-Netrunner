@@ -443,7 +443,8 @@ Score and Timer</string>
       </property>
       <property name="font">
        <font>
-        <pointsize>10</pointsize>
+        <family>netrunner</family>
+        <pointsize>6</pointsize>
        </font>
       </property>
       <property name="toolTip">
@@ -461,7 +462,7 @@ Score and Timer</string>
       </property>
       <property name="font">
        <font>
-        <pointsize>10</pointsize>
+        <pointsize>6</pointsize>
        </font>
       </property>
       <property name="toolTip">
@@ -815,6 +816,11 @@ Score and Timer</string>
         <height>16</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>7</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Info from Download Cards</string>
       </property>
@@ -880,6 +886,9 @@ Score and Timer</string>
         <height>23</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Add choosen card to deck</string>
+      </property>
       <property name="text">
        <string>-&gt; Add Card to Deck -&gt;</string>
       </property>
@@ -894,7 +903,7 @@ Score and Timer</string>
        </rect>
       </property>
       <property name="toolTip">
-       <string>Ex: HåkanC or HåkanC_corp</string>
+       <string>Save decklist with choosen name</string>
       </property>
       <property name="text">
        <string>Save to Deck</string>
@@ -971,6 +980,9 @@ Score and Timer</string>
         <height>22</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Saved decklists. Choose to be able to show on screen</string>
+      </property>
      </widget>
      <widget class="QComboBox" name="comboPlayer2Deck">
       <property name="geometry">
@@ -981,6 +993,9 @@ Score and Timer</string>
         <height>22</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Saved decklists. Choose to be able to show on screen</string>
+      </property>
      </widget>
      <widget class="QLineEdit" name="lineTournamentName">
       <property name="geometry">
@@ -990,6 +1005,9 @@ Score and Timer</string>
         <width>211</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Not implemented</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_5">
@@ -1013,6 +1031,9 @@ Score and Timer</string>
         <width>191</width>
         <height>23</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Remove choosen card from deck</string>
       </property>
       <property name="text">
        <string>Remove Card from Deck &lt;-</string>
@@ -1040,6 +1061,9 @@ Score and Timer</string>
         <height>23</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Show choosen decklist on lefthand screen</string>
+      </property>
       <property name="text">
        <string>Show Deck</string>
       </property>
@@ -1052,6 +1076,9 @@ Score and Timer</string>
         <width>75</width>
         <height>23</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Show choosen decklist on righthand screen</string>
       </property>
       <property name="text">
        <string>Show Deck</string>
@@ -1066,6 +1093,9 @@ Score and Timer</string>
         <height>23</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Clear deck</string>
+      </property>
       <property name="text">
        <string>Clear Deck -&gt;</string>
       </property>
@@ -1078,6 +1108,9 @@ Score and Timer</string>
         <width>191</width>
         <height>23</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Import deck from Clipboard</string>
       </property>
       <property name="text">
        <string>Import Deck from Clipboard -&gt;</string>
@@ -1152,6 +1185,11 @@ Score and Timer</string>
         <height>22</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>6</pointsize>
+       </font>
+      </property>
      </widget>
      <widget class="QComboBox" name="Player1Id3_input">
       <property name="geometry">
@@ -1161,6 +1199,11 @@ Score and Timer</string>
         <width>211</width>
         <height>22</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>6</pointsize>
+       </font>
       </property>
      </widget>
      <widget class="QComboBox" name="Player1Id4_input">
@@ -1172,6 +1215,11 @@ Score and Timer</string>
         <height>21</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>6</pointsize>
+       </font>
+      </property>
      </widget>
      <widget class="QComboBox" name="Player1Id5_input">
       <property name="geometry">
@@ -1181,6 +1229,11 @@ Score and Timer</string>
         <width>211</width>
         <height>22</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>6</pointsize>
+       </font>
       </property>
      </widget>
      <widget class="QSpinBox" name="spinBox2P1">
@@ -1282,6 +1335,11 @@ Score and Timer</string>
         <height>22</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>6</pointsize>
+       </font>
+      </property>
      </widget>
      <widget class="QComboBox" name="Player2Id3_input">
       <property name="geometry">
@@ -1291,6 +1349,11 @@ Score and Timer</string>
         <width>211</width>
         <height>22</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>6</pointsize>
+       </font>
       </property>
      </widget>
      <widget class="QComboBox" name="Player2Id4_input">
@@ -1302,6 +1365,11 @@ Score and Timer</string>
         <height>22</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>6</pointsize>
+       </font>
+      </property>
      </widget>
      <widget class="QComboBox" name="Player2Id5_input">
       <property name="geometry">
@@ -1311,6 +1379,11 @@ Score and Timer</string>
         <width>211</width>
         <height>22</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>6</pointsize>
+       </font>
       </property>
      </widget>
      <zorder>LabelFactionColor</zorder>
@@ -1406,7 +1479,7 @@ Score and Timer</string>
        <rect>
         <x>420</x>
         <y>60</y>
-        <width>157</width>
+        <width>161</width>
         <height>51</height>
        </rect>
       </property>
@@ -1432,7 +1505,7 @@ Score and Timer</string>
        <rect>
         <x>420</x>
         <y>110</y>
-        <width>152</width>
+        <width>161</width>
         <height>61</height>
        </rect>
       </property>
@@ -1549,7 +1622,7 @@ Score and Timer</string>
        <rect>
         <x>0</x>
         <y>100</y>
-        <width>591</width>
+        <width>631</width>
         <height>21</height>
        </rect>
       </property>
@@ -1562,7 +1635,7 @@ Score and Timer</string>
        <rect>
         <x>0</x>
         <y>50</y>
-        <width>581</width>
+        <width>631</width>
         <height>21</height>
        </rect>
       </property>
@@ -1599,7 +1672,7 @@ Score and Timer</string>
      <widget class="Line" name="line_8">
       <property name="geometry">
        <rect>
-        <x>580</x>
+        <x>620</x>
         <y>0</y>
         <width>20</width>
         <height>461</height>
@@ -1614,7 +1687,7 @@ Score and Timer</string>
        <rect>
         <x>0</x>
         <y>170</y>
-        <width>591</width>
+        <width>631</width>
         <height>16</height>
        </rect>
       </property>
@@ -1678,7 +1751,7 @@ Score and Timer</string>
        <rect>
         <x>20</x>
         <y>190</y>
-        <width>111</width>
+        <width>141</width>
         <height>17</height>
        </rect>
       </property>
@@ -1749,7 +1822,7 @@ Score and Timer</string>
        <rect>
         <x>0</x>
         <y>250</y>
-        <width>591</width>
+        <width>631</width>
         <height>16</height>
        </rect>
       </property>
@@ -1830,7 +1903,7 @@ Score and Timer</string>
        <rect>
         <x>0</x>
         <y>380</y>
-        <width>591</width>
+        <width>631</width>
         <height>16</height>
        </rect>
       </property>
@@ -1843,7 +1916,7 @@ Score and Timer</string>
        <rect>
         <x>0</x>
         <y>330</y>
-        <width>591</width>
+        <width>631</width>
         <height>16</height>
        </rect>
       </property>
@@ -1869,7 +1942,7 @@ Score and Timer</string>
        <rect>
         <x>20</x>
         <y>400</y>
-        <width>121</width>
+        <width>141</width>
         <height>16</height>
        </rect>
       </property>
@@ -1882,7 +1955,7 @@ Score and Timer</string>
        <rect>
         <x>0</x>
         <y>450</y>
-        <width>591</width>
+        <width>631</width>
         <height>16</height>
        </rect>
       </property>
@@ -1914,7 +1987,7 @@ Score and Timer</string>
        <rect>
         <x>360</x>
         <y>430</y>
-        <width>231</width>
+        <width>271</width>
         <height>17</height>
        </rect>
       </property>
@@ -1931,7 +2004,7 @@ Score and Timer</string>
      <widget class="QLabel" name="label_11">
       <property name="geometry">
        <rect>
-        <x>160</x>
+        <x>180</x>
         <y>400</y>
         <width>91</width>
         <height>16</height>
@@ -1944,9 +2017,9 @@ Score and Timer</string>
      <widget class="QFontComboBox" name="fontComboBoxDecklist">
       <property name="geometry">
        <rect>
-        <x>160</x>
+        <x>180</x>
         <y>420</y>
-        <width>188</width>
+        <width>161</width>
         <height>22</height>
        </rect>
       </property>
@@ -2099,7 +2172,7 @@ Score and Timer</string>
        <rect>
         <x>40</x>
         <y>240</y>
-        <width>481</width>
+        <width>601</width>
         <height>71</height>
        </rect>
       </property>
@@ -2225,9 +2298,9 @@ Score and Timer</string>
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>210</y>
+        <y>200</y>
         <width>561</width>
-        <height>16</height>
+        <height>21</height>
        </rect>
       </property>
       <property name="font">
@@ -2244,7 +2317,7 @@ Score and Timer</string>
        <rect>
         <x>10</x>
         <y>230</y>
-        <width>561</width>
+        <width>641</width>
         <height>21</height>
        </rect>
       </property>

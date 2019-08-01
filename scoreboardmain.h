@@ -211,7 +211,7 @@ private:
     QTimer *hotkey;
     QTcpServer server;
     QTcpSocket* client;
-    QNetworkAccessManager *managerOne, *managerTwo, *managerThree;
+    QNetworkAccessManager *managerOne, *managerTwo, *managerThree, *managerFour;
     QMediaPlayer *player;
 };
 
