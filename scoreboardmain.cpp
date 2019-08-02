@@ -31,24 +31,28 @@
 
 using namespace std;
 
-static string version_info = "1.04"; //Please Change this after a update!
+static string version_info = "1.05"; //Please Change this after a update!
 
 static string Update_URL = "https://github.com/purpletechnician/Scoreboard-for-Netrunner";
 static string CardDB_URL_ANR = "http://www.netrunnerdb.com/api/2.0/public/card/" ;
-static string CardDB_URL_SWD = "http://www.swdestinydb.com/api/public/card/" ;
+static string CardDB_URL_SWD = "http://swdestinydb.com/api/public/card/" ;
 static string CardDB_URL = CardDB_URL_ANR ;
 static QString CardDB_DecklistURL_ANR = "http://www.netrunnerdb.com/api/2.0/public/decklist/" ;
-static QString CardDB_DecklistURL_SWD = "http://www.swdestinydb.com/api/public/decklist/" ;
+static QString CardDB_DecklistURL_SWD = "http://swdestinydb.com/api/public/decklist/" ;
 static QString CardDB_DecklistURL = CardDB_DecklistURL_ANR ;
 static QString BaseCardURL_ANR = "http://www.netrunnerdb.com/card_image/";
-static QString BaseCardURL_SWD = "http://www.swdestinydb.com/bundles/cards/en/"; // "01/" added for first cycle, "02/" for second and so on
+static QString BaseCardURL_SWD = "http://swdestinydb.com/bundles/cards/en/"; // "01/" added for first cycle, "02/" for second and so on
 static QString BaseCardURL = BaseCardURL_ANR ;
 static QString Game_ANR = "ANR" ;
 static QString Game_SWD = "SWD" ;
 static QString Game = Game_ANR ;
+static QString ANRCardDB = "/ANRCardDB/";
+static QString SWDCardDB = "/SWDCardDB/";
+static QString xxxCardDB = ANRCardDB;
 static QString appName = "Scoreboard for Netrunner" ;
 static int cardWidth = 300;
 static int cardHeight = 418;
+static QString SWDCardFormat = ".json";
 
 static QString saveLocation = QDir::currentPath() ;
 static string sLocation = saveLocation.toStdString();
@@ -84,9 +88,12 @@ static string Player1_Id = "", Player2_Id = ""; //Id for Player1, Player2
 static string Round = "", Round_info = "", Custom = "", NR_text="", NRS_text="";
 static string clock_symbol = ":"; //Clock Symbol | Default = : | Milliseconds = .
 static QString Clock_text = "65:00"; //Clock Text
-static QString choosenCard;
+static QString choosenCard, choosenName;
+static int Max_healthP1C1, Max_healthP1C2, Max_healthP1C3, Max_healthP1C4, Max_healthP1C5;
+static int Max_healthP2C1, Max_healthP2C2, Max_healthP2C3, Max_healthP2C4, Max_healthP2C5;
 
 static QList<QString> IdList;
+static QList<QString> Id1SWDList, Id2SWDList;
 
 struct FactionColorCode {
     QString Faction;
@@ -110,7 +117,7 @@ struct CardSWD_info {
     QString Name;
     QString Code;
     QString Image_src ;
-    QString Health ;
+    int Health ;
 };
 static QList<CardSWD_info> CardSWD_infoList ;
 
@@ -141,6 +148,7 @@ static QString strFile ;
 
 //Ofstream for outputting to .txt
 static ofstream Player1_Name_Output, Player2_Name_Output, Player1_Id_Output, Player2_Id_Output, Player1_Score_Output, Player2_Score_Output ;
+static ofstream Player1_Id2_Output, Player2_Id2_Output, Player1_Id3_Output, Player2_Id3_Output, Player1_Id4_Output, Player2_Id4_Output, Player1_Id5_Output, Player2_Id5_Output ;
 static ofstream Period_Output, Clock_Output;
 static ofstream Round_Output, Round_info_Output, NR_Output, NRS_Output, UA_Output;
 static ofstream Player1_char1Health_Output, Player1_char2Health_Output, Player1_char3Health_Output, Player1_char4Health_Output, Player1_char5Health_Output;
@@ -177,11 +185,17 @@ void ScoreboardMain::Opened() //Resets all
         oDir.mkpath(saveLocation+"/Output/");
         qDebug() << saveLocation+"/Output/";
     }
-    QDir cDir(saveLocation+"/CardDB/");
-    if (!cDir.exists())
+    QDir cANRDir(saveLocation+ANRCardDB);
+    if (!cANRDir.exists())
     {
-        cDir.mkpath(saveLocation+"/CardDB/");
-        qDebug() << saveLocation+"/CardDB/";
+        cANRDir.mkpath(saveLocation+ANRCardDB);
+        qDebug() << saveLocation+ANRCardDB;
+    }
+    QDir cSWDDir(saveLocation+SWDCardDB);
+    if (!cSWDDir.exists())
+    {
+        cSWDDir.mkpath(saveLocation+SWDCardDB);
+        qDebug() << saveLocation+SWDCardDB;
     }
     QDir uDir(saveLocation+"/Update/");
     if (!uDir.exists())
@@ -193,7 +207,15 @@ void ScoreboardMain::Opened() //Resets all
     Player1_Name_Output.open(sLocation+"/Output/Player1_Name.txt");
     Player2_Name_Output.open(sLocation+"/Output/Player2_Name.txt");
     Player1_Id_Output.open(sLocation+"/Output/Player1_Id.txt");
+    Player1_Id2_Output.open(sLocation+"/Output/Player1_Id2.txt");
+    Player1_Id3_Output.open(sLocation+"/Output/Player1_Id3.txt");
+    Player1_Id4_Output.open(sLocation+"/Output/Player1_Id4.txt");
+    Player1_Id5_Output.open(sLocation+"/Output/Player1_Id5.txt");
     Player2_Id_Output.open(sLocation+"/Output/Player2_Id.txt");
+    Player2_Id2_Output.open(sLocation+"/Output/Player2_Id2.txt");
+    Player2_Id3_Output.open(sLocation+"/Output/Player2_Id3.txt");
+    Player2_Id4_Output.open(sLocation+"/Output/Player2_Id4.txt");
+    Player2_Id5_Output.open(sLocation+"/Output/Player2_Id5.txt");
     Player1_Score_Output.open(sLocation+"/Output/Player1_Score.txt");
     Player2_Score_Output.open(sLocation+"/Output/Player2_Score.txt");
     Player1_char1Health_Output.open(sLocation+"/Output/Player1_char1Health.txt");
@@ -223,6 +245,16 @@ void ScoreboardMain::Opened() //Resets all
     {
          Player1_Score_Output << "";
          Player2_Score_Output << "";
+         Player1_Id_Output << "";
+         Player1_Id2_Output << "";
+         Player1_Id3_Output << "";
+         Player1_Id4_Output << "";
+         Player1_Id5_Output << "";
+         Player2_Id_Output << "";
+         Player2_Id2_Output << "";
+         Player2_Id3_Output << "";
+         Player2_Id4_Output << "";
+         Player2_Id5_Output << "";
          Player1_char1Health_Output << "";
          Player1_char2Health_Output << "";
          Player1_char3Health_Output << "";
@@ -252,11 +284,18 @@ void ScoreboardMain::Opened() //Resets all
     }
     QFile::copy(saveLocation+"/ID_Pictures/ANRBackground.jpg",saveLocation+"/Output/Background.jpg");
 
-
     Player1_Name_Output.close();
     Player2_Name_Output.close();
     Player1_Id_Output.close();
+    Player1_Id2_Output.close();
+    Player1_Id3_Output.close();
+    Player1_Id4_Output.close();
+    Player1_Id5_Output.close();
     Player2_Id_Output.close();
+    Player2_Id2_Output.close();
+    Player2_Id3_Output.close();
+    Player2_Id4_Output.close();
+    Player2_Id5_Output.close();
     Player1_Score_Output.close();
     Player2_Score_Output.close();
 
@@ -279,6 +318,151 @@ void ScoreboardMain::Opened() //Resets all
 
     createColors();
 
+    addANR_Ids();
+    ui->Player1Id_Input->addItems(IdList);
+    ui->Player2Id_Input->addItems(IdList);
+
+    Id1SWDList.append("1"); Id2SWDList.append("1");
+    Id1SWDList.append("2"); Id2SWDList.append("2");
+    Id1SWDList.append("3"); Id2SWDList.append("3");
+    Id1SWDList.append("4"); Id2SWDList.append("4");
+    Id1SWDList.append("5"); Id2SWDList.append("5");
+    ui->comboBoxChooseCharP1->addItems(Id1SWDList);
+    ui->comboBoxChooseCharP2->addItems(Id1SWDList);
+
+    loadDecks();
+
+    ui->Player1UP_Button->setText((QString::fromWCharArray(L"\u25B3")));
+    QFont font2 = ui->Player1UP_Button->font();
+    font2.setPointSize(20);
+    ui->Player1UP_Button->setFont(font2);
+
+    ui->Player1DOWN_Button->setText((QString::fromWCharArray(L"\u25BD")));
+    QFont font3 = ui->Player1DOWN_Button->font();
+    font3.setPointSize(20);
+    ui->Player1DOWN_Button->setFont(font3);
+
+    ui->Player2UP_Button->setText((QString::fromWCharArray(L"\u25B3")));
+    QFont font4 = ui->Player2UP_Button->font();
+    font4.setPointSize(20);
+    ui->Player2UP_Button->setFont(font4);
+
+    ui->Player2DOWN_Button->setText((QString::fromWCharArray(L"\u25BD")));
+    QFont font5 = ui->Player2DOWN_Button->font();
+    font5.setPointSize(20);
+    ui->Player2DOWN_Button->setFont(font5);
+
+    this->setFixedSize(this->size());
+
+    this->setWindowTitle(Window_Name);
+    ui->StopMusic_Button->setVisible(false);
+    ui->Warning_Label->setVisible(false);
+
+    ui->Player1Id2_Input->setVisible(false);
+    ui->Player1Id3_Input->setVisible(false);
+    ui->Player1Id4_Input->setVisible(false);
+    ui->Player1Id5_Input->setVisible(false);
+    ui->Player2Id2_Input->setVisible(false);
+    ui->Player2Id3_Input->setVisible(false);
+    ui->Player2Id4_Input->setVisible(false);
+    ui->Player2Id5_Input->setVisible(false);
+    ui->spinBox1P1->setVisible(false);
+    ui->spinBox2P1->setVisible(false);
+    ui->spinBox3P1->setVisible(false);
+    ui->spinBox4P1->setVisible(false);
+    ui->spinBox5P1->setVisible(false);
+    ui->spinBox1P2->setVisible(false);
+    ui->spinBox2P2->setVisible(false);
+    ui->spinBox3P2->setVisible(false);
+    ui->spinBox4P2->setVisible(false);
+    ui->spinBox5P2->setVisible(false);
+    ui->comboBoxChooseCharP1->setVisible(false);
+    ui->comboBoxChooseCharP2->setVisible(false);
+    ui->ChooseCharP1->setVisible(false);
+    ui->ChooseCharP2->setVisible(false);
+
+    ui->search_Input->setFocus();
+
+    ui->Start_Button->setStyleSheet("* { background-color: rgba(0,255,0, 1.0) }");
+
+    if (Game == Game_ANR)
+    {
+        if (QFile::exists(saveLocation+ANRCardDB+"Cards_ANR.bin"))
+        {
+            ui->downloadCards_Label->setText("ANRCards-file downloaded");
+        }
+        if (QFile::exists(saveLocation+ANRCardDB+"01001.png"))
+        {
+            ui->saveCards_Label->setText("1+ cards already downloaded");
+        }
+    }
+
+    if (Game == Game_SWD)
+    {
+        if (QFile::exists(saveLocation+SWDCardDB+"Cards_SWD.bin"))
+        {
+            ui->downloadCards_Label->setText("SWDCards-file already downloaded");
+        }
+    }
+
+    //Create new QNetworkAccessManager and parents to this
+    managerOne = new QNetworkAccessManager(this);
+    managerTwo = new QNetworkAccessManager(this);
+    managerThree = new QNetworkAccessManager(this) ;
+    managerFour = new QNetworkAccessManager(this) ;
+
+    //Connect first to replyFinished QnetworkReply
+    connect(managerOne,SIGNAL(finished(QNetworkReply*)),this,SLOT(replyFinished(QNetworkReply*)));
+    managerOne->get(QNetworkRequest(QUrl(QUpdate_URL)));
+
+
+    if (QFile::exists(saveLocation+ANRCardDB+"Cards_ANR.bin"))
+    {
+        QFile file(saveLocation+ANRCardDB+"Cards_ANR.bin");
+        if (!file.open(QIODevice::ReadOnly))
+            qDebug() << "Cannot open file Cards_ANR.bin for read";
+        QDataStream stream(&file);
+        stream >> Card_infoList ;
+        file.close();
+    }
+
+    if (QFile::exists(saveLocation+SWDCardDB+"Cards_SWD.bin"))
+    {
+        QFile file(saveLocation+SWDCardDB+"Cards_SWD.bin");
+        if (!file.open(QIODevice::ReadOnly))
+            qDebug() << "Cannot open file Cards_SWD.bin for read";
+        QDataStream stream(&file);
+        stream >> CardSWD_infoList ;
+        file.close();
+    }
+
+     //ui->tableDeck->setRowCount(2);
+     //ui->tableDeck->setColumnCount(2);
+     //ui->tableDeck->horizontalHeader()->setVisible(false);
+     ui->tableDeck->verticalHeader()->setVisible(true);
+     ui->tableDeck->verticalHeader()->setSectionsMovable(true);
+     //ui->tableDeck->horizontalHeader()->resizeSection(0, 188);
+     ui->tableDeck->horizontalHeader()->resizeSection(0, 168);
+     ui->tableDeck->horizontalHeader()->resizeSection(1, 20);
+     ui->tableDeck->verticalHeader()->setDefaultSectionSize(20);
+
+     QFontDatabase::addApplicationFont(":/fonts/netrunner.ttf");
+     QFontDatabase::addApplicationFont(":/fonts/Monkirta Pursuit NC.ttf");
+
+     QFont fontNetrunner = QFont("netrunner",7,1);
+     QFont fontMonkirta = QFont("Monkirta Pursuit NC",10, 1);
+     //ui->tableDeck->setFont(fontMonkirta);
+     ui->Player1Id_Input->setFont(fontNetrunner);
+     ui->Player2Id_Input->setFont(fontNetrunner);
+     //qDebug() << ui->fontComboBoxDecklist->currentFont() ;
+     connect(ui->fontComboBoxDecklist, SIGNAL(currentFontChanged(QFont)),SLOT(fontComboBoxDecklist_currentChanged()));
+
+     ui->pushImportDeck->setToolTip("Imports deck from these NetrunnerDb-sources:\n* bbCode (not yet implemented)\n* Markdown (not yet implemented)\n* Plaintext (not yet implemented)\n* Jinteki.net (implemented)\n* NetrunnerDb-URL (implemented)\n");
+}
+
+void ScoreboardMain::addANR_Ids()
+{
+    IdList.clear();
     IdList.append("Anarch: Wyvern"); IdList.append("Anarch: Noise"); IdList.append("Anarch: Whizzard");
     IdList.append("Anarch: Quetzal"); IdList.append("Anarch: Edward Kim"); IdList.append("Anarch: MaxX"); IdList.append("Anarch: Valencia Estevez"); IdList.append("Anarch: Null");
     IdList.append("Anarch: Omar Keung"); IdList.append("Anarch: Alice Merchant"); IdList.append("Anarch: Reina Roja"); IdList.append("Anarch: Freedom Khumalo"); IdList.append("Anarch: Nathaniel Gnat Hall");
@@ -309,127 +493,6 @@ void ScoreboardMain::Opened() //Resets all
     IdList.append("Weyland: Blue Sun"); IdList.append("Weyland: Argus Security"); IdList.append("Weyland: Gagarin Deep Space"); IdList.append("Weyland: Titan Transnational");
     IdList.append("Weyland: Builder of Nations"); IdList.append("Weyland: Jemison Astronautics"); IdList.append("Weyland: Skorpios Defence Systems"); IdList.append("Weyland: Building a Better World");
     IdList.append("Weyland: SSO Industries"); IdList.append("Weyland: The Outfit");
-
-    loadDecks();
-
-    ui->Player1Id_Input->addItems(IdList);
-    ui->Player2Id_Input->addItems(IdList);
-
-    ui->Player1UP_Button->setText((QString::fromWCharArray(L"\u25B3")));
-    QFont font2 = ui->Player1UP_Button->font();
-    font2.setPointSize(20);
-    ui->Player1UP_Button->setFont(font2);
-
-    ui->Player1DOWN_Button->setText((QString::fromWCharArray(L"\u25BD")));
-    QFont font3 = ui->Player1DOWN_Button->font();
-    font3.setPointSize(20);
-    ui->Player1DOWN_Button->setFont(font3);
-
-    ui->Player2UP_Button->setText((QString::fromWCharArray(L"\u25B3")));
-    QFont font4 = ui->Player2UP_Button->font();
-    font4.setPointSize(20);
-    ui->Player2UP_Button->setFont(font4);
-
-    ui->Player2DOWN_Button->setText((QString::fromWCharArray(L"\u25BD")));
-    QFont font5 = ui->Player2DOWN_Button->font();
-    font5.setPointSize(20);
-    ui->Player2DOWN_Button->setFont(font5);
-
-    this->setFixedSize(this->size());
-
-    this->setWindowTitle(Window_Name);
-    ui->StopMusic_Button->setVisible(false);
-    ui->Warning_Label->setVisible(false);
-
-    ui->Player1Id2_input->setVisible(false);
-    ui->Player1Id3_input->setVisible(false);
-    ui->Player1Id4_input->setVisible(false);
-    ui->Player1Id5_input->setVisible(false);
-    ui->Player2Id2_input->setVisible(false);
-    ui->Player2Id3_input->setVisible(false);
-    ui->Player2Id4_input->setVisible(false);
-    ui->Player2Id5_input->setVisible(false);
-    ui->spinBox1P1->setVisible(false);
-    ui->spinBox2P1->setVisible(false);
-    ui->spinBox3P1->setVisible(false);
-    ui->spinBox4P1->setVisible(false);
-    ui->spinBox5P1->setVisible(false);
-    ui->spinBox1P2->setVisible(false);
-    ui->spinBox2P2->setVisible(false);
-    ui->spinBox3P2->setVisible(false);
-    ui->spinBox4P2->setVisible(false);
-    ui->spinBox5P2->setVisible(false);
-
-    ui->search_Input->setFocus();
-
-    ui->Start_Button->setStyleSheet("* { background-color: rgba(0,255,0) }");
-    if (QFile::exists(saveLocation+"/CardDB/Cards_ANR.bin"))
-    {
-        ui->downloadCards_Label->setText("ANRCards-file downloaded");
-    }
-    if (QFile::exists(saveLocation+"/CardDB/01001.png"))
-    {
-        ui->saveCards_Label->setText("1+ cards already downloaded");
-    }
-
-    if (QFile::exists(saveLocation+"/CardDB/Cards_SWD.bin"))
-    {
-        //ui->downloadCards_Label->setText("SWDCards-file already downloaded");
-    }
-
-    //Makes new QNetworkAccessManager and parents to this
-    managerOne = new QNetworkAccessManager(this);
-    managerTwo = new QNetworkAccessManager(this);
-    managerThree = new QNetworkAccessManager(this) ;
-    managerFour = new QNetworkAccessManager(this) ;
-
-    //Connect to replyFinished QnetworkReply
-    connect(managerOne,SIGNAL(finished(QNetworkReply*)),this,SLOT(replyFinished(QNetworkReply*)));
-    managerOne->get(QNetworkRequest(QUrl(QUpdate_URL)));
-
-
-    if (QFile::exists(saveLocation+"/CardDB/Cards_ANR.bin"))
-    {
-        QFile file(saveLocation+"/CardDB/Cards_ANR.bin");
-        if (!file.open(QIODevice::ReadOnly))
-            qDebug() << "Cannot open file Cards_ANR.bin for read";
-        QDataStream stream(&file);
-        stream >> Card_infoList ;
-        file.close();
-    }
-
-    if (QFile::exists(saveLocation+"/CardDB/Cards_SWD.bin"))
-    {
-        QFile file(saveLocation+"/CardDB/Cards_SWD.bin");
-        if (!file.open(QIODevice::ReadOnly))
-            qDebug() << "Cannot open file Cards_SWD.bin for read";
-        QDataStream stream(&file);
-        //stream >> Card_infoList ;
-        file.close();
-    }
-
-     //ui->tableDeck->setRowCount(2);
-     //ui->tableDeck->setColumnCount(2);
-     //ui->tableDeck->horizontalHeader()->setVisible(false);
-     ui->tableDeck->verticalHeader()->setVisible(true);
-     ui->tableDeck->verticalHeader()->setSectionsMovable(true);
-     //ui->tableDeck->horizontalHeader()->resizeSection(0, 188);
-     ui->tableDeck->horizontalHeader()->resizeSection(0, 168);
-     ui->tableDeck->horizontalHeader()->resizeSection(1, 20);
-     ui->tableDeck->verticalHeader()->setDefaultSectionSize(20);
-
-     QFontDatabase::addApplicationFont(":/fonts/netrunner.ttf");
-     QFontDatabase::addApplicationFont(":/fonts/Monkirta Pursuit NC.ttf");
-
-     QFont fontNetrunner = QFont("netrunner",7,1);
-     QFont fontMonkirta = QFont("Monkirta Pursuit NC",10, 1);
-     //ui->tableDeck->setFont(fontMonkirta);
-     ui->Player1Id_Input->setFont(fontNetrunner);
-     ui->Player2Id_Input->setFont(fontNetrunner);
-     //qDebug() << ui->fontComboBoxDecklist->currentFont() ;
-     connect(ui->fontComboBoxDecklist, SIGNAL(currentFontChanged(QFont)),SLOT(fontComboBoxDecklist_currentChanged()));
-
-     ui->pushImportDeck->setToolTip("Imports deck from these NetrunnerDb-sources:\n* bbCode (not yet implemented)\n* Markdown (not yet implemented)\n* Plaintext (not yet implemented)\n* Jinteki.net (implemented)\n* NetrunnerDb-URL (implemented)\n");
 }
 
 void ScoreboardMain::fontComboBoxDecklist_currentChanged()
@@ -513,20 +576,22 @@ void ScoreboardMain::comboFactionColor_currentIndexChanged()
 
 void ScoreboardMain::searchChanged(const QString &newvalue)
 {
-    ui->List_Output->clear();
-    bool found_first = false;
-    if (newvalue.count()>=3)
+    if (Game == Game_ANR)
     {
-        foreach(Card_info data, Card_infoList)
+        ui->List_Output->clear();
+        bool found_first = false;
+        if (newvalue.count()>=3)
         {
-            if (data.Title.toLower().contains(newvalue))
+            foreach(Card_info data, Card_infoList)
             {
-                QListWidgetItem *newCard = new QListWidgetItem(data.Title+" #"+data.Code);
-                foreach(FactionColorCode faction, FactionColorCodes)
+                if (data.Title.toLower().contains(newvalue))
                 {
-                    if (faction.Faction == data.Faction)
+                    QListWidgetItem *newCard = new QListWidgetItem(data.Title+" #"+data.Code);
+                    foreach(FactionColorCode faction, FactionColorCodes)
                     {
-                        if (ui->checkUseGradientsDecklists->isChecked())
+                        if (faction.Faction == data.Faction)
+                        {
+                            if (ui->checkUseGradientsDecklists->isChecked())
                                 newCard->setBackground(QBrush(faction.FactionGradient));
                         /*if (ui->checkUseImageDecklists->isChecked())
                         {
@@ -543,19 +608,69 @@ void ScoreboardMain::searchChanged(const QString &newvalue)
                             ui->labelTest->setPixmap(QPixmap::fromImage(cropped));
                             newCard->setBackground(QBrush(QImage(cropped)));
                         }*/
+                        }
                     }
+                    ui->List_Output->addItem(newCard);
+                    if (found_first == false)
+                    {
+                        ui->List_Output->setCurrentRow(0);
+                        QListWidgetItem *card = ui->List_Output->currentItem();
+                        QString str = card->text();
+                        choosenCard = str.mid(str.indexOf("#")+1,str.length());
+                    }
+                    found_first=true;
                 }
-                ui->List_Output->addItem(newCard);
-                if (found_first == false)
-                {
-                    ui->List_Output->setCurrentRow(0);
-                    QListWidgetItem *card = ui->List_Output->currentItem();
-                    QString str = card->text();
-                    choosenCard = str.mid(str.indexOf("#")+1,str.length());
-                }
-                found_first=true;
             }
         }
+    }
+    if (Game == Game_SWD)
+    {
+        ui->List_Output->clear();
+        bool found_first = false;
+        if (newvalue.count()>=3)
+        {
+            foreach(CardSWD_info data, CardSWD_infoList)
+            {
+                if (data.Name.toLower().contains(newvalue))
+                {
+                    QListWidgetItem *newCard = new QListWidgetItem(data.Name+" #"+data.Code);
+                    foreach(FactionColorCode faction, FactionColorCodes)
+                    {
+                        /*if (faction.Faction == data.Faction)
+                        {
+                            if (ui->checkUseGradientsDecklists->isChecked())
+                                newCard->setBackground(QBrush(faction.FactionGradient));
+                            if (ui->checkUseImageDecklists->isChecked())
+                            {
+                            QString image = saveLocation+"/CardDB/"+data.Code+".png";
+                            QImage original(image);
+                            QRect rect(0,original.height()/5-10, original.width(), original.height()/5+10);
+                            //QPixmap cropped = original.copy(rect).scaled(50,50,Qt::KeepAspectRatio);
+                            QImage cropped = original.copy(rect);
+                            QPainter p;
+                            p.begin(&cropped);
+                            p.setCompositionMode(QPainter::CompositionMode_DestinationIn);
+                            p.fillRect(cropped.rect(),QColor(0,0,0,50));
+                            p.end();
+                            ui->labelTest->setPixmap(QPixmap::fromImage(cropped));
+                            newCard->setBackground(QBrush(QImage(cropped)));
+                            }
+                        }*/
+                    }
+                    ui->List_Output->addItem(newCard);
+                    if (found_first == false)
+                    {
+                        ui->List_Output->setCurrentRow(0);
+                        QListWidgetItem *card = ui->List_Output->currentItem();
+                        QString str = card->text();
+                        choosenCard = str.mid(str.indexOf("#")+1,str.length());
+                        choosenName = str ;
+                    }
+                    found_first=true;
+                }
+            }
+        }
+
     }
 }
 
@@ -564,47 +679,237 @@ void ScoreboardMain::on_List_Output_clicked()
     QListWidgetItem *card = ui->List_Output->currentItem();
     QString str = card->text();
     choosenCard = str.mid(str.indexOf("#")+1,str.length());
+    choosenName = str ;
 }
 
 void ScoreboardMain::on_Show_right_clicked()
 {
-    if (QFile::exists(saveLocation+"/Output/Card_right.png"))
+    if (Game == Game_ANR)
     {
-        QFile::remove(saveLocation+"/Output/Card_right.png");
-    }
-    QFile::copy(saveLocation+"/CardDB/"+choosenCard+".png",saveLocation+"/Output/Card_right.png");
+        if (QFile::exists(saveLocation+"/Output/Card_right.png"))
+        {
+            QFile::remove(saveLocation+"/Output/Card_right.png");
+        }
+        QFile::copy(saveLocation+xxxCardDB+choosenCard+".png",saveLocation+"/Output/Card_right.png");
 
-    if (ui->Show_right->text()=="Show right")
-    {
-        ui->Show_right->setText("Hide right");
+        if (ui->Show_right->text()=="Show right")
+        {
+            ui->Show_right->setText("Hide right");
+        }
+        else
+        {
+            ui->Show_right->setText("Show right");
+            QFile::remove(saveLocation+"/Output/Card_right.png");
+            ui->search_Input->setText("");
+            ui->search_Input->setFocus();
+        }
     }
-    else
+    if (Game == Game_SWD)
     {
-        ui->Show_right->setText("Show right");
-        QFile::remove(saveLocation+"/Output/Card_right.png");
-        ui->search_Input->setText("");
-        ui->search_Input->setFocus();
+        if (QFile::exists(saveLocation+"/Output/Card_right.jpg"))
+        {
+            QFile::remove(saveLocation+"/Output/Card_right.jpg");
+        }
+        QFile::copy(saveLocation+xxxCardDB+choosenCard+".jpg",saveLocation+"/Output/Card_right.jpg");
+
+        if (ui->Show_right->text()=="Show right")
+        {
+            ui->Show_right->setText("Hide right");
+        }
+        else
+        {
+            ui->Show_right->setText("Show right");
+            QFile::remove(saveLocation+"/Output/Card_right.jpg");
+            ui->search_Input->setText("");
+            ui->search_Input->setFocus();
+        }
     }
+
 }
 
 void ScoreboardMain::on_Show_left_clicked()
 {
-    if (QFile::exists(saveLocation+"/Output/Card_left.png"))
+    if (Game == Game_ANR)
     {
-        QFile::remove(saveLocation+"/Output/Card_left.png");
-    }
-    QFile::copy(saveLocation+"/CardDB/"+choosenCard+".png",saveLocation+"/Output/Card_left.png");
+        if (QFile::exists(saveLocation+"/Output/Card_left.png"))
+        {
+            QFile::remove(saveLocation+"/Output/Card_left.png");
+        }
+        QFile::copy(saveLocation+xxxCardDB+choosenCard+".png",saveLocation+"/Output/Card_left.png");
 
-    if (ui->Show_left->text()=="Show left")
-    {
-        ui->Show_left->setText("Hide left");
+        if (ui->Show_left->text()=="Show left")
+        {
+            ui->Show_left->setText("Hide left");
+        }
+        else
+        {
+            ui->Show_left->setText("Show left");
+            QFile::remove(saveLocation+"/Output/Card_left.png");
+            ui->search_Input->setText("");
+            ui->search_Input->setFocus();
+        }
     }
-    else
+    if (Game == Game_SWD)
     {
-        ui->Show_left->setText("Show left");
-        QFile::remove(saveLocation+"/Output/Card_left.png");
-        ui->search_Input->setText("");
-        ui->search_Input->setFocus();
+        if (QFile::exists(saveLocation+"/Output/Card_left.jpg"))
+        {
+            QFile::remove(saveLocation+"/Output/Card_left.jpg");
+        }
+        QFile::copy(saveLocation+xxxCardDB+choosenCard+".jpg",saveLocation+"/Output/Card_left.jpg");
+
+        if (ui->Show_left->text()=="Show left")
+        {
+            ui->Show_left->setText("Hide left");
+        }
+        else
+        {
+            ui->Show_left->setText("Show left");
+            QFile::remove(saveLocation+"/Output/Card_left.jpg");
+            ui->search_Input->setText("");
+            ui->search_Input->setFocus();
+        }
+    }
+}
+
+
+void ScoreboardMain::on_ChooseCharP1_clicked()
+{
+    int characterNumber = ui->comboBoxChooseCharP1->currentText().toInt();
+    int health = 1;
+
+    foreach(CardSWD_info data, CardSWD_infoList)
+    {
+        //if (choosenName.toLower().contains(data.Name))
+        if (choosenCard==data.Code)
+        {
+            qDebug()<<"Found card:"<<data.Code;
+            health = data.Health;
+            qDebug()<<"ChoosenName"<<choosenName<<" Health:"<<health<<":"<<data.Health;
+        }
+    }
+
+    switch (characterNumber)
+    {
+        case 1:
+            ui->Player1Id_Input->addItem(choosenName);
+            Player1_Id_Output.open(sLocation+"/Output/Player1_Id.txt");
+            Player1_Id_Output<<choosenName.toStdString();
+            Player1_Id_Output.close();
+
+            ui->spinBox1P1->setValue(health);
+            Max_healthP1C1 = health;
+            ScoreboardMain::on_spinBox1P1_valueChanged();
+            break;
+        case 2:
+            ui->Player1Id2_Input->addItem(choosenName);
+            Player1_Id2_Output.open(sLocation+"/Output/Player1_Id2.txt");
+            Player1_Id2_Output<<choosenName.toStdString();
+            Player1_Id2_Output.close();
+
+            ui->spinBox2P1->setValue(health);
+            ScoreboardMain::on_spinBox2P1_valueChanged();
+            Max_healthP1C2 = health;
+            break;
+        case 3:
+            ui->Player1Id3_Input->addItem(choosenName);
+            Player1_Id3_Output.open(sLocation+"/Output/Player1_Id3.txt");
+            Player1_Id3_Output<<choosenName.toStdString();
+            Player1_Id3_Output.close();
+
+            ui->spinBox3P1->setValue(health);
+            Max_healthP1C3 = health;
+            ScoreboardMain::on_spinBox3P1_valueChanged();
+            break;
+        case 4:
+            ui->Player1Id4_Input->addItem(choosenName);
+            Player1_Id4_Output.open(sLocation+"/Output/Player1_Id4.txt");
+            Player1_Id4_Output<<choosenName.toStdString();
+            Player1_Id4_Output.close();
+
+            ui->spinBox4P1->setValue(health);
+            Max_healthP1C4 = health;
+            ScoreboardMain::on_spinBox4P1_valueChanged();
+            break;
+        case 5:
+            ui->Player1Id5_Input->addItem(choosenName);
+            Player1_Id5_Output.open(sLocation+"/Output/Player1_Id5.txt");
+            Player1_Id5_Output<<choosenName.toStdString();
+            Player1_Id5_Output.close();
+
+            ui->spinBox5P1->setValue(health);
+            Max_healthP1C5 = health;
+            ScoreboardMain::on_spinBox5P1_valueChanged();
+            break;
+    }
+}
+
+void ScoreboardMain::on_ChooseCharP2_clicked()
+{
+    int characterNumber = ui->comboBoxChooseCharP2->currentText().toInt();
+    int health = 1;
+
+    foreach(CardSWD_info data, CardSWD_infoList)
+    {
+        //if (choosenName.toLower().contains(data.Name))
+        if (choosenCard==data.Code)
+        {
+            health = (int)data.Health;
+            qDebug()<<"ChoosenName"<<choosenName<<" Health:"<<health<<":"<<data.Health;
+        }
+    }
+
+    switch (characterNumber)
+    {
+        case 1:
+            ui->Player2Id_Input->addItem(choosenName);
+            Player2_Id_Output.open(sLocation+"/Output/Player2_Id.txt");
+            Player2_Id_Output<<choosenName.toStdString();
+            Player2_Id_Output.close();
+
+            ui->spinBox1P2->setValue(health);
+            Max_healthP2C1 = health;
+            ScoreboardMain::on_spinBox1P2_valueChanged();
+            break;
+        case 2:
+            ui->Player2Id2_Input->addItem(choosenName);
+            Player2_Id2_Output.open(sLocation+"/Output/Player2_Id2.txt");
+            Player2_Id2_Output<<choosenName.toStdString();
+            Player2_Id2_Output.close();
+
+            ui->spinBox2P2->setValue(health);
+            Max_healthP2C2 = health;
+            ScoreboardMain::on_spinBox2P2_valueChanged();
+            break;
+        case 3:
+            ui->Player2Id3_Input->addItem(choosenName);
+            Player2_Id3_Output.open(sLocation+"/Output/Player2_Id3.txt");
+            Player2_Id3_Output<<choosenName.toStdString();
+            Player2_Id3_Output.close();
+
+            ui->spinBox3P2->setValue(health);
+            Max_healthP2C3 = health;
+            ScoreboardMain::on_spinBox3P2_valueChanged();
+            break;
+        case 4:
+            ui->Player2Id4_Input->addItem(choosenName);
+            Player2_Id4_Output.open(sLocation+"/Output/Player2_Id4.txt");
+            Player2_Id4_Output<<choosenName.toStdString();
+            Player2_Id4_Output.close();
+
+            ui->spinBox4P2->setValue(health);
+            Max_healthP2C4 = health;
+            ScoreboardMain::on_spinBox4P2_valueChanged();
+            break;
+        case 5:
+            ui->Player2Id5_Input->addItem(choosenName);
+            Player2_Id5_Output.open(sLocation+"/Output/Player2_Id5.txt");
+            Player2_Id5_Output<<choosenName.toStdString();
+            Player2_Id5_Output.close();
+
+            ui->spinBox5P2->setValue(health);
+            Max_healthP2C5 = health;
+            ScoreboardMain::on_spinBox5P2_valueChanged();
+            break;
     }
 }
 
@@ -614,11 +919,14 @@ void ScoreboardMain::on_addCardToDeck_clicked()
     int inc = 1 ;
     QColor endColor ;
     QListWidgetItem *card = ui->List_Output->currentItem();
-    foreach(FactionColorCode faction, FactionColorCodes)
+    if (Game == Game_ANR)
     {
-        if (card->background() == faction.FactionGradient)
+        foreach(FactionColorCode faction, FactionColorCodes)
         {
-            endColor.setNamedColor(faction.EndColor);
+            if (card->background() == faction.FactionGradient)
+            {
+                endColor.setNamedColor(faction.EndColor);
+            }
         }
     }
     QString textLong = card->text();
@@ -633,25 +941,39 @@ void ScoreboardMain::on_addCardToDeck_clicked()
                 inc =  ui->tableDeck->item(r,1)->text().toInt() + 1 ;
                 QString incString = QString::number(inc);
                 QTableWidgetItem *widgetItemPlus = new QTableWidgetItem(incString);
-                if (ui->checkUseGradientsDecklists->isChecked())
-                    widgetItemPlus->setBackground(QBrush(endColor));
+                if (Game == Game_ANR)
+                {
+                    if (ui->checkUseGradientsDecklists->isChecked())
+                        widgetItemPlus->setBackground(QBrush(endColor));
+                }
                 found = true ;
 
-                if (ui->tableDeck->item(r,1)->text().toInt() < 3)
-                    ui->tableDeck->setItem(r,1,widgetItemPlus);
+                if (Game == Game_ANR)
+                {
+                    if (ui->tableDeck->item(r,1)->text().toInt() < 3)
+                        ui->tableDeck->setItem(r,1,widgetItemPlus);
+                }
+                if (Game == Game_SWD)
+                {
+                    if (ui->tableDeck->item(r,1)->text().toInt() < 2)
+                        ui->tableDeck->setItem(r,1,widgetItemPlus);
+                }
              }
         }
     }
     if (found == false)
     {
         ui->tableDeck->setRowCount(row+1);
-        QBrush gradient = card->background() ;
         QTableWidgetItem *widgetItem = new QTableWidgetItem(text) ;
         QTableWidgetItem *widgetItemOne = new QTableWidgetItem("1");
-        if (ui->checkUseGradientsDecklists->isChecked())
+        if (Game == Game_ANR)
         {
-            widgetItem->setBackground(gradient);
-            widgetItemOne->setBackground(QBrush(endColor));
+            QBrush gradient = card->background() ;
+            if (ui->checkUseGradientsDecklists->isChecked())
+            {
+                widgetItem->setBackground(gradient);
+                widgetItemOne->setBackground(QBrush(endColor));
+            }
         }
         ui->tableDeck->setItem(row, 0, widgetItem);
         ui->tableDeck->setItem(row,1,widgetItemOne);
@@ -956,6 +1278,10 @@ void ScoreboardMain::getCardsResult()
         set_info = {6,20}; Set_infoList.append(set_info); // Rivals
         set_info = {7,160}; Set_infoList.append(set_info); // Way of the Force
         set_info = {8,160}; Set_infoList.append(set_info); // Across the Galaxy
+        set_info = {9,160}; Set_infoList.append(set_info); // Convergence
+        set_info = {10,160}; Set_infoList.append(set_info); // Allies of Necessity
+        set_info = {11,160}; Set_infoList.append(set_info); // Spark of Hope
+        //set_info = {12,160}; Set_infoList.append(set_info); // Covert Missions
         QList<Set_info>::iterator p;
         for (p=Set_infoList.begin(); p != Set_infoList.end(); p++)
         {
@@ -963,7 +1289,7 @@ void ScoreboardMain::getCardsResult()
             for (int j=1; j<=(*p).Total_cards;j++)
             {
                 QString Cardnumber = QString("%1").arg((*p).Set_code,2,10,QChar('0'))+ QString("%1").arg(j,3,10,QChar('0')) ;
-                QString CardURL = QCardDB_URL+Cardnumber;
+                QString CardURL = QCardDB_URL+Cardnumber+SWDCardFormat;
                 qDebug() << "CardURL" << CardURL;
                 managerTwo->get(QNetworkRequest(QUrl(CardURL)));
             }
@@ -977,10 +1303,10 @@ void ScoreboardMain::on_saveCards_Button_clicked()
 {
     if (Game == Game_ANR)
     {
-        if (!QFile::exists(saveLocation+"/CardDB/Cards_ANR.bin"))
+        if (!QFile::exists(saveLocation+ANRCardDB+"Cards_ANR.bin"))
         {
             ui->saveCards_Label->setText("Saving Cards");
-            QFile file(saveLocation+"/CardDB/Cards_ANR.bin");
+            QFile file(saveLocation+ANRCardDB+"Cards_ANR.bin");
             if (!file.open(QIODevice::WriteOnly))
                 qDebug() << "Cannot open file for write";
             QDataStream stream(&file);
@@ -991,15 +1317,14 @@ void ScoreboardMain::on_saveCards_Button_clicked()
     }
     if (Game == Game_SWD)
     {
-        // TBD
-        if (!QFile::exists(saveLocation+"/CardDB/Cards_SWD.bin"))
+        if (!QFile::exists(saveLocation+SWDCardDB+"Cards_SWD.bin"))
         {
             ui->saveCards_Label->setText("Saving Cards");
-            QFile file(saveLocation+"/CardDB/Cards_SWD.bin");
+            QFile file(saveLocation+SWDCardDB+"Cards_SWD.bin");
             if (!file.open(QIODevice::WriteOnly))
                 qDebug() << "Cannot open file for write";
             QDataStream stream(&file);
-            stream << Card_infoList ;
+            stream << CardSWD_infoList ;
             file.close();
             ui->saveCards_Label->setText("Cards saved");
         }
@@ -1022,25 +1347,34 @@ void ScoreboardMain::on_saveCards_Button_clicked()
     if (Game == Game_SWD)
     {
         //TBD
+        foreach (CardSWD_info data, CardSWD_infoList)
+        {
+            QString CardURL = data.Image_src;
+            qDebug()<<CardURL;
+            QString code = data.Code;
+            double health = data.Health ;
+            qDebug()<<"foreach   Code: "<<code;
+            QNetworkReply* reply = managerFour->get(QNetworkRequest(QUrl(CardURL)));
+            reply->setProperty("code",code);
+        }
     }
 }
 
 void ScoreboardMain::getCardURLResult(QNetworkReply *replyCard)
 {
-    qDebug()<<"getCardURLResult";
+
     if (Game == Game_ANR)
     {
         QString code = replyCard->property("code").toString();
-        QString imageName = saveLocation+"/CardDB/"+code+".png";
+        QString imageName = saveLocation+ANRCardDB+code+".png";
+        qDebug()<<"getCardURLResult "<<code;
         QFile file(imageName);
         if (!file.open(QIODevice::ReadWrite))
             qDebug() << "Cannot open file "<<code;
         QByteArray data=replyCard->readAll();
         file.write(data);
         file.close();
-        /*QImageReader reader(imageName);
-        QSize sizeOfImage = reader.size();
-        int width = sizeOfImage.width();*/
+
         QImage img;
         img.load(imageName, "PNG");
         QPixmap pixmap = QPixmap::fromImage(img);
@@ -1054,33 +1388,47 @@ void ScoreboardMain::getCardURLResult(QNetworkReply *replyCard)
             qDebug() <<"Scaling: "<<code;
             //qDebug()<<"Saving card: "<<code<<" width: "<<img.width();
         }
-        /*else
-        {
-            file.write(data);
-            qDebug()<<"Saving card: "<<code;
-        }*/
-        //file.close();
         ui->saveCards_Label->setText("Saving ANR-card "+code);
-        //
     }
     else if (Game == Game_SWD)
     {
         QString code = replyCard->property("code").toString();
-        QFile file(saveLocation+"/CardDB/"+code+".png");
+        QFile file(saveLocation+SWDCardDB+code+".jpg");
+        qDebug()<<"getCardURLResult "<<code;
         if (!file.open(QIODevice::ReadWrite))
             qDebug() << "Cannot open file "<<code;
         QByteArray data=replyCard->readAll();
         file.write(data);
         file.close();
-        ui->saveCards_Label->setText("Saving SWD-card "+code);
 
+        /*QImage img;
+        img.load(imageName, "JPG"); // Or "JPEG"?
+        QPixmap pixmap = QPixmap::fromImage(img);
+        qDebug()<<"Saving card: "<<code<<" width: "<<pixmap.width();
+        if (pixmap.width() != 300)
+        {
+            pixmap = QPixmap::fromImage(img.scaled(cardWidth,cardHeight,Qt::IgnoreAspectRatio,Qt::SmoothTransformation));
+            file.open(QIODevice::WriteOnly);
+            pixmap.save(&file,"jpg",100);
+            file.close();
+            qDebug() <<"Scaling: "<<code;
+            //qDebug()<<"Saving card: "<<code<<" width: "<<img.width();
+        }*/
+
+        ui->saveCards_Label->setText("Saving SWD-card "+code);
     }
     replyCard->deleteLater();
 }
 
 QDataStream &operator<<(QDataStream &stream, const Card_info &data)
 {
-    stream << data.Title << data.Code << data.Image_url << data.Faction;
+   stream << data.Title << data.Code << data.Image_url << data.Faction;
+   return stream;
+}
+
+QDataStream &operator<<(QDataStream &stream, const CardSWD_info &data)
+{
+    stream << data.Name << data.Code << data.Image_src << data.Health;
     return stream;
 }
 
@@ -1090,6 +1438,15 @@ QDataStream &operator>>(QDataStream &stream, Card_info &data)
     stream >> data.Code ;
     stream >> data.Image_url ;
     stream >> data.Faction ;
+    return stream ;
+}
+
+QDataStream &operator>>(QDataStream &stream, CardSWD_info &data)
+{
+    stream >> data.Name ;
+    stream >> data.Code ;
+    stream >> data.Image_src ;
+    stream >> data.Health ;
     return stream ;
 }
 
@@ -1126,7 +1483,7 @@ void ScoreboardMain::getCardResult(QNetworkReply *replyCard)
         qDebug()<<"getCardResult SWD"; // TBD
         QJsonParseError jsonError;
         QString Carddata = replyCard->readAll();
-        qDebug()<<Carddata;
+        //qDebug()<<Carddata;
         QJsonDocument CardJson = QJsonDocument::fromJson(Carddata.toUtf8(),&jsonError);
         /*if (jsonError.error != QJsonParseError::NoError){
             qDebug() << jsonError.errorString();
@@ -1134,16 +1491,16 @@ void ScoreboardMain::getCardResult(QNetworkReply *replyCard)
         QJsonObject CarddataObject = CardJson.object() ;
         //foreach (const QJsonValue & v, CarddataArray)
         //{
-            //qDebug()<<"!";
             CardSWD_info temp_Card_info;
             temp_Card_info.Name = CarddataObject.value("name").toString();
-            //qDebug()<<"Name:"<<temp_Card_info.Name;
             temp_Card_info.Code = CarddataObject.value("code").toString();
-            temp_Card_info.Image_src = CarddataObject.value("image_src").toString();
+            qDebug()<<"Name:"<<temp_Card_info.Name<<" Code:"<<temp_Card_info.Code;
+            temp_Card_info.Image_src = CarddataObject.value("imagesrc").toString();
             //qDebug() << temp_Card_info.Image_src;
-            temp_Card_info.Health = CarddataObject.value("health").toString();
+            temp_Card_info.Health = (int)CarddataObject.value("health").toDouble();
+            qDebug()<<"Health:"<<temp_Card_info.Health<<" HealthDou:"<<CarddataObject.value("health").toDouble();
             if (temp_Card_info.Image_src == "")
-                temp_Card_info.Image_src = BaseCardURL+temp_Card_info.Code+".png";
+                temp_Card_info.Image_src = BaseCardURL+temp_Card_info.Code.left(2)+"/"+temp_Card_info.Code+".jpg";
             CardSWD_infoList.append(temp_Card_info);
             ui->downloadCards_Label->setText("Downloading data: "+temp_Card_info.Code);
         //}
@@ -1291,9 +1648,10 @@ void ScoreboardMain::Changed() //Changed Score,etc
         }
         else
         {
+            qDebug()<<"Updating scores";
             Player1_Score_Output << Player1_Score;
             Player2_Score_Output << Player2_Score;
-        }
+         }
         Player1_Score_Output.close();
         Player2_Score_Output.close();
     }
@@ -1351,6 +1709,226 @@ void ScoreboardMain::on_UpNextScreen_clicked() //UpNext Button
     }
     NR_Output.close();
     NRS_Output.close();
+}
+
+void ScoreboardMain::on_spinBox1P1_valueChanged()
+{
+    if(ui->checkBox->isChecked())
+    {
+        writexml();
+    }
+    else
+    {
+        Player1_char1Health_Output.open(sLocation+"/Output/Player1_char1Health.txt");
+        if (ui->NoScoreIdOutput->isChecked())
+        {
+            Player1_char1Health_Output << "";
+        }
+        else
+        {
+            qDebug()<<"Updating scores";
+            Player1_char1Health_Output << ui->spinBox1P1->value()<<"/"<<Max_healthP1C1;
+        }
+        Player1_char1Health_Output.close();
+    }
+}
+
+void ScoreboardMain::on_spinBox2P1_valueChanged()
+{
+    if(ui->checkBox->isChecked())
+    {
+        writexml();
+    }
+    else
+    {
+        Player1_char2Health_Output.open(sLocation+"/Output/Player1_char2Health.txt");
+        if (ui->NoScoreIdOutput->isChecked())
+        {
+            Player1_char2Health_Output << "";
+       }
+        else
+        {
+            qDebug()<<"Updating scores";
+            Player1_char2Health_Output << ui->spinBox2P1->value()<<"/"<<Max_healthP1C2;
+        }
+        Player1_char2Health_Output.close();
+    }
+}
+
+void ScoreboardMain::on_spinBox3P1_valueChanged()
+{
+    if(ui->checkBox->isChecked())
+    {
+        writexml();
+    }
+    else
+    {
+        Player1_char3Health_Output.open(sLocation+"/Output/Player1_char3Health.txt");
+        if (ui->NoScoreIdOutput->isChecked())
+        {
+            Player1_char3Health_Output << "";
+       }
+        else
+        {
+            qDebug()<<"Updating scores";
+            Player1_char3Health_Output << ui->spinBox3P1->value()<<"/"<<Max_healthP1C3;
+        }
+        Player1_char3Health_Output.close();
+    }
+}
+
+void ScoreboardMain::on_spinBox4P1_valueChanged()
+{
+    if(ui->checkBox->isChecked())
+    {
+        writexml();
+    }
+    else
+    {
+        Player1_char4Health_Output.open(sLocation+"/Output/Player1_char4Health.txt");
+        if (ui->NoScoreIdOutput->isChecked())
+        {
+            Player1_char4Health_Output << "";
+       }
+        else
+        {
+            qDebug()<<"Updating scores";
+            Player1_char4Health_Output << ui->spinBox4P1->value()<<"/"<<Max_healthP1C4;
+        }
+        Player1_char4Health_Output.close();
+    }
+}
+
+void ScoreboardMain::on_spinBox5P1_valueChanged()
+{
+    if(ui->checkBox->isChecked())
+    {
+        writexml();
+    }
+    else
+    {
+        Player1_char5Health_Output.open(sLocation+"/Output/Player1_char5Health.txt");
+        if (ui->NoScoreIdOutput->isChecked())
+        {
+            Player1_char5Health_Output << "";
+       }
+        else
+        {
+            qDebug()<<"Updating scores";
+            Player1_char5Health_Output << ui->spinBox5P1->value()<<"/"<<Max_healthP1C5;
+        }
+        Player1_char5Health_Output.close();
+    }
+}
+
+void ScoreboardMain::on_spinBox1P2_valueChanged()
+{
+    if(ui->checkBox->isChecked())
+    {
+        writexml();
+    }
+    else
+    {
+        Player2_char1Health_Output.open(sLocation+"/Output/Player2_char1Health.txt");
+        if (ui->NoScoreIdOutput->isChecked())
+        {
+            Player2_char1Health_Output << "";
+       }
+        else
+        {
+            qDebug()<<"Updating scores";
+            Player2_char1Health_Output << ui->spinBox1P2->value()<<"/"<<Max_healthP2C1;
+        }
+        Player2_char1Health_Output.close();
+    }
+}
+
+void ScoreboardMain::on_spinBox2P2_valueChanged()
+{
+    if(ui->checkBox->isChecked())
+    {
+        writexml();
+    }
+    else
+    {
+        Player2_char2Health_Output.open(sLocation+"/Output/Player2_char2Health.txt");
+        if (ui->NoScoreIdOutput->isChecked())
+        {
+            Player2_char2Health_Output << "";
+       }
+        else
+        {
+            qDebug()<<"Updating scores";
+            Player2_char2Health_Output << ui->spinBox2P2->value()<<"/"<<Max_healthP2C2;
+        }
+        Player2_char2Health_Output.close();
+    }
+}
+
+void ScoreboardMain::on_spinBox3P2_valueChanged()
+{
+    if(ui->checkBox->isChecked())
+    {
+        writexml();
+    }
+    else
+    {
+        Player2_char3Health_Output.open(sLocation+"/Output/Player2_char3Health.txt");
+        if (ui->NoScoreIdOutput->isChecked())
+        {
+            Player2_char3Health_Output << "";
+       }
+        else
+        {
+            qDebug()<<"Updating scores";
+            Player2_char3Health_Output << ui->spinBox3P2->value()<<"/"<<Max_healthP2C3;
+        }
+        Player2_char3Health_Output.close();
+    }
+}
+
+void ScoreboardMain::on_spinBox4P2_valueChanged()
+{
+    if(ui->checkBox->isChecked())
+    {
+        writexml();
+    }
+    else
+    {
+        Player2_char4Health_Output.open(sLocation+"/Output/Player2_char4Health.txt");
+        if (ui->NoScoreIdOutput->isChecked())
+        {
+            Player2_char4Health_Output << "";
+       }
+        else
+        {
+            qDebug()<<"Updating scores";
+            Player2_char4Health_Output << ui->spinBox4P2->value()<<"/"<<Max_healthP2C4;
+        }
+        Player2_char4Health_Output.close();
+    }
+}
+
+void ScoreboardMain::on_spinBox5P2_valueChanged()
+{
+    if(ui->checkBox->isChecked())
+    {
+        writexml();
+    }
+    else
+    {
+        Player2_char5Health_Output.open(sLocation+"/Output/Player2_char5Health.txt");
+        if (ui->NoScoreIdOutput->isChecked())
+        {
+            Player2_char5Health_Output << "";
+       }
+        else
+        {
+            qDebug()<<"Updating scores";
+            Player2_char5Health_Output << ui->spinBox5P2->value()<<"/"<<Max_healthP2C5;
+        }
+        Player2_char5Health_Output.close();
+    }
 }
 
 void ScoreboardMain::on_Player1UP_Button_clicked() //Player1_Up Button
@@ -1519,71 +2097,88 @@ void ScoreboardMain::on_Update_Team_Button_clicked() //Update Team Name Button
         }
         else
         {
-            QString out1Id = ui->Player1Id_Input->currentText().mid(1,ui->Player1Id_Input->currentText().length()-1) ;
-            Player1_Id_Output << out1Id.toStdString() ;
-            QString out2Id = ui->Player2Id_Input->currentText().mid(1,ui->Player2Id_Input->currentText().length()-1) ;
-            Player2_Id_Output << out2Id.toStdString() ;
+            if (Game == Game_ANR)
+            {
+                QString out1Id = ui->Player1Id_Input->currentText().mid(1,ui->Player1Id_Input->currentText().length()-1) ;
+                Player1_Id_Output << out1Id.toStdString() ;
+                QString out2Id = ui->Player2Id_Input->currentText().mid(1,ui->Player2Id_Input->currentText().length()-1) ;
+                Player2_Id_Output << out2Id.toStdString() ;
+            }
+            if (Game == Game_SWD)
+            {
+                Player1_Id_Output << ui->Player1Id_Input->currentText().toStdString() ;
+                Player2_Id_Output << ui->Player2Id_Input->currentText().toStdString() ;
+            }
 
             if (QFile::exists(saveLocation+"/Output/Player1_Id.png"))
             {
                 QFile::remove(saveLocation+"/Output/Player1_Id.png");
             }
             QString p1Faction = ui->Player1Id_Input->currentText().mid(0,1);
-            QString p1FactionId, p1FactionHTML;
-            p1FactionHTML.append("<!DOCTYPE html><html lang=\"en\" dir=\"ltr\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /><title> </title></head><body><p style=\"font-family:netrunner\">");
+            QString p1FactionId ;
+            //QString p1FactionId, p1FactionHTML;
+            /*p1FactionHTML.append("<!DOCTYPE html><html lang=\"en\" dir=\"ltr\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /><title> </title></head><body><p style=\"font-family:netrunner\">");
             p1FactionHTML.append(p1Faction);
-            p1FactionHTML.append("</p></body></html>");
+            p1FactionHTML.append("</p></body></html>");*/
             p1FactionId.append(p1Faction);
             //qDebug() <<p1Faction ;
 
-            QTextStream out1HTML(&Player1_Id_HTML);
+            /*QTextStream out1HTML(&Player1_Id_HTML);
             out1HTML.setCodec("UTF-8");
             out1HTML << p1FactionHTML ;
             QTextStream out1(&Player1_FactionId);
             out1.setCodec("UTF-8");
-            out1 << p1FactionId ;
+            out1 << p1FactionId ;*/
 
-            QString p1_id= ui->Player1Id_Input->currentText().mid(1,2); // First char is a Netrunner.ttf factionchar
-            QString p1_idfile=saveLocation+"/ID_Pictures/" ;
-            p1_idfile.append(p1_id);
-            //qDebug() << "Id:" << p1_id ;
-            p1_idfile.append(".png");
-            QFile::copy(p1_idfile,saveLocation+"/Output/Player1_Id.png");
+            if (Game == Game_ANR)
+            {
+                QString p1_id= ui->Player1Id_Input->currentText().mid(1,2); // First char is a Netrunner.ttf factionchar
+                QString p1_idfile=saveLocation+"/ID_Pictures/" ;
+                p1_idfile.append(p1_id);
+                //qDebug() << "Id:" << p1_id ;
+                p1_idfile.append(".png");
+                QFile::copy(p1_idfile,saveLocation+"/Output/Player1_Id.png");
+            }
 
             QString p2Faction = ui->Player2Id_Input->currentText().mid(0,1);
-            QString p2FactionId, p2FactionHTML ;
-            p2FactionHTML.append("<!DOCTYPE html><html lang=\"en\" dir=\"ltr\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /><title> </title></head><body><p style=\"font-family:netrunner\">");
+            QString p2FactionId ;
+            //QString p2FactionId, p2FactionHTML ;
+            /*p2FactionHTML.append("<!DOCTYPE html><html lang=\"en\" dir=\"ltr\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /><title> </title></head><body><p style=\"font-family:netrunner\">");
             p2FactionHTML.append(p2Faction);
-            p2FactionHTML.append("</p></body></html>");
+            p2FactionHTML.append("</p></body></html>");*/
             p2FactionId.append(p2Faction);
 
-            QTextStream out2HTML(&Player2_Id_HTML);
+            /*QTextStream out2HTML(&Player2_Id_HTML);
             out2HTML.setCodec("UTF-8");
             out2HTML << p2FactionHTML ;
             QTextStream out2(&Player2_FactionId);
             out2.setCodec("UTF-8");
-            out2 << p2FactionId ;
+            out2 << p2FactionId ;*/
 
             if (QFile::exists(saveLocation+"/Output/Player2_Id.png"))
             {
                 QFile::remove(saveLocation+"/Output/Player2_Id.png");
             }
-            QString p2_id= ui->Player2Id_Input->currentText().mid(1,2); // First char is a Netrunner.ttf factionchar
-            QString p2_idfile=saveLocation+"/ID_pictures/" ;
-            p2_idfile.append(p2_id);
-            p2_idfile.append(".png");
-            QFile::copy(p2_idfile,saveLocation+"/Output/Player2_Id.png");
+            if (Game == Game_ANR)
+            {
+                QString p2_id= ui->Player2Id_Input->currentText().mid(1,2); // First char is a Netrunner.ttf factionchar
+                QString p2_idfile=saveLocation+"/ID_pictures/" ;
+                p2_idfile.append(p2_id);
+                p2_idfile.append(".png");
+                QFile::copy(p2_idfile,saveLocation+"/Output/Player2_Id.png");
 
-            QFile::copy(saveLocation+"/ID_pictures/AgendaPoint.png",saveLocation+"/Output/AgendaPoint.png");
-            QFile::copy(saveLocation+"/ID_pictures/faction_bakgrund.png",saveLocation+"/Output/faction_bakgrund.png");
+                QFile::copy(saveLocation+"/ID_pictures/AgendaPoint.png",saveLocation+"/Output/AgendaPoint.png");
+                QFile::copy(saveLocation+"/ID_pictures/faction_bakgrund.png",saveLocation+"/Output/faction_bakgrund.png");
+            }
+
         }
 
         Player1_Name_Output.close();
         Player2_Name_Output.close();
         Player1_Id_Output.close();
         Player2_Id_Output.close();
-        Player1_Id_HTML.close();
-        Player2_Id_HTML.close();
+        //Player1_Id_HTML.close();
+        //Player2_Id_HTML.close();
         Player1_FactionId.close();
         Player2_FactionId.close();
         Round_Output.close();
@@ -2749,14 +3344,14 @@ void ScoreboardMain::on_checkBox_clicked(bool checked20)
 
 void ScoreboardMain::on_actionNetrunner_triggered()
 {
-    ui->Player1Id2_input->setVisible(false);
-    ui->Player1Id3_input->setVisible(false);
-    ui->Player1Id4_input->setVisible(false);
-    ui->Player1Id5_input->setVisible(false);
-    ui->Player2Id2_input->setVisible(false);
-    ui->Player2Id3_input->setVisible(false);
-    ui->Player2Id4_input->setVisible(false);
-    ui->Player2Id5_input->setVisible(false);
+    ui->Player1Id2_Input->setVisible(false);
+    ui->Player1Id3_Input->setVisible(false);
+    ui->Player1Id4_Input->setVisible(false);
+    ui->Player1Id5_Input->setVisible(false);
+    ui->Player2Id2_Input->setVisible(false);
+    ui->Player2Id3_Input->setVisible(false);
+    ui->Player2Id4_Input->setVisible(false);
+    ui->Player2Id5_Input->setVisible(false);
     ui->spinBox1P1->setVisible(false);
     ui->spinBox2P1->setVisible(false);
     ui->spinBox3P1->setVisible(false);
@@ -2767,6 +3362,10 @@ void ScoreboardMain::on_actionNetrunner_triggered()
     ui->spinBox3P2->setVisible(false);
     ui->spinBox4P2->setVisible(false);
     ui->spinBox5P2->setVisible(false);
+    ui->comboBoxChooseCharP1->setVisible(false);
+    ui->comboBoxChooseCharP2->setVisible(false);
+    ui->ChooseCharP1->setVisible(false);
+    ui->ChooseCharP2->setVisible(false);
 
     ui->pushShowPlayer1Deck->setVisible(true);
     ui->pushShowPlayer2Deck->setVisible(true);
@@ -2784,24 +3383,31 @@ void ScoreboardMain::on_actionNetrunner_triggered()
     QCardDB_URL = QString::fromStdString(CardDB_URL);
     CardDB_DecklistURL = CardDB_DecklistURL_ANR ;
     BaseCardURL = BaseCardURL_ANR ;
+    xxxCardDB=ANRCardDB;
 
     if (QFile::exists(saveLocation+"/Output/Background.jpg"))
     {
         QFile::remove(saveLocation+"/Output/Background.jpg");
     }
     QFile::copy(saveLocation+"/ID_Pictures/ANRBackground.jpg",saveLocation+"/Output/Background.jpg");
+
+    //addANR_Ids();
+    ui->Player1Id_Input->clear();
+    ui->Player2Id_Input->clear();
+    ui->Player1Id_Input->addItems(IdList);
+    ui->Player2Id_Input->addItems(IdList);
 }
 
 void ScoreboardMain::on_actionSWDestiny_triggered()
 {
-    ui->Player1Id2_input->setVisible(true);
-    ui->Player1Id3_input->setVisible(true);
-    ui->Player1Id4_input->setVisible(true);
-    ui->Player1Id5_input->setVisible(true);
-    ui->Player2Id2_input->setVisible(true);
-    ui->Player2Id3_input->setVisible(true);
-    ui->Player2Id4_input->setVisible(true);
-    ui->Player2Id5_input->setVisible(true);
+    ui->Player1Id2_Input->setVisible(true);
+    ui->Player1Id3_Input->setVisible(true);
+    ui->Player1Id4_Input->setVisible(true);
+    ui->Player1Id5_Input->setVisible(true);
+    ui->Player2Id2_Input->setVisible(true);
+    ui->Player2Id3_Input->setVisible(true);
+    ui->Player2Id4_Input->setVisible(true);
+    ui->Player2Id5_Input->setVisible(true);
     ui->spinBox1P1->setVisible(true);
     ui->spinBox2P1->setVisible(true);
     ui->spinBox3P1->setVisible(true);
@@ -2812,6 +3418,10 @@ void ScoreboardMain::on_actionSWDestiny_triggered()
     ui->spinBox3P2->setVisible(true);
     ui->spinBox4P2->setVisible(true);
     ui->spinBox5P2->setVisible(true);
+    ui->comboBoxChooseCharP1->setVisible(true);
+    ui->comboBoxChooseCharP2->setVisible(true);
+    ui->ChooseCharP1->setVisible(true);
+    ui->ChooseCharP2->setVisible(true);
 
     ui->pushShowPlayer1Deck->setVisible(false);
     ui->pushShowPlayer2Deck->setVisible(false);
@@ -2829,12 +3439,17 @@ void ScoreboardMain::on_actionSWDestiny_triggered()
     QCardDB_URL = QString::fromStdString(CardDB_URL);
     CardDB_DecklistURL = CardDB_DecklistURL_SWD ;
     BaseCardURL = BaseCardURL_SWD ;
+    xxxCardDB=SWDCardDB;
 
     if (QFile::exists(saveLocation+"/Output/Background.jpg"))
     {
         QFile::remove(saveLocation+"/Output/Background.jpg");
     }
     QFile::copy(saveLocation+"/SWD/SWDBackground.jpg",saveLocation+"/Output/Background.jpg");
+
+    ui->Player1Id_Input->clear();
+    ui->Player2Id_Input->clear();
+    //IdList.clear();
 }
 
 void ScoreboardMain::on_actionDonate_triggered()
@@ -2848,6 +3463,7 @@ void ScoreboardMain::on_actionDonate_triggered()
 void ScoreboardMain::on_SoundSpeed_Slider_sliderMoved(int slidepos)
 {
     qreal test = (qreal)slidepos;
+    //qreal test = slidepos;
     if(test < 0.0)
     {
         //test = -0.9;

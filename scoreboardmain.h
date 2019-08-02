@@ -32,6 +32,8 @@ private slots:
 
     void createColors();
 
+    void addANR_Ids();
+
     void comboFactionColor_currentIndexChanged();
 
     void fontComboBoxDecklist_currentChanged();
@@ -40,9 +42,33 @@ private slots:
 
     void on_List_Output_clicked();
 
+    void on_spinBox1P1_valueChanged();
+
+    void on_spinBox2P1_valueChanged();
+
+    void on_spinBox3P1_valueChanged();
+
+    void on_spinBox4P1_valueChanged();
+
+    void on_spinBox5P1_valueChanged();
+
+    void on_spinBox1P2_valueChanged();
+
+    void on_spinBox2P2_valueChanged();
+
+    void on_spinBox3P2_valueChanged();
+
+    void on_spinBox4P2_valueChanged();
+
+    void on_spinBox5P2_valueChanged();
+
     void on_Show_right_clicked();
 
     void on_Show_left_clicked();
+
+    void on_ChooseCharP1_clicked();
+
+    void on_ChooseCharP2_clicked();
 
     void on_addCardToDeck_clicked();
 

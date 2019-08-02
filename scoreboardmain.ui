@@ -444,7 +444,7 @@ Score and Timer</string>
       <property name="font">
        <font>
         <family>netrunner</family>
-        <pointsize>6</pointsize>
+        <pointsize>7</pointsize>
        </font>
       </property>
       <property name="toolTip">
@@ -462,7 +462,8 @@ Score and Timer</string>
       </property>
       <property name="font">
        <font>
-        <pointsize>6</pointsize>
+        <family>netrunner</family>
+        <pointsize>7</pointsize>
        </font>
       </property>
       <property name="toolTip">
@@ -1173,7 +1174,7 @@ Score and Timer</string>
        </rect>
       </property>
      </widget>
-     <widget class="QComboBox" name="Player1Id2_input">
+     <widget class="QComboBox" name="Player1Id2_Input">
       <property name="enabled">
        <bool>true</bool>
       </property>
@@ -1187,11 +1188,12 @@ Score and Timer</string>
       </property>
       <property name="font">
        <font>
-        <pointsize>6</pointsize>
+        <family>netrunner</family>
+        <pointsize>7</pointsize>
        </font>
       </property>
      </widget>
-     <widget class="QComboBox" name="Player1Id3_input">
+     <widget class="QComboBox" name="Player1Id3_Input">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -1202,11 +1204,12 @@ Score and Timer</string>
       </property>
       <property name="font">
        <font>
-        <pointsize>6</pointsize>
+        <family>netrunner</family>
+        <pointsize>7</pointsize>
        </font>
       </property>
      </widget>
-     <widget class="QComboBox" name="Player1Id4_input">
+     <widget class="QComboBox" name="Player1Id4_Input">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -1217,11 +1220,12 @@ Score and Timer</string>
       </property>
       <property name="font">
        <font>
-        <pointsize>6</pointsize>
+        <family>netrunner</family>
+        <pointsize>7</pointsize>
        </font>
       </property>
      </widget>
-     <widget class="QComboBox" name="Player1Id5_input">
+     <widget class="QComboBox" name="Player1Id5_Input">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -1232,7 +1236,8 @@ Score and Timer</string>
       </property>
       <property name="font">
        <font>
-        <pointsize>6</pointsize>
+        <family>netrunner</family>
+        <pointsize>7</pointsize>
        </font>
       </property>
      </widget>
@@ -1326,7 +1331,7 @@ Score and Timer</string>
        </rect>
       </property>
      </widget>
-     <widget class="QComboBox" name="Player2Id2_input">
+     <widget class="QComboBox" name="Player2Id2_Input">
       <property name="geometry">
        <rect>
         <x>640</x>
@@ -1337,11 +1342,12 @@ Score and Timer</string>
       </property>
       <property name="font">
        <font>
-        <pointsize>6</pointsize>
+        <family>netrunner</family>
+        <pointsize>7</pointsize>
        </font>
       </property>
      </widget>
-     <widget class="QComboBox" name="Player2Id3_input">
+     <widget class="QComboBox" name="Player2Id3_Input">
       <property name="geometry">
        <rect>
         <x>640</x>
@@ -1352,11 +1358,12 @@ Score and Timer</string>
       </property>
       <property name="font">
        <font>
-        <pointsize>6</pointsize>
+        <family>netrunner</family>
+        <pointsize>7</pointsize>
        </font>
       </property>
      </widget>
-     <widget class="QComboBox" name="Player2Id4_input">
+     <widget class="QComboBox" name="Player2Id4_Input">
       <property name="geometry">
        <rect>
         <x>640</x>
@@ -1367,11 +1374,12 @@ Score and Timer</string>
       </property>
       <property name="font">
        <font>
-        <pointsize>6</pointsize>
+        <family>netrunner</family>
+        <pointsize>7</pointsize>
        </font>
       </property>
      </widget>
-     <widget class="QComboBox" name="Player2Id5_input">
+     <widget class="QComboBox" name="Player2Id5_Input">
       <property name="geometry">
        <rect>
         <x>640</x>
@@ -1382,19 +1390,82 @@ Score and Timer</string>
       </property>
       <property name="font">
        <font>
+        <family>netrunner</family>
+        <pointsize>7</pointsize>
+       </font>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="ChooseCharP1">
+      <property name="geometry">
+       <rect>
+        <x>300</x>
+        <y>310</y>
+        <width>81</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string>Show choosen Card to left side of screen</string>
+      </property>
+      <property name="text">
+       <string>Choose Char</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="ChooseCharP2">
+      <property name="geometry">
+       <rect>
+        <x>470</x>
+        <y>310</y>
+        <width>81</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string>Show choosen Card to left side of screen</string>
+      </property>
+      <property name="text">
+       <string>Choose Char</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="comboBoxChooseCharP1">
+      <property name="geometry">
+       <rect>
+        <x>250</x>
+        <y>310</y>
+        <width>41</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>6</pointsize>
+       </font>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="comboBoxChooseCharP2">
+      <property name="geometry">
+       <rect>
+        <x>560</x>
+        <y>310</y>
+        <width>41</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
         <pointsize>6</pointsize>
        </font>
       </property>
      </widget>
      <zorder>LabelFactionColor</zorder>
-     <zorder>Player2Id4_input</zorder>
-     <zorder>Player2Id2_input</zorder>
-     <zorder>Player2Id3_input</zorder>
-     <zorder>Player2Id5_input</zorder>
-     <zorder>Player1Id5_input</zorder>
-     <zorder>Player1Id4_input</zorder>
-     <zorder>Player1Id3_input</zorder>
-     <zorder>Player1Id2_input</zorder>
+     <zorder>Player2Id4_Input</zorder>
+     <zorder>Player2Id2_Input</zorder>
+     <zorder>Player2Id3_Input</zorder>
+     <zorder>Player2Id5_Input</zorder>
+     <zorder>Player1Id5_Input</zorder>
+     <zorder>Player1Id4_Input</zorder>
+     <zorder>Player1Id3_Input</zorder>
+     <zorder>Player1Id2_Input</zorder>
      <zorder>Minutes_To_In</zorder>
      <zorder>Player2Score_Label</zorder>
      <zorder>Player2Name_Input</zorder>
@@ -1469,6 +1540,10 @@ Score and Timer</string>
      <zorder>spinBox3P2</zorder>
      <zorder>spinBox4P2</zorder>
      <zorder>spinBox5P2</zorder>
+     <zorder>ChooseCharP1</zorder>
+     <zorder>ChooseCharP2</zorder>
+     <zorder>comboBoxChooseCharP1</zorder>
+     <zorder>comboBoxChooseCharP2</zorder>
     </widget>
     <widget class="QWidget" name="S">
      <attribute name="title">
