@@ -23,7 +23,8 @@
 #include <QPrinter>
 #include <QPainter>
 #include <QImage>
-#include <QImageReader>
+//#include <QImageReader>
+#include <QBitmap>
 
 #ifdef Q_OS_WIN
     #include <windows.h> //For Hotkey/Shortcut key
@@ -31,7 +32,8 @@
 
 using namespace std;
 
-static string version_info = "1.05"; //Please Change this after a update!
+static string version_info = "1.06"; //Please Change this after a update!
+static QString appName = "Scoreboard for Android:Netrunner & Star Wars:Destiny" ;
 
 static string Update_URL = "https://github.com/purpletechnician/Scoreboard-for-Netrunner";
 static string CardDB_URL_ANR = "http://www.netrunnerdb.com/api/2.0/public/card/" ;
@@ -49,7 +51,6 @@ static QString Game = Game_ANR ;
 static QString ANRCardDB = "/ANRCardDB/";
 static QString SWDCardDB = "/SWDCardDB/";
 static QString xxxCardDB = ANRCardDB;
-static QString appName = "Scoreboard for Netrunner" ;
 static int cardWidth = 300;
 static int cardHeight = 418;
 static QString SWDCardFormat = ".json";
@@ -272,6 +273,17 @@ void ScoreboardMain::Opened() //Resets all
          Player2_Score_Output << Player2_Score;
      }
 
+    QFile::remove(saveLocation+"/Output/Player1_Id1.jpg");
+    QFile::remove(saveLocation+"/Output/Player1_Id2.jpg");
+    QFile::remove(saveLocation+"/Output/Player1_Id3.jpg");
+    QFile::remove(saveLocation+"/Output/Player1_Id4.jpg");
+    QFile::remove(saveLocation+"/Output/Player1_Id5.jpg");
+    QFile::remove(saveLocation+"/Output/Player2_Id1.jpg");
+    QFile::remove(saveLocation+"/Output/Player2_Id2.jpg");
+    QFile::remove(saveLocation+"/Output/Player2_Id3.jpg");
+    QFile::remove(saveLocation+"/Output/Player2_Id4.jpg");
+    QFile::remove(saveLocation+"/Output/Player2_Id5.jpg");
+
     Clock_Output << "00:00";
     Round_Output << "";
     NR_Output << "";
@@ -322,11 +334,16 @@ void ScoreboardMain::Opened() //Resets all
     ui->Player1Id_Input->addItems(IdList);
     ui->Player2Id_Input->addItems(IdList);
 
-    Id1SWDList.append("1"); Id2SWDList.append("1");
-    Id1SWDList.append("2"); Id2SWDList.append("2");
-    Id1SWDList.append("3"); Id2SWDList.append("3");
-    Id1SWDList.append("4"); Id2SWDList.append("4");
-    Id1SWDList.append("5"); Id2SWDList.append("5");
+    Id1SWDList.append("n1"); Id2SWDList.append("n1");
+    Id1SWDList.append("e1"); Id2SWDList.append("e1");
+    Id1SWDList.append("n2"); Id2SWDList.append("n2");
+    Id1SWDList.append("e2"); Id2SWDList.append("e2");
+    Id1SWDList.append("n3"); Id2SWDList.append("n3");
+    Id1SWDList.append("e3"); Id2SWDList.append("e3");
+    Id1SWDList.append("n4"); Id2SWDList.append("n4");
+    Id1SWDList.append("e4"); Id2SWDList.append("e4");
+    Id1SWDList.append("n5"); Id2SWDList.append("n5");
+    Id1SWDList.append("e5"); Id2SWDList.append("e5");
     ui->comboBoxChooseCharP1->addItems(Id1SWDList);
     ui->comboBoxChooseCharP2->addItems(Id1SWDList);
 
@@ -774,8 +791,8 @@ void ScoreboardMain::on_Show_left_clicked()
 
 void ScoreboardMain::on_ChooseCharP1_clicked()
 {
-    int characterNumber = ui->comboBoxChooseCharP1->currentText().toInt();
-    int health = 1;
+    QString characterNumber = ui->comboBoxChooseCharP1->currentText();
+    int health;
 
     foreach(CardSWD_info data, CardSWD_infoList)
     {
@@ -784,68 +801,98 @@ void ScoreboardMain::on_ChooseCharP1_clicked()
         {
             qDebug()<<"Found card:"<<data.Code;
             health = data.Health;
-            qDebug()<<"ChoosenName"<<choosenName<<" Health:"<<health<<":"<<data.Health;
+
+            qDebug()<<"ChoosenName"<<choosenName<<" Health:"<<health;
         }
     }
 
-    switch (characterNumber)
+    if (characterNumber.right(1) == "1")
     {
-        case 1:
+            ui->Player1Id_Input->clear();
+            if (characterNumber.left(1) == "e")
+                choosenName = "e"+choosenName;
             ui->Player1Id_Input->addItem(choosenName);
             Player1_Id_Output.open(sLocation+"/Output/Player1_Id.txt");
             Player1_Id_Output<<choosenName.toStdString();
             Player1_Id_Output.close();
+            QFile::remove(saveLocation+"/Output/Player1_Id1.jpg");
+            QFile::copy(saveLocation+xxxCardDB+choosenCard+"_small.jpg",saveLocation+"/Output/Player1_Id1.jpg");
 
             ui->spinBox1P1->setValue(health);
             Max_healthP1C1 = health;
             ScoreboardMain::on_spinBox1P1_valueChanged();
-            break;
-        case 2:
+    }
+    if (characterNumber.right(1) == "2")
+    {
+            ui->Player1Id2_Input->clear();
+            if (characterNumber.left(1) == "e")
+                choosenName = "e"+choosenName;
             ui->Player1Id2_Input->addItem(choosenName);
             Player1_Id2_Output.open(sLocation+"/Output/Player1_Id2.txt");
             Player1_Id2_Output<<choosenName.toStdString();
             Player1_Id2_Output.close();
+            QFile::remove(saveLocation+"/Output/Player1_Id2.jpg");
+            QFile::copy(saveLocation+xxxCardDB+choosenCard+"_small.jpg",saveLocation+"/Output/Player1_Id2.jpg");
 
             ui->spinBox2P1->setValue(health);
-            ScoreboardMain::on_spinBox2P1_valueChanged();
             Max_healthP1C2 = health;
-            break;
-        case 3:
+            ScoreboardMain::on_spinBox2P1_valueChanged();
+    }
+    if (characterNumber.right(1) == "3")
+    {
+            ui->Player1Id3_Input->clear();
+            if (characterNumber.left(1) == "e")
+                choosenName = "e"+choosenName;
             ui->Player1Id3_Input->addItem(choosenName);
             Player1_Id3_Output.open(sLocation+"/Output/Player1_Id3.txt");
             Player1_Id3_Output<<choosenName.toStdString();
             Player1_Id3_Output.close();
+            QFile::remove(saveLocation+"/Output/Player1_Id3.jpg");
+            QFile::copy(saveLocation+xxxCardDB+choosenCard+"_small.jpg",saveLocation+"/Output/Player1_Id3.jpg");
 
             ui->spinBox3P1->setValue(health);
             Max_healthP1C3 = health;
             ScoreboardMain::on_spinBox3P1_valueChanged();
-            break;
-        case 4:
+    }
+    if (characterNumber.right(1) == "4")
+    {
+            ui->Player1Id4_Input->clear();
+            if (characterNumber.left(1) == "e")
+                choosenName = "e"+choosenName;
             ui->Player1Id4_Input->addItem(choosenName);
             Player1_Id4_Output.open(sLocation+"/Output/Player1_Id4.txt");
             Player1_Id4_Output<<choosenName.toStdString();
             Player1_Id4_Output.close();
+            QFile::remove(saveLocation+"/Output/Player1_Id4.jpg");
+            QFile::copy(saveLocation+xxxCardDB+choosenCard+"_small.jpg",saveLocation+"/Output/Player1_Id4.jpg");
 
             ui->spinBox4P1->setValue(health);
             Max_healthP1C4 = health;
             ScoreboardMain::on_spinBox4P1_valueChanged();
-            break;
-        case 5:
+    }
+    if (characterNumber.right(1) == "5")
+    {
+            ui->Player1Id5_Input->clear();
+            if (characterNumber.left(1) == "e")
+                choosenName = "e"+choosenName;
             ui->Player1Id5_Input->addItem(choosenName);
             Player1_Id5_Output.open(sLocation+"/Output/Player1_Id5.txt");
             Player1_Id5_Output<<choosenName.toStdString();
             Player1_Id5_Output.close();
+            QFile::remove(saveLocation+"/Output/Player1_Id5.jpg");
+            QFile::copy(saveLocation+xxxCardDB+choosenCard+"_small.jpg",saveLocation+"/Output/Player1_Id5.jpg");
 
             ui->spinBox5P1->setValue(health);
             Max_healthP1C5 = health;
             ScoreboardMain::on_spinBox5P1_valueChanged();
-            break;
     }
+    ui->search_Input->setText("");
+    ui->search_Input->setFocus();
 }
 
 void ScoreboardMain::on_ChooseCharP2_clicked()
 {
-    int characterNumber = ui->comboBoxChooseCharP2->currentText().toInt();
+    QString characterNumber = ui->comboBoxChooseCharP2->currentText();
     int health = 1;
 
     foreach(CardSWD_info data, CardSWD_infoList)
@@ -854,63 +901,92 @@ void ScoreboardMain::on_ChooseCharP2_clicked()
         if (choosenCard==data.Code)
         {
             health = (int)data.Health;
-            qDebug()<<"ChoosenName"<<choosenName<<" Health:"<<health<<":"<<data.Health;
+            qDebug()<<"ChoosenName"<<choosenName<<" Health:"<<health;
         }
     }
 
-    switch (characterNumber)
+    if (characterNumber.right(1) == "1")
     {
-        case 1:
+            ui->Player2Id_Input->clear();
+            if (characterNumber.left(1) == "e")
+                choosenName = "e"+choosenName;
             ui->Player2Id_Input->addItem(choosenName);
             Player2_Id_Output.open(sLocation+"/Output/Player2_Id.txt");
             Player2_Id_Output<<choosenName.toStdString();
             Player2_Id_Output.close();
+            QFile::remove(saveLocation+"/Output/Player2_Id1.jpg");
+            QFile::copy(saveLocation+xxxCardDB+choosenCard+"_small.jpg",saveLocation+"/Output/Player2_Id1.jpg");
 
             ui->spinBox1P2->setValue(health);
             Max_healthP2C1 = health;
             ScoreboardMain::on_spinBox1P2_valueChanged();
-            break;
-        case 2:
+    }
+    if (characterNumber.right(1) == "2")
+    {
+            ui->Player2Id2_Input->clear();
+            if (characterNumber.left(1) == "e")
+                choosenName = "e"+choosenName;
             ui->Player2Id2_Input->addItem(choosenName);
             Player2_Id2_Output.open(sLocation+"/Output/Player2_Id2.txt");
             Player2_Id2_Output<<choosenName.toStdString();
             Player2_Id2_Output.close();
+            QFile::remove(saveLocation+"/Output/Player2_Id2.jpg");
+            QFile::copy(saveLocation+xxxCardDB+choosenCard+"_small.jpg",saveLocation+"/Output/Player2_Id2.jpg");
 
             ui->spinBox2P2->setValue(health);
             Max_healthP2C2 = health;
             ScoreboardMain::on_spinBox2P2_valueChanged();
-            break;
-        case 3:
+    }
+    if (characterNumber.right(1) == "3")
+    {
+            ui->Player2Id3_Input->clear();
+            if (characterNumber.left(1) == "e")
+                choosenName = "e"+choosenName;
             ui->Player2Id3_Input->addItem(choosenName);
             Player2_Id3_Output.open(sLocation+"/Output/Player2_Id3.txt");
             Player2_Id3_Output<<choosenName.toStdString();
             Player2_Id3_Output.close();
+            QFile::remove(saveLocation+"/Output/Player2_Id3.jpg");
+            QFile::copy(saveLocation+xxxCardDB+choosenCard+"_small.jpg",saveLocation+"/Output/Player2_Id3.jpg");
 
             ui->spinBox3P2->setValue(health);
             Max_healthP2C3 = health;
             ScoreboardMain::on_spinBox3P2_valueChanged();
-            break;
-        case 4:
+    }
+    if (characterNumber.right(1) == "4")
+    {
+            ui->Player2Id4_Input->clear();
+            if (characterNumber.left(1) == "e")
+                choosenName = "e"+choosenName;
             ui->Player2Id4_Input->addItem(choosenName);
             Player2_Id4_Output.open(sLocation+"/Output/Player2_Id4.txt");
             Player2_Id4_Output<<choosenName.toStdString();
             Player2_Id4_Output.close();
+            QFile::remove(saveLocation+"/Output/Player2_Id4.jpg");
+            QFile::copy(saveLocation+xxxCardDB+choosenCard+"_small.jpg",saveLocation+"/Output/Player2_Id4.jpg");
 
             ui->spinBox4P2->setValue(health);
             Max_healthP2C4 = health;
             ScoreboardMain::on_spinBox4P2_valueChanged();
-            break;
-        case 5:
+    }
+    if (characterNumber.right(1) == "5")
+    {
+            ui->Player2Id5_Input->clear();
+            if (characterNumber.left(1) == "e")
+                choosenName = "e"+choosenName;
             ui->Player2Id5_Input->addItem(choosenName);
             Player2_Id5_Output.open(sLocation+"/Output/Player2_Id5.txt");
             Player2_Id5_Output<<choosenName.toStdString();
             Player2_Id5_Output.close();
+            QFile::remove(saveLocation+"/Output/Player2_Id5.jpg");
+            QFile::copy(saveLocation+xxxCardDB+choosenCard+"_small.jpg",saveLocation+"/Output/Player2_Id5.jpg");
 
             ui->spinBox5P2->setValue(health);
             Max_healthP2C5 = health;
             ScoreboardMain::on_spinBox5P2_valueChanged();
-            break;
     }
+    ui->search_Input->setText("");
+    ui->search_Input->setFocus();
 }
 
 void ScoreboardMain::on_addCardToDeck_clicked()
@@ -1393,7 +1469,8 @@ void ScoreboardMain::getCardURLResult(QNetworkReply *replyCard)
     else if (Game == Game_SWD)
     {
         QString code = replyCard->property("code").toString();
-        QFile file(saveLocation+SWDCardDB+code+".jpg");
+        QString imageName = saveLocation+SWDCardDB+code+".jpg" ;
+        QFile file(imageName);
         qDebug()<<"getCardURLResult "<<code;
         if (!file.open(QIODevice::ReadWrite))
             qDebug() << "Cannot open file "<<code;
@@ -1401,7 +1478,7 @@ void ScoreboardMain::getCardURLResult(QNetworkReply *replyCard)
         file.write(data);
         file.close();
 
-        /*QImage img;
+        QImage img;
         img.load(imageName, "JPG"); // Or "JPEG"?
         QPixmap pixmap = QPixmap::fromImage(img);
         qDebug()<<"Saving card: "<<code<<" width: "<<pixmap.width();
@@ -1413,7 +1490,24 @@ void ScoreboardMain::getCardURLResult(QNetworkReply *replyCard)
             file.close();
             qDebug() <<"Scaling: "<<code;
             //qDebug()<<"Saving card: "<<code<<" width: "<<img.width();
-        }*/
+        }
+        QImage img_orig;
+        img_orig.load(imageName, "JPG");
+        QImage img_small = img_orig.copy(75,65,150,150);
+        QPixmap pixmap_small = QPixmap::fromImage(img_small);
+
+        QBitmap map(150,150);
+        map.fill(Qt::color0);
+        QPainter painter(&map);
+        painter.setBrush(Qt::color1);
+        painter.drawRoundedRect(0,0,150,150,75,75);
+        pixmap_small.setMask(map);
+
+        QString imageName_small = saveLocation+SWDCardDB+code+"_small.jpg" ;
+        QFile file_small(imageName_small);
+        file_small.open(QIODevice::WriteOnly);
+        pixmap_small.save(&file_small,"jpg",100);
+        file_small.close();
 
         ui->saveCards_Label->setText("Saving SWD-card "+code);
     }
