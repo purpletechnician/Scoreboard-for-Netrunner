@@ -1,4 +1,6 @@
-# Scoreboard-for-Netrunner 1.04<br/>
+# Scoreboard-for-Netrunner 1.06<br/>
+1,06 Added extended funtionality for SW:D
+1,05 Added basic functionality for SW:D
 1,04 Added missing ID:s, scaled images to same size, buxfixing</br>
 1,03 Bugfixing SSL-libraries<br/>
 1,02 Adding Magnum Opus, System Core 2019, Downfall. Bugfixing and adaptation to newest QT-environment<br/>
@@ -27,9 +29,12 @@ The software has the following features:<br/>
 <br/>
 Below files are created by the software (Output-folder):<br/>
 • "Player1_Name.txt"/"Player2_Name.txt": Shows each player name. Input: Textfield.<br/>
-• "Player1_Score.txt"/"Player2_Score.txt": Shows each player score. Input: Up/down-buttons for each player. Output can be disabled in software.<br/>
-• "Player1_Id.txt"/"Player2_Id.txt": Shows each player identity.Input: Choosable field. Output can be disabled in software.<br/>
-• "Player1_Id.png"/"Player2_Id.png": Hold each player identity icon. Based on above input. Output can be disabled in software.<br/>
+• ANR only: "Player1_Score.txt"/"Player2_Score.txt": Shows each player score. Input: Up/down-buttons for each player. Output can be disabled in software.<br/>
+• "Player1_Id.txt"/"Player2_Id.txt": Shows each player or 1st character identity. Input: Choosable field. Output can be disabled in software.<br/>
+• SWD only: "Player1_Idx.txt"/"Player2_Idx.txt": Shows each characters identity. x = 2-5. Input: Choosable field. Output can be disabled in software.<br/>
+• ANR only: "Player1_Id.png"/"Player2_Id.png": Hold each player identity icon. Based on above input. Output can be disabled in software.<br/>
+• SWD only: "Player1_Ixd.jpg"/"Player2_Idx.jpg": Hold each characters identity icon. x = 1-5. Based on above input. Output can be disabled in software.<br/>
+• SWD Only: "Player1_charxHealth.txt"/"Player2_charxHealth.txt": Hold each characters current health. Based on above input. Output can be disabled in software.<br/>
 • "Clock.txt": Show actual timer value. Input: start/stop timer and radio-button swiss/top cut/grand final.<br/>
 • "Round.txt": Shows which round in tourament. Input: textfield.<br/>
 • "Round_info.txt": Show "Swiss"/"Top cut"/"Grand final" and round number.<br/>
