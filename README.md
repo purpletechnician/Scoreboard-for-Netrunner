@@ -1,4 +1,4 @@
-# Scoreboard-for-Netrunner 1.06<br/>
+# Scoreboard for Android:Netrunner & Star Wars:Destiny 1.06<br/>
 1,06 Added extended funtionality for SW:D
 1,05 Added basic functionality for SW:D
 1,04 Added missing ID:s, scaled images to same size, buxfixing</br>
