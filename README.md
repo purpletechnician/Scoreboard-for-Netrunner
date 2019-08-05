@@ -1,6 +1,6 @@
 # Scoreboard for Android:Netrunner & Star Wars:Destiny 1.06<br/>
-1,06 Added extended funtionality for SW:D
-1,05 Added basic functionality for SW:D
+1,06 Added extended funtionality for SW:D<br/>
+1,05 Added basic functionality for SW:D<br/>
 1,04 Added missing ID:s, scaled images to same size, buxfixing</br>
 1,03 Bugfixing SSL-libraries<br/>
 1,02 Adding Magnum Opus, System Core 2019, Downfall. Bugfixing and adaptation to newest QT-environment<br/>
@@ -43,3 +43,6 @@ Below files are created by the software (Output-folder):<br/>
 • "Next_round_start.txt": Shows when next round starts in the "Up next screen". Input: textfield. Output can be enabled/disabled in software.<br/>
 • "Card_left.png"/"Card_right.png": Shows the card choosen from a search. Cards can afterwards be hidden in software.
 • "Xml.xml": Shows Player names, score and time. Output can be enabled/disabled in software. Feature not fully implemented.<br/>
+
+
+Licence: GNU General Public Licence v3 (GPL-3) https://www.gnu.org/licenses/gpl-3.0.en.html
